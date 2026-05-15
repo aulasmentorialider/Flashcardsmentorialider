@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas — Controle de Constitucionalidade | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F3864;
+    --navy-mid: #2E5FA3;
+    --navy-light: #dce8f8;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --coral: #993C1D;
+    --coral-light: #FAECE7;
+    --amber: #854F0B;
+    --amber-light: #FAEEDA;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --border: rgba(31,56,100,0.12);
+    --text: #1a1f2e;
+    --muted: #5a6580;
+    --faint: #9ba4bc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--navy);
+    padding: 1.5rem 2rem 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .header-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+  }
+  header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 3px;
+  }
+  .header-info { flex: 1; }
+  .card-count-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* TOPIC NAV */
+  .topic-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.75rem;
+  }
+  .topic-btn {
+    font-family: 'Sora', sans-serif;
+    font-size: 11.5px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+  .topic-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .topic-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .counter-pill {
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--faint);
+    align-self: center;
+    white-space: nowrap;
+  }
+
+  /* CARD */
+  .card-scene { perspective: 1200px; margin-bottom: 1.5rem; }
+  .card-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+    min-height: 280px;
+  }
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .face {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .face.back {
+    transform: rotateY(180deg);
+    position: absolute;
+    top: 0; left: 0; right: 0;
+  }
+
+  /* Front face */
+  .f-cat {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 1.1rem;
+    width: fit-content;
+  }
+  .cat-navy   { background: var(--navy-light); color: var(--navy); }
+  .cat-teal   { background: var(--teal-light); color: var(--teal); }
+  .cat-coral  { background: var(--coral-light); color: var(--coral); }
+  .cat-amber  { background: var(--amber-light); color: var(--amber); }
+  .cat-purple { background: var(--purple-light); color: var(--purple); }
+
+  .f-title {
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+  }
+  .f-question {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+    flex: 1;
+  }
+  .f-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.5rem;
+  }
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .hint-line {
+    font-size: 11.5px;
+    color: var(--faint);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+  .hint-line svg { width: 14px; height: 14px; opacity: 0.5; flex-shrink: 0; }
+
+  /* Back face */
+  .b-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1.1rem;
+  }
+  .b-block {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 11px 15px;
+    margin-bottom: 9px;
+  }
+  .b-block .blbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 5px;
+  }
+  .b-block p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.65;
+  }
+  .b-alert {
+    border-left: 3px solid var(--coral);
+    background: var(--coral-light);
+    border-radius: 0 10px 10px 0;
+    padding: 11px 15px;
+    margin-bottom: 9px;
+  }
+  .b-alert .blbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 5px;
+  }
+  .b-alert p { font-size: 13px; color: #5a2010; line-height: 1.65; }
+
+  .b-tip {
+    border-left: 3px solid var(--teal);
+    background: var(--teal-light);
+    border-radius: 0 10px 10px 0;
+    padding: 11px 15px;
+    margin-bottom: 9px;
+  }
+  .b-tip .blbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 5px;
+  }
+  .b-tip p { font-size: 13px; color: #0a3d2e; line-height: 1.65; }
+
+  /* BUTTONS */
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 1.4rem;
+  }
+  .btn {
+    flex: 1;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--bg); color: var(--text); }
+  .btn-primary {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .btn-primary:hover { background: #17316b; color: #fff; }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    height: 3px;
+    background: var(--border);
+    border-radius: 999px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--navy-mid);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 11.5px;
+    color: var(--faint);
+    border-top: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 540px) {
+    main { padding: 1.25rem 1rem 3rem; }
+    header { padding: 1.25rem 1rem; }
+    .f-title { font-size: 18px; }
+    .face { padding: 1.25rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-info">
+    <div class="header-badge">CFO PMMG · Direito Constitucional</div>
+    <h1>Controle de Constitucionalidade</h1>
+    <p>Fichas temáticas para revisão e estudo ativo</p>
+  </div>
+  <div class="card-count-badge" id="hdr-count"></div>
+</header>
+
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="topic-nav" id="topic-nav"></div>
+
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front" id="front">
+        <div id="f-cat" class="f-cat cat-navy"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Tente responder mentalmente antes de revelar
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta ↓</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+
+      <div class="face back" id="back">
+        <div id="b-cat" class="f-cat cat-navy"></div>
+        <div id="b-title" class="b-title"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">↑ ocultar</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>Mentoria Líder · CFO PMMG · Material de uso exclusivo dos alunos</footer>
+
+<script>
+const cards = [
+  {
+    cat: "Fundamentos", catClass: "cat-navy",
+    title: "Conceito e fundamento do controle de constitucionalidade",
+    question: "O que é o controle de constitucionalidade e qual é o seu fundamento na Constituição Federal de 1988?",
+    pills: ["Art. 102 CF/88", "Supremacia constitucional", "Hans Kelsen"],
+    fundamento: "Arts. 102, 103 e 125, §2º da CF/88. Fundamento teórico: princípio da supremacia da Constituição — norma hierarquicamente superior a todas as demais.",
+    conceito: "É o mecanismo pelo qual se verifica a compatibilidade vertical das normas infraconstitucionais com a Constituição. Toda lei ou ato normativo que contrarie a CF é nulo de pleno direito (nulidade absoluta — teoria norte-americana adotada pelo STF). O controle pode ser preventivo (antes da promulgação) ou repressivo (após a entrada em vigor).",
+    atencao: "O STF adota a teoria da nulidade: lei inconstitucional é nula ab initio, não meramente anulável. Exceção: modulação dos efeitos (art. 27 da Lei 9.868/99) por razões de segurança jurídica.",
+    dica: "Para a prova: diferencie sistema norte-americano (difuso, nulidade) do sistema austríaco/kelseniano (concentrado, anulabilidade). O Brasil adota sistema misto."
+  },
+  {
+    cat: "Espécies", catClass: "cat-teal",
+    title: "Controle difuso x concentrado",
+    question: "Quais as diferenças entre o controle difuso e o controle concentrado de constitucionalidade?",
+    pills: ["Art. 97 CF/88", "Cláusula de reserva do plenário", "Efeitos inter partes / erga omnes"],
+    fundamento: "CF/88: art. 97 (cláusula de reserva do plenário), art. 102, I (controle concentrado pelo STF), art. 125, §2º (controle concentrado estadual pelos TJs).",
+    conceito: "Controle difuso: qualquer juiz ou tribunal pode declarar a inconstitucionalidade de lei no caso concreto. Efeitos inter partes e ex tunc. Controle concentrado: competência exclusiva do STF (âmbito federal) ou TJs (âmbito estadual). Efeitos erga omnes e, em regra, ex tunc — salvo modulação.",
+    atencao: "Cláusula de reserva do plenário (art. 97 CF): somente pelo voto da maioria absoluta do tribunal pode ser declarada inconstitucionalidade. Súmula Vinculante 10 do STF: viola a cláusula decisão de órgão fracionário que afasta a lei sem declará-la inconstitucional.",
+    dica: "Macete: Difuso = qualquer juiz, caso concreto, inter partes. Concentrado = STF/TJ, ação própria, erga omnes. O Brasil adota os dois — sistema misto ou híbrido."
+  },
+  {
+    cat: "Ações diretas", catClass: "cat-purple",
+    title: "ADI — Ação Direta de Inconstitucionalidade",
+    question: "Quais são os legitimados, o objeto e os efeitos da ADI genérica?",
+    pills: ["Art. 103 CF/88", "Lei 9.868/99", "Efeito vinculante"],
+    fundamento: "Art. 103 da CF/88 e Lei nº 9.868/1999. Competência: STF (lei ou ato normativo federal ou estadual em face da CF).",
+    conceito: "Legitimados (art. 103 CF): Presidente da República, Mesa do Senado/Câmara, Mesa de AL, Governador, PGR, Conselho Federal da OAB, partido político com representação no Congresso, confederação sindical ou entidade de classe nacional. Objeto: leis e atos normativos federais e estaduais. Efeitos da procedência: erga omnes, ex tunc e vinculante (Executivo + Judiciário, exceto o próprio STF).",
+    atencao: "Legitimados universais x especiais: os especiais (Governadores, Mesas de AL, confederações sindicais e entidades de classe) devem demonstrar pertinência temática — relação entre o objeto da ADI e suas finalidades institucionais.",
+    dica: "Macete dos legitimados: P-M-M-G-P-O-P-C (Presidente, Mesas, Mesas-AL, Governadores, PGR, OAB, Partidos, Confederações/Entidades). Os 4 últimos = legitimados especiais com pertinência temática."
+  },
+  {
+    cat: "Ações diretas", catClass: "cat-purple",
+    title: "ADC, ADPF e ADO — distinções essenciais",
+    question: "Qual a finalidade e o cabimento da ADC, ADPF e ADO? Como se diferenciam da ADI?",
+    pills: ["Art. 102, I, 'a' CF", "Art. 103-A CF", "Lei 9.882/99"],
+    fundamento: "ADC: art. 102, I, 'a' CF e Lei 9.868/99. ADPF: art. 102, §1º CF e Lei 9.882/99. ADO: art. 103, §2º CF.",
+    conceito: "ADC: declara a constitucionalidade de lei ou ato normativo federal — pressupõe controvérsia judicial relevante. ADO: combate omissão inconstitucional do legislador; se procedente, o STF dá ciência ao órgão omisso (e prazo de 30 dias para órgão administrativo). ADPF: subsidiária — cabível quando não houver outro meio eficaz; alcança atos anteriores à CF/88 e direito municipal em face da CF.",
+    atencao: "ADPF tem caráter subsidiário expresso (art. 4º, §1º, Lei 9.882/99): não será admitida quando houver outro meio eficaz de sanar a lesividade. Objeto inclui atos do poder público que lesem preceito fundamental.",
+    dica: "Diferença ADI x ADO: ADI = norma existente inconstitucional. ADO = ausência de norma. ADC = norma existente que se quer confirmar como constitucional (pressupõe dúvida judicial instalada)."
+  },
+  {
+    cat: "Controle preventivo", catClass: "cat-amber",
+    title: "Controle preventivo de constitucionalidade",
+    question: "Como se dá o controle preventivo no Brasil? O Judiciário pode realizá-lo?",
+    pills: ["CCJ", "Veto presidencial", "Mandado de segurança"],
+    fundamento: "CF/88: arts. 66, §1º (veto presidencial), 58 (CCJ). Jurisprudência do STF sobre MS de parlamentar.",
+    conceito: "O controle preventivo é feito, em regra, pelo próprio Legislativo (CCJ) e pelo Executivo (veto presidencial por inconstitucionalidade — art. 66, §1º CF). O STF, excepcionalmente, realiza controle preventivo em sede de mandado de segurança impetrado por parlamentar federal contra projeto de lei em tramitação — quando houver violação ao devido processo legislativo constitucional.",
+    atencao: "Somente parlamentar tem legitimidade para impetrar MS preventivo no STF contra projeto de lei. Após a promulgação, o controle já é repressivo. O STF não analisa o mérito das normas internas do processo legislativo (interna corporis).",
+    dica: "Regra: controle preventivo = Legislativo (CCJ) + Executivo (veto). Exceção judicial: MS de parlamentar no STF, apenas para vícios formais do processo legislativo — nunca para mérito."
+  },
+  {
+    cat: "Efeitos", catClass: "cat-coral",
+    title: "Modulação de efeitos temporais",
+    question: "Em que consiste a modulação de efeitos nas decisões de inconstitucionalidade? Qual o quórum?",
+    pills: ["Art. 27 Lei 9.868/99", "2/3 do STF", "Segurança jurídica"],
+    fundamento: "Art. 27 da Lei nº 9.868/1999. Aplicável ao controle concentrado (ADI, ADC, ADPF). Estendido pelo STF ao controle difuso.",
+    conceito: "Por razões de segurança jurídica ou excepcional interesse social, o STF pode restringir os efeitos da declaração de inconstitucionalidade ou decidir que ela só terá eficácia a partir do trânsito em julgado ou de outro momento que vier a ser fixado. A decisão de modular exige quórum de 2/3 dos ministros (8 de 11).",
+    atencao: "A regra geral é a eficácia ex tunc (retroativa) e erga omnes. A modulação é exceção que exige quórum qualificado de 2/3. O STF tem admitido modulação também em controle difuso (RE com repercussão geral), por simetria.",
+    dica: "Quórum: declaração de inconstitucionalidade em plenário = maioria absoluta (6 ministros). Modulação de efeitos = 2/3 (8 ministros). Não confundir!"
+  },
+  {
+    cat: "Súmula Vinculante", catClass: "cat-teal",
+    title: "Súmula Vinculante — requisitos e efeitos",
+    question: "Quais os requisitos para edição de Súmula Vinculante? A quem ela vincula?",
+    pills: ["Art. 103-A CF/88", "Lei 11.417/2006", "Quórum: 2/3 STF"],
+    fundamento: "Art. 103-A da CF/88 (EC nº 45/2004) e Lei nº 11.417/2006.",
+    conceito: "Requisitos: (1) reiteradas decisões do STF sobre matéria constitucional; (2) controvérsia atual entre órgãos judiciários ou entre estes e a Administração Pública; (3) aprovação por 2/3 dos ministros (8 de 11). Efeitos: vincula os demais órgãos do Poder Judiciário e a Administração Pública direta e indireta, nas esferas federal, estadual e municipal.",
+    atencao: "A Súmula Vinculante NÃO vincula o próprio STF nem o Poder Legislativo. O Legislativo pode editar lei superando o entendimento sumulado (reversão legislativa). O STF pode rever ou cancelar a súmula.",
+    dica: "Descumprimento de SV: cabe reclamação diretamente ao STF (art. 103-A, §3º CF). Legitimados para propor edição, revisão ou cancelamento: os mesmos da ADI + qualquer tribunal, inclusive de ofício pelo STF."
+  },
+  {
+    cat: "Controle estadual", catClass: "cat-navy",
+    title: "Controle de constitucionalidade estadual",
+    question: "Como funciona o controle concentrado estadual? O TJ pode declarar inconstitucionalidade em face da CF federal?",
+    pills: ["Art. 125, §2º CF", "Constituição estadual", "Reserva do STF"],
+    fundamento: "Art. 125, §2º da CF/88. Cada Estado institui na sua Constituição Estadual a representação de inconstitucionalidade perante o TJ.",
+    conceito: "Os Tribunais de Justiça exercem controle concentrado de constitucionalidade de leis ou atos normativos estaduais e municipais em face da Constituição Estadual. O parâmetro obrigatório é a Constituição do Estado — não a CF/88 diretamente. Exceção: normas de reprodução obrigatória da CF (princípios constitucionais sensíveis) — o TJ pode usá-las como parâmetro e cabe recurso ao STF.",
+    atencao: "Lei municipal só pode ser questionada em ADI perante o TJ (em face da CE), nunca em ADI diretamente no STF. Para questionamento de lei municipal em face da CF federal, o instrumento é a ADPF (caráter subsidiário).",
+    dica: "Resumo: TJ + CE = controle concentrado estadual. STF + CF = controle concentrado federal. Lei municipal x CF = ADPF no STF. Normas de reprodução obrigatória = TJ pode usar CF como parâmetro."
+  }
+];
+
+let cur = 0;
+
+function catLabel(c) {
+  const map = {
+    "cat-navy": "Fundamentos",
+    "cat-teal": "Espécies / Efeitos",
+    "cat-purple": "Ações diretas",
+    "cat-amber": "Controle preventivo",
+    "cat-coral": "Efeitos",
+  };
+  return map[c] || c;
+}
+
+function render() {
+  const c = cards[cur];
+
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(p => `<span class="pill">${p}</span>`).join('');
+
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+
+  let html = `
+    <div class="b-block"><div class="blbl">Fundamento legal</div><p>${c.fundamento}</p></div>
+    <div class="b-block"><div class="blbl">Conceito e distinções</div><p>${c.conceito}</p></div>
+    <div class="b-alert"><div class="blbl">Atenção — ponto de prova</div><p>${c.atencao}</p></div>
+  `;
+  if (c.dica) {
+    html += `<div class="b-tip"><div class="blbl">Dica de memorização</div><p>${c.dica}</p></div>`;
+  }
+  document.getElementById('b-blocks').innerHTML = html;
+
+  document.getElementById('card').classList.remove('flipped');
+
+  const pct = ((cur + 1) / cards.length * 100).toFixed(0);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('hdr-count').textContent = `${cur + 1} / ${cards.length} fichas`;
+
+  const nav = document.getElementById('topic-nav');
+  nav.innerHTML = cards.map((x, i) =>
+    `<button class="topic-btn ${i === cur ? 'active' : ''}" onclick="go(${i})">${i + 1}. ${x.title.split('—')[0].split('x')[0].trim()}</button>`
+  ).join('') + `<span class="counter-pill">${cur + 1} / ${cards.length}</span>`;
+}
+
+function flip() { document.getElementById('card').classList.toggle('flipped'); }
+function go(i) { cur = i; render(); }
+function prev() { cur = (cur - 1 + cards.length) % cards.length; render(); }
+function next() { cur = (cur + 1) % cards.length; render(); }
+
+render();
+</script>
+</body>
+</html>

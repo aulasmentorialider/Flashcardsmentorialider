@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas — Notitia Criminis | Processo Penal Comum | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F3864; --navy-mid: #2E5FA3; --navy-light: #dce8f8;
+    --teal: #0F6E56; --teal-light: #E1F5EE;
+    --coral: #993C1D; --coral-light: #FAECE7;
+    --amber: #854F0B; --amber-light: #FAEEDA;
+    --purple: #534AB7; --purple-light: #EEEDFE;
+    --bg: #f4f6fb; --surface: #fff;
+    --border: rgba(31,56,100,0.12);
+    --text: #1a1f2e; --muted: #5a6580; --faint: #9ba4bc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header { background: var(--navy); padding: 1.5rem 2rem 1.25rem; }
+  .hbadge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .12em; color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); padding: 4px 10px; border-radius: 4px; text-transform: uppercase; display: inline-block; margin-bottom: 6px; }
+  header h1 { font-size: 20px; font-weight: 600; color: #fff; }
+  header p { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 3px; }
+  .hrow { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+  .hcount { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.35); margin-left: auto; }
+
+  .mode-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: .65rem 2rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .mode-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .toggle-wrap { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 2px; gap: 2px; }
+  .toggle-opt { font-size: 11.5px; padding: 4px 14px; border-radius: 999px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: 'Sora', sans-serif; font-weight: 500; transition: all .15s; }
+  .toggle-opt.active { background: var(--navy); color: #fff; }
+  .mode-hint { font-size: 11px; color: var(--faint); }
+
+  .filter-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: .65rem 2rem; display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn { font-family: 'Sora', sans-serif; font-size: 11.5px; font-weight: 500; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .15s; }
+  .filter-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  main { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .progress-wrap { height: 3px; background: var(--border); border-radius: 999px; margin-bottom: 1.5rem; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--navy-mid); border-radius: 999px; transition: width .3s ease; }
+
+  .topic-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.75rem; align-items: center; }
+  .topic-btn { font-size: 11px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all .15s; font-weight: 500; font-family: 'Sora', sans-serif; }
+  .topic-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .topic-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .counter-pill { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--faint); white-space: nowrap; }
+
+  .card-scene { perspective: 1200px; margin-bottom: 1.5rem; }
+  .card-inner { position: relative; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.4,0,.2,1); min-height: 290px; }
+  .card-inner.flipped { transform: rotateY(180deg); }
+  .face { backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem 2rem; display: flex; flex-direction: column; }
+  .face.back { transform: rotateY(180deg); position: absolute; top: 0; left: 0; right: 0; }
+
+  .f-cat { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 1.1rem; width: fit-content; }
+  .cat-navy   { background: var(--navy-light);   color: var(--navy); }
+  .cat-teal   { background: var(--teal-light);   color: var(--teal); }
+  .cat-coral  { background: var(--coral-light);  color: var(--coral); }
+  .cat-amber  { background: var(--amber-light);  color: var(--amber); }
+  .cat-purple { background: var(--purple-light); color: var(--purple); }
+
+  .f-title    { font-size: 21px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: .6rem; }
+  .f-question { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 1.25rem; flex: 1; }
+  .f-pills    { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.4rem; }
+  .pill { font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 3px 9px; border-radius: 4px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+  .hint-line  { font-size: 11.5px; color: var(--faint); display: flex; align-items: center; gap: 6px; margin-bottom: 1.25rem; }
+
+  .oral-answer { font-size: 14px; color: var(--text); line-height: 1.8; border-left: 3px solid var(--navy-mid); background: var(--navy-light); border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 9px; }
+  .oral-tip { border-left: 3px solid var(--teal); background: var(--teal-light); border-radius: 0 10px 10px 0; padding: 11px 15px; }
+  .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 5px; }
+  .oral-tip .blbl { color: var(--teal); }
+  .oral-tip p { font-size: 13px; color: #0a3d2e; line-height: 1.65; }
+
+  .b-block { background: var(--bg); border-radius: 10px; padding: 11px 15px; margin-bottom: 9px; }
+  .b-block .blbl { color: var(--faint); }
+  .b-block p { font-size: 13px; color: var(--text); line-height: 1.65; }
+  .b-alert { border-left: 3px solid var(--coral); background: var(--coral-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-bottom: 9px; }
+  .b-alert .blbl { color: var(--coral); }
+  .b-alert p { font-size: 13px; color: #5a2010; line-height: 1.65; }
+  .b-tip { border-left: 3px solid var(--teal); background: var(--teal-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-bottom: 9px; }
+  .b-tip .blbl { color: var(--teal); }
+  .b-tip p { font-size: 13px; color: #0a3d2e; line-height: 1.65; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 1.4rem; }
+  .btn { flex: 1; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .15s; }
+  .btn:hover { background: var(--bg); color: var(--text); }
+  .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .btn-primary:hover { background: #17316b; }
+
+  footer { text-align: center; padding: 2rem 1rem; font-size: 11.5px; color: var(--faint); border-top: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; letter-spacing: .05em; }
+
+  @media (max-width: 540px) {
+    main { padding: 1.25rem 1rem 3rem; }
+    header, .filter-bar, .mode-bar { padding: .75rem 1rem; }
+    .f-title { font-size: 18px; }
+    .face { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG · Processo Penal Comum</div>
+      <h1>Notitia Criminis</h1>
+      <p>Fichas para prova oral e estudo ativo — responda em voz alta antes de revelar</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">🎤 Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">📚 Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido — ideal para simular a banca</span>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('conceito',this)">Conceito e espécies</button>
+  <button class="filter-btn" onclick="setFilter('inquerito',this)">Inquérito Policial</button>
+  <button class="filter-btn" onclick="setFilter('flagrante',this)">Flagrante</button>
+  <button class="filter-btn" onclick="setFilter('representacao',this)">Representação</button>
+  <button class="filter-btn" onclick="setFilter('dispensabilidade',this)">Dispensabilidade</button>
+</div>
+
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar — simule a banca
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta ↓</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" class="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">↑ ocultar</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>Mentoria Líder · CFO PMMG · Material de uso exclusivo dos alunos</footer>
+
+<script>
+let mode = 'oral';
+
+const allCards = [
+
+  // ── CONCEITO E ESPÉCIES ─────────────────────────────────────────
+  {
+    grupo: 'conceito', cat: 'Conceito e espécies', catClass: 'cat-navy',
+    title: 'Notitia criminis — conceito e natureza jurídica',
+    question: 'O que é notitia criminis? Qual sua natureza jurídica e qual sua função no processo penal?',
+    pills: ['Art. 5º CPP', 'Cognição da autoridade', 'Não é ato processual'],
+    fundamento: 'Art. 5º do CPP. Doutrina: Guilherme de Souza Nucci, Renato Brasileiro de Lima, Fernando Capez.',
+    conceito: 'Notitia criminis é o conhecimento, pela autoridade policial, da ocorrência de um fato aparentemente criminoso. Não é ato processual — é fato jurídico que provoca a instauração da atividade investigatória. Natureza jurídica: condição para a instauração do inquérito policial de ofício (art. 5º, I CPP) ou por requisição/requerimento (art. 5º, II e III). Função: deflagrar a persecução penal na fase pré-processual. Não se confunde com a denúncia, com a queixa-crime nem com a representação — que são atos formais de iniciativa da ação penal.',
+    atencao: 'A notitia criminis não vincula obrigatoriamente a instauração do inquérito: o Delegado pode arquivar a notícia quando o fato narrado evidentemente não constituir infração penal, quando o autor for desconhecido ou quando estiver extinta a punibilidade — art. 5º, §3º do CPP (com a redação dada pelo Pacote Anticrime, Lei 13.964/2019). O arquivamento agora é homologado pelo órgão de revisão do MP, não pelo juiz.',
+    oral: 'A notitia criminis é o conhecimento, pela autoridade policial, da ocorrência de um fato aparentemente criminoso. Trata-se de fato jurídico — não de ato processual — que desencadeia a atividade investigatória na fase pré-processual. Sua função é deflagrar a persecução penal, podendo resultar na instauração de inquérito policial de ofício, por requisição do Ministério Público ou da autoridade judiciária, ou mediante requerimento do ofendido. Não se confunde com a representação, a queixa-crime ou a denúncia, que são atos formais de iniciativa da ação penal.',
+    dica: 'Notitia criminis: conhecimento do fato pelo Delegado → fase pré-processual. Não é denúncia, não é queixa, não é representação. Pode resultar em IP ou, se evidentemente atípico, em arquivamento direto pelo Delegado (art. 5º, §3º CPP — Pacote Anticrime).'
+  },
+  {
+    grupo: 'conceito', cat: 'Conceito e espécies', catClass: 'cat-navy',
+    title: 'Espécies de notitia criminis',
+    question: 'Quais são as espécies de notitia criminis? Como se classificam doutrinariamente?',
+    pills: ['Direta / indireta', 'Coercitiva', 'Cognição imediata'],
+    fundamento: 'Art. 5º, I, II e III do CPP. Classificação doutrinária (Renato Brasileiro, Nucci).',
+    conceito: 'A doutrina classifica a notitia criminis em três espécies: (1) DIRETA, IMEDIATA ou DE COGNIÇÃO DIRETA: a autoridade policial toma conhecimento do fato por meios próprios — rondas, flagrante presenciado, notícia pela imprensa, relatórios de inteligência. Instaura o IP de ofício (art. 5º, I CPP). (2) INDIRETA, MEDIATA ou DE COGNIÇÃO INDIRETA: o conhecimento chega à autoridade por meio de terceiros — delação de qualquer pessoa do povo (art. 5º, §3º CPP), requisição do MP ou do juiz (art. 5º, II), requerimento do ofendido (art. 5º, III), portaria do Delegado após boletim de ocorrência. (3) COERCITIVA: é a prisão em flagrante delito — a própria condução do preso ao Delegado constitui notícia do crime (art. 5º, II, in fine CPP). É a espécie mais relevante na prática policial.',
+    atencao: 'A notitia criminis coercitiva (flagrante) é a única que vincula imediatamente a lavratura do auto de prisão em flagrante e, consequentemente, a instauração do IP. Nas demais espécies, o Delegado tem discricionariedade técnica para avaliar se o fato narrado constitui infração penal antes de instaurar o IP. Qualquer pessoa do povo pode comunicar a prática de infração penal à autoridade policial (art. 5º, §3º) — dever cívico, não obrigação jurídica (salvo para funcionários públicos — art. 66 CPP).',
+    oral: 'A doutrina identifica três espécies de notitia criminis. A cognição direta ou imediata ocorre quando a própria autoridade policial toma conhecimento do fato por meios próprios — patrulhamento, informações de inteligência, notícia espontânea — permitindo a instauração do inquérito de ofício. A cognição indireta ou mediata se dá pela comunicação de terceiros: requerimento do ofendido, requisição do Ministério Público ou do juiz, ou delação de qualquer pessoa do povo. A notitia criminis coercitiva é a mais relevante na prática: é a prisão em flagrante delito, em que a própria condução do preso à autoridade policial deflagra a persecução e vincula a lavratura do auto de prisão em flagrante.',
+    dica: 'Três espécies: direta (Delegado descobre sozinho → IP de ofício), indireta (terceiro comunica → IP por requisição/requerimento), coercitiva (flagrante → lavratura obrigatória do APF). A coercitiva é a única que vincula imediatamente — nas demais há discricionariedade técnica do Delegado.'
+  },
+
+  // ── INQUÉRITO POLICIAL ──────────────────────────────────────────
+  {
+    grupo: 'inquerito', cat: 'Inquérito Policial', catClass: 'cat-purple',
+    title: 'Inquérito policial — natureza, características e valor probatório',
+    question: 'Qual a natureza jurídica do inquérito policial? Quais suas características? As provas do IP valem no processo?',
+    pills: ['Art. 4º CPP', 'Procedimento administrativo', 'Valor probatório relativo'],
+    fundamento: 'Arts. 4º a 23 do CPP. Doutrina e STF — RE 1.177.980 (Tema 1030).',
+    conceito: 'O inquérito policial é procedimento administrativo, inquisitorial, sigiloso, escrito e dispensável, presidido pelo Delegado de Polícia, destinado à apuração da autoria e materialidade de infrações penais para fundamentar a opinio delicti do MP. Características: (1) inquisitoriedade — sem contraditório obrigatório; (2) oficialidade — conduzido por autoridade pública; (3) oficiosidade — instaurado de ofício nos crimes de ação pública incondicionada; (4) indisponibilidade — o Delegado não pode arquivar de ofício (regra); (5) escrito (art. 9º CPP); (6) sigiloso (art. 20 CPP) — mas o advogado tem acesso às provas já documentadas (Súmula Vinculante 14 STF); (7) dispensabilidade — o MP pode oferecer denúncia sem IP.',
+    atencao: 'Valor probatório do IP: as provas produzidas no IP são elementos informativos — têm valor relativo e, em regra, não podem fundamentar isoladamente uma condenação. Provas cautelares, não repetíveis e antecipadas (art. 155 CPP) são exceção: produzidas no IP com contraditório diferido, podem fundar a condenação. O STF (RE 1.177.980) reafirmou que o juiz não pode condenar com base exclusivamente em elementos informativos do IP.',
+    oral: 'O inquérito policial é procedimento administrativo inquisitorial, presidido pelo Delegado de Polícia, destinado a apurar a autoria e a materialidade das infrações penais para subsidiar a opinio delicti do Ministério Público. Suas características fundamentais são: inquisitoriedade, sem contraditório obrigatório; oficialidade; oficiosidade nos crimes de ação pública incondicionada; indisponibilidade pelo Delegado; caráter escrito e sigiloso — embora a Súmula Vinculante 14 do STF assegure ao advogado acesso às provas já documentadas. Quanto ao valor probatório, os elementos informativos do IP têm valor relativo e não podem, por si sós, fundamentar condenação, ressalvadas as provas cautelares, não repetíveis e antecipadas.',
+    dica: 'IP: administrativo + inquisitorial + sigiloso + dispensável. SV 14: advogado acessa provas já documentadas. Art. 155 CPP: condenação não pode se basear exclusivamente em elementos do IP — exceto provas cautelares, não repetíveis e antecipadas.'
+  },
+  {
+    grupo: 'inquerito', cat: 'Inquérito Policial', catClass: 'cat-purple',
+    title: 'Instauração do IP — formas e prazo',
+    question: 'Como é instaurado o inquérito policial? Quais os prazos para conclusão? O que ocorre com o indiciado preso?',
+    pills: ['Art. 5º CPP', 'Art. 10 CPP', 'Prazo: 10/30 dias'],
+    fundamento: 'Arts. 5º e 10 do CPP. Lei 12.830/2013 (investigação criminal pelo Delegado).',
+    conceito: 'FORMAS DE INSTAURAÇÃO: portaria do Delegado (de ofício — art. 5º, I); requisição do MP ou do juiz (art. 5º, II — vincula o Delegado); requerimento do ofendido (art. 5º, III — Delegado pode indeferir, com recurso ao chefe de polícia); auto de prisão em flagrante (art. 5º, II, in fine). PRAZOS DE CONCLUSÃO (art. 10 CPP): indiciado PRESO — 10 dias (improrrogável, salvo crimes de tráfico de drogas: 30 dias — art. 51 Lei 11.343/06, e lei de crimes hediondos); indiciado SOLTO — 30 dias, prorrogáveis por igual período mediante requerimento fundamentado ao juiz. Delegado pode requerer prorrogação justificando complexidade.',
+    atencao: 'A requisição do MP ou do juiz para instauração do IP é obrigatória — o Delegado não pode se recusar, sob pena de prevaricação. Já o requerimento do ofendido é ato que pode ser indeferido fundamentadamente. O STF e o STJ reconhecem que o estouro do prazo do IP não gera nulidade automática do processo — é causa de constrangimento ilegal sanável por habeas corpus, mas não invalida a persecução.',
+    oral: 'O inquérito policial pode ser instaurado de quatro formas: por portaria do Delegado, de ofício, nos crimes de ação pública incondicionada; por requisição do Ministério Público ou do juiz, que vincula a autoridade policial; por requerimento do ofendido, que pode ser indeferido com recurso ao chefe de polícia; e pelo auto de prisão em flagrante. Quanto aos prazos de conclusão, o art. 10 do CPP estabelece dez dias para o indiciado preso e trinta dias para o solto, prorrogáveis mediante requerimento fundamentado. O descumprimento do prazo com indiciado preso configura constrangimento ilegal, podendo ser impugnado por habeas corpus, mas não invalida automaticamente a persecução penal.',
+    dica: 'Prazos: preso = 10 dias (improrrogável no CPP; 30 dias no tráfico). Solto = 30 dias, prorrogáveis. Requisição: vincula o Delegado (recusar = prevaricação). Requerimento: pode ser indeferido + recurso ao chefe de polícia. Prazo vencido: HC, não nulidade.'
+  },
+  {
+    grupo: 'inquerito', cat: 'Inquérito Policial', catClass: 'cat-purple',
+    title: 'Arquivamento do IP — novo regime (Pacote Anticrime)',
+    question: 'Como funciona o arquivamento do IP após a Lei 13.964/2019? O Delegado pode arquivar? Quem homologa?',
+    pills: ['Art. 28 CPP', 'Lei 13.964/2019', 'Órgão de revisão do MP'],
+    fundamento: 'Art. 28 do CPP, com redação dada pela Lei nº 13.964/2019 (Pacote Anticrime).',
+    conceito: 'Antes do Pacote Anticrime: o MP promovia o arquivamento e o juiz homologava (ou rejeitava, remetendo ao PGJ). Após a Lei 13.964/2019 (art. 28 CPP): o promotor que deixar de oferecer denúncia requererá o arquivamento diretamente ao ÓRGÃO DE REVISÃO DO MP (PGJ ou Câmara de revisão). O juiz foi retirado desse papel — não homologa mais o arquivamento. O Delegado também pode, diretamente, comunicar ao MP o seu entendimento pelo arquivamento (art. 5º, §3º CPP) quando o fato for evidentemente atípico, estiver extinta a punibilidade ou o autor for desconhecido. O MP pode: (a) concordar e arquivar; (b) complementar a investigação; (c) oferecer denúncia.',
+    atencao: 'O STF (ADI 6.298, 6.299, 6.300 e 6.305 — Min. Fux) suspendeu a eficácia do novo art. 28 CPP por tempo indeterminado em 2020, mantendo o sistema anterior (juiz homologa o arquivamento). Em 2023, o STF levantou parcialmente a suspensão, mas a implementação definitiva do novo modelo depende de regulamentação. Para provas: cobrar os dois sistemas e indicar o estado atual da implementação.',
+    oral: 'O arquivamento do inquérito policial sofreu alteração significativa com o Pacote Anticrime. Pela redação original do art. 28 do CPP, o promotor requeria o arquivamento ao juiz, que podia homologar ou discordar e remeter ao Procurador-Geral. Com a Lei 13.964 de 2019, o juiz foi excluído dessa função: o promotor passa a requerer o arquivamento ao órgão de revisão do próprio Ministério Público. No entanto, o STF suspendeu a eficácia desse dispositivo em 2020, mantendo o sistema anterior transitoriamente. Para a prova, é importante dominar os dois regimes e mencionar o estado de suspensão pelo STF, demonstrando atualização.',
+    dica: 'Antes de 2019: MP requer arquivamento → juiz homologa. Após Pacote Anticrime: MP requer ao órgão de revisão interno, juiz sai. Suspensão pelo STF em 2020: sistema anterior ainda vigora parcialmente. Na oral: cite os dois modelos + a suspensão + o julgamento das ADIs.'
+  },
+
+  // ── FLAGRANTE ───────────────────────────────────────────────────
+  {
+    grupo: 'flagrante', cat: 'Prisão em Flagrante', catClass: 'cat-coral',
+    title: 'Flagrante — espécies e requisitos',
+    question: 'Quais as espécies de flagrante delito previstas no CPP? O que é flagrante esperado, preparado e retardado?',
+    pills: ['Art. 302 CPP', 'Flagrante próprio', 'Flagrante retardado'],
+    fundamento: 'Art. 302 do CPP. Lei 12.850/2013 (flagrante retardado — organizações criminosas).',
+    conceito: 'ESPÉCIES LEGAIS (art. 302 CPP): (I) PRÓPRIO ou REAL: o agente está cometendo a infração; (II) IMPRÓPRIO ou IRREAL: perseguição logo após a infração; (III) PRESUMIDO ou FICTO: encontrado logo depois com instrumentos, armas, objetos ou papéis que façam presumir ser autor da infração; (IV) QUASI-FLAGRANTE: encontrado logo após em situação que faça presumir a autoria (extensão da perseguição). FLAGRANTE ESPERADO: a polícia, por informação prévia, aguarda a prática do crime para efetuar a prisão — VÁLIDO; não há crime impossível. FLAGRANTE PREPARADO ou PROVOCADO: a própria polícia induz o agente a cometer o crime — INVÁLIDO; crime impossível (Súmula 145 STF). FLAGRANTE RETARDADO ou DIFERIDO (ação controlada): a polícia posterga a prisão em flagrante para obter mais provas ou identificar coautores — previsto na Lei 12.850/13 (ORCRIM) e na Lei 11.343/06 (tráfico), exige autorização judicial prévia.',
+    atencao: 'A distinção entre flagrante esperado e preparado é ponto clássico de provas orais. No esperado, o crime ocorreria de qualquer forma — a polícia apenas aguarda. No preparado, sem a indução policial, o crime não ocorreria — daí a nulidade e o crime impossível (Súmula 145 STF). O flagrante retardado (ação controlada) exige autorização judicial e é exceção ao dever de imediata prisão.',
+    oral: 'O art. 302 do CPP prevê quatro modalidades de flagrante delito: o próprio, quando o agente está cometendo a infração; o impróprio, quando é perseguido logo após; o presumido, quando encontrado logo depois com objetos que indiquem a autoria; e o quase-flagrante, extensão da perseguição. A doutrina acrescenta outras figuras relevantes. O flagrante esperado é válido: a polícia aguarda a prática do crime com base em informação prévia, sem induzir o agente. O flagrante preparado ou provocado é nulo — a polícia induz o crime, configurando crime impossível pela Súmula 145 do STF. O flagrante retardado ou ação controlada, previsto na Lei 12.850/2013, posterga a prisão para colher mais provas ou identificar toda a cadeia criminosa, exigindo autorização judicial prévia.',
+    dica: 'Esperado: válido (polícia aguarda, crime ocorreria de qualquer forma). Preparado: inválido, crime impossível (S. 145 STF — polícia induziu). Retardado: válido com autorização judicial (ação controlada — Lei 12.850/13). Esses três são os mais cobrados na oral.'
+  },
+  {
+    grupo: 'flagrante', cat: 'Prisão em Flagrante', catClass: 'cat-coral',
+    title: 'Auto de prisão em flagrante — formalidades e audiência de custódia',
+    question: 'Quais as formalidades do APF? O que é audiência de custódia e qual o prazo para realizá-la?',
+    pills: ['Arts. 304–310 CPP', 'Audiência de custódia', '24 horas'],
+    fundamento: 'Arts. 304 a 310 do CPP. Resolução CNJ nº 213/2015. Lei 13.964/2019 (art. 310 CPP).',
+    conceito: 'LAVRATURA DO APF (art. 304): oitiva do condutor, testemunhas, do preso (advertido do direito ao silêncio — art. 5º, LXIII CF); se o autuado recusar-se a assinar, lavra-se a recusa. O APF não é a ação penal — é ato administrativo que formaliza a prisão em flagrante. Após a lavratura: o Delegado comunica ao juiz em 24h, entrega nota de culpa ao preso (art. 306 CPP). AUDIÊNCIA DE CUSTÓDIA (art. 310 CPP, com redação da Lei 13.964/2019): o preso deve ser apresentado ao juiz em até 24 horas da lavratura do APF. O juiz decide: (a) relaxar a prisão ilegal; (b) converter em preventiva, se presentes os requisitos; (c) conceder liberdade provisória com ou sem fiança. Também controla a legalidade da prisão e verifica eventual tortura ou maus-tratos.',
+    atencao: 'O STF (ADI 5.240 e ADPF 347) reconheceu a audiência de custódia como direito fundamental e determinou sua realização em todo o país. A Lei 13.964/2019 positivou o prazo de 24 horas no art. 310. O descumprimento do prazo NÃO gera nulidade automática da prisão, mas é constrangimento ilegal impugnável por HC. Na audiência de custódia, o juiz não analisa mérito da culpabilidade — apenas a legalidade da prisão e a necessidade de preventiva.',
+    oral: 'O auto de prisão em flagrante é o ato administrativo que formaliza a prisão, contendo a oitiva do condutor, das testemunhas e do próprio preso, que deve ser cientificado do direito ao silêncio. Após a lavratura, o Delegado comunica ao juiz em vinte e quatro horas e entrega nota de culpa ao autuado. A Lei 13.964 de 2019 positivou a audiência de custódia no art. 310 do CPP: o preso deve ser apresentado ao juiz no prazo de vinte e quatro horas, oportunidade em que este decidirá entre relaxar a prisão ilegal, converter em preventiva ou conceder liberdade provisória. A audiência também serve para verificar eventual tortura ou maus-tratos durante a prisão.',
+    dica: 'APF: condutor → testemunhas → preso (direito ao silêncio) → nota de culpa em 24h. Audiência de custódia: 24h → juiz decide: relaxar / converter em preventiva / liberdade provisória. Juiz não analisa mérito — só legalidade da prisão e necessidade de cautelar.'
+  },
+
+  // ── REPRESENTAÇÃO ───────────────────────────────────────────────
+  {
+    grupo: 'representacao', cat: 'Representação', catClass: 'cat-amber',
+    title: 'Representação — natureza, prazo e retratação',
+    question: 'O que é a representação nos crimes de ação pública condicionada? Qual o prazo? Admite retratação?',
+    pills: ['Art. 38 CPP', 'Decadência: 6 meses', 'Art. 25 CPP'],
+    fundamento: 'Arts. 24, 25 e 38 do CPP.',
+    conceito: 'Representação é a manifestação de vontade do ofendido (ou seu representante legal) autorizando o MP a promover a ação penal nos crimes de ação pública condicionada. Natureza jurídica: condição de procedibilidade — sem ela, o MP não pode oferecer denúncia. Prazo decadencial: 6 meses a partir do conhecimento da autoria (art. 38 CPP). A decadência extingue a punibilidade (art. 107, IV CP). Não exige forma especial — pode ser verbal, escrita, diretamente ao Delegado, ao MP ou ao juiz. RETRATAÇÃO: a representação pode ser retratada até o oferecimento da denúncia (art. 25 CPP). Após o oferecimento, é irretratável. Exceção: Lei Maria da Penha (art. 16 Lei 11.340/06) — retratação possível até o recebimento da denúncia, perante o juiz, em audiência designada para essa finalidade.',
+    atencao: 'Distinção importante: decadência (art. 38 CPP) = perda do direito de representar pelo decurso do prazo → extingue a punibilidade. Perempção (art. 60 CPP) = inércia do querelante na ação privada → extingue a punibilidade. São institutos distintos. A representação nos crimes de violência doméstica é irretratável após o recebimento da denúncia — o STF e o STJ pacificaram que a ação é pública incondicionada nos crimes da Lei Maria da Penha (Súmula 542 STJ).',
+    oral: 'A representação é a manifestação de vontade do ofendido autorizando o Ministério Público a promover a ação penal nos crimes de ação pública condicionada à representação. É condição de procedibilidade: sem ela, a denúncia não pode ser oferecida. O prazo é decadencial de seis meses, contado do conhecimento da autoria, e seu descumprimento extingue a punibilidade. Não exige forma especial — pode ser apresentada ao Delegado, ao Ministério Público ou ao juiz. Quanto à retratação, o art. 25 do CPP permite que seja feita até o oferecimento da denúncia. Nos crimes de violência doméstica, a retratação é possível até o recebimento da denúncia, perante o juiz em audiência específica, conforme o art. 16 da Lei Maria da Penha.',
+    dica: 'Representação: condição de procedibilidade + prazo de 6 meses (decadência). Retratação: até o OFERECIMENTO da denúncia (CPP). Exceção LMP: até o RECEBIMENTO, em audiência. Violência doméstica: ação pública incondicionada (S. 542 STJ) — representação não se aplica.'
+  },
+  {
+    grupo: 'representacao', cat: 'Representação', catClass: 'cat-amber',
+    title: 'Queixa-crime — ação penal privada e prazo',
+    question: 'O que é a queixa-crime? Qual o prazo decadencial? O MP pode aditar a queixa?',
+    pills: ['Art. 30 CPP', 'Art. 38 CPP', 'Ação penal privada'],
+    fundamento: 'Arts. 29, 30, 38 e 46 do CPP.',
+    conceito: 'A queixa-crime é a peça inaugural da ação penal privada, oferecida pelo ofendido ou seu representante legal, por meio de advogado. É equivalente particular da denúncia. Prazo decadencial: 6 meses do conhecimento da autoria (art. 38 CPP) — a decadência extingue a punibilidade (art. 107, IV CP). AÇÃO PENAL PRIVADA SUBSIDIÁRIA DA PÚBLICA (art. 29 CPP): quando o MP deixa escoar o prazo sem oferecer denúncia, arquivar ou requerer diligência — o ofendido pode oferecer queixa subsidiária. Prazo: 6 meses do esgotamento do prazo do MP. O MP funciona como fiscal (custos legis) e pode aditar a queixa, repudiá-la e oferecer denúncia substitutiva (se improcedente a rejeição), ou retomar a ação se o querelante se tornar incapaz.',
+    atencao: 'Institutos extintivos da punibilidade exclusivos da ação privada: perempção (art. 60 CPP — inércia do querelante), perdão do ofendido (extrajudicial ou judicial — art. 105 CP, aceito pelo querelado), renúncia ao direito de queixa (antes do ajuizamento — art. 104 CP). O MP não pode desistir da ação privada subsidiária — mas pode retomar se o querelante for negligente (art. 29 CPP). Renúncia em relação a um corréu se estende aos demais (art. 49 CPP).',
+    oral: 'A queixa-crime é a peça inaugural da ação penal privada, apresentada pelo ofendido por meio de advogado, e equivale à denúncia na ação pública. O prazo para seu oferecimento é decadencial de seis meses, contado do conhecimento da autoria, sob pena de extinção da punibilidade. Existe ainda a ação penal privada subsidiária da pública, prevista no art. 29 do CPP: quando o Ministério Público não age no prazo legal, o ofendido pode oferecer queixa subsidiária, e o MP assume o papel de fiscal da lei. São institutos exclusivos da ação privada: a perempção pela inércia do querelante, o perdão aceito pelo querelado e a renúncia ao direito de queixa antes do ajuizamento.',
+    dica: 'Queixa: 6 meses (decadência) + advogado obrigatório. Subsidiária (art. 29): MP inerte → ofendido oferece queixa, MP vira custos legis. Extinção exclusiva da privada: perempção, perdão aceito, renúncia. Renúncia a um = estende a todos os corréus (art. 49 CPP).'
+  },
+
+  // ── DISPENSABILIDADE ────────────────────────────────────────────
+  {
+    grupo: 'dispensabilidade', cat: 'Dispensabilidade do IP', catClass: 'cat-teal',
+    title: 'Dispensabilidade do inquérito policial',
+    question: 'O inquérito policial é obrigatório para o ajuizamento da ação penal? Em quais casos pode ser dispensado?',
+    pills: ['Art. 39 §5º CPP', 'Art. 46 §1º CPP', 'Justa causa'],
+    fundamento: 'Arts. 39, §5º e 46, §1º do CPP. STF — HC 73.271.',
+    conceito: 'O IP é DISPENSÁVEL. O MP pode oferecer denúncia com base em outros elementos de informação que não o inquérito policial, desde que presentes indícios de autoria e materialidade — a chamada justa causa para a ação penal (art. 395, III CPP). Hipóteses frequentes de dispensa: flagrante delito com APF robusto; termos circunstanciados (infrações de menor potencial ofensivo — Lei 9.099/95); inquéritos civis, CPI, procedimentos do MP, ação controlada; comunicação formal de crime com documentação suficiente; crimes falimentares (relatório do administrador judicial). Na ação penal privada: o ofendido pode ajuizar queixa diretamente (art. 30 CPP), sem aguardar conclusão do IP.',
+    atencao: 'A dispensabilidade do IP não significa que o MP pode denunciar sem nenhum elemento probatório mínimo — a justa causa para a ação penal (art. 395, III CPP) exige indícios razoáveis de autoria e prova da materialidade. A denúncia sem suporte probatório mínimo deve ser rejeitada pelo juiz por falta de justa causa. O STF entende que o MP pode realizar sua própria investigação criminal (RE 593.727 — Tema 184) e dispensar o IP quando tiver elementos suficientes.',
+    oral: 'O inquérito policial é dispensável. O Ministério Público pode oferecer denúncia com base em qualquer elemento que demonstre indícios de autoria e prova da materialidade delitiva — o que a doutrina denomina justa causa para a ação penal. As situações mais comuns de dispensa são o flagrante delito documentado em auto de prisão em flagrante robusto, os termos circunstanciados nas infrações de menor potencial ofensivo, investigações conduzidas pelo próprio MP, comissões parlamentares de inquérito e relatórios de administradores judiciais em crimes falimentares. Na ação penal privada, o ofendido pode igualmente ajuizar a queixa-crime diretamente, sem aguardar a conclusão do inquérito.',
+    dica: 'IP dispensável: MP denuncia com qualquer elemento que forme justa causa (art. 395, III). Flagrante + APF completo = base suficiente. TCO (Lei 9.099) = dispensa o IP. MP pode investigar diretamente (RE 593.727 — Tema 184 STF) e dispensar o IP. Sem justa causa: rejeição da denúncia.'
+  },
+  {
+    grupo: 'dispensabilidade', cat: 'Dispensabilidade do IP', catClass: 'cat-teal',
+    title: 'Controle externo da atividade policial pelo MP',
+    question: 'O MP exerce controle externo sobre a atividade policial? Qual o fundamento? Isso afasta a presidência do Delegado?',
+    pills: ['Art. 129 VII CF', 'LC 75/93', 'Lei 12.830/2013'],
+    fundamento: 'Art. 129, VII, da CF/88. LC nº 75/1993 (MP federal). Lei nº 12.830/2013 (investigação criminal pelo Delegado).',
+    conceito: 'CONTROLE EXTERNO (art. 129, VII CF): o MP tem função constitucional de exercer o controle externo da atividade policial, com o objetivo de garantir a autonomia funcional e operacional das polícias e o respeito aos direitos constitucionais. Abrange: fiscalização da legalidade das prisões, das condições de custódia, da regularidade dos inquéritos. NÃO significa subordinação da polícia ao MP. PRESIDÊNCIA DO IP (Lei 12.830/13): é exclusiva do Delegado de Polícia, bacharel em Direito, que conduz as investigações com discricionariedade técnica e jurídica. O MP pode requisitar diligências ao Delegado (art. 129, VIII CF e art. 13, II CPP), mas não pode avocar o IP nem presidir diretamente as investigações policiais.',
+    atencao: 'O STF (RE 593.727 — Tema 184) firmou que o MP pode realizar investigações criminais diretamente — mas isso não afasta nem diminui a atribuição investigatória do Delegado. São instâncias paralelas, não excludentes. A Lei 12.830/2013 reforçou a natureza jurídica da função do Delegado: atividade jurídica, com indiciamento como ato privativo fundamentado em análise técnico-jurídica — o MP não pode determinar o indiciamento.',
+    oral: 'O art. 129, VII da Constituição Federal confere ao Ministério Público a função de exercer o controle externo da atividade policial, visando garantir a legalidade das investigações e o respeito aos direitos fundamentais. Esse controle abrange a fiscalização das prisões, das condições de custódia e da regularidade dos inquéritos, sem configurar subordinação hierárquica da polícia ao MP. A presidência do inquérito policial permanece exclusiva do Delegado de Polícia, conforme a Lei 12.830 de 2013, que qualifica a atividade investigatória como função jurídica e reconhece o indiciamento como ato privativo e fundamentado do Delegado. O MP pode requisitar diligências, mas não presidir investigações policiais nem determinar indiciamentos.',
+    dica: 'Controle externo: MP fiscaliza legalidade (art. 129, VII CF) — não é subordinação. Presidência do IP: exclusiva do Delegado (Lei 12.830/13). Indiciamento: ato privativo e fundamentado do Delegado — MP não determina. MP pode investigar diretamente (RE 593.727), mas não avoca o IP policial.'
+  }
+];
+
+let filtered = [...allCards];
+let cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido — ideal para simular a banca'
+    : 'Resposta em blocos estruturados — ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? [...allCards] : allCards.filter(c => c.grupo === f);
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  const c = filtered[cur];
+
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(p => `<span class="pill">${p}</span>`).join('');
+
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+
+  document.getElementById('b-blocks').innerHTML = mode === 'oral' ? `
+    <div class="oral-answer">${c.oral}</div>
+    <div class="oral-tip"><div class="blbl">Dica para a banca</div><p>${c.dica}</p></div>
+  ` : `
+    <div class="b-block"><div class="blbl">Fundamento legal</div><p>${c.fundamento}</p></div>
+    <div class="b-block"><div class="blbl">Conceito e distinções</div><p>${c.conceito}</p></div>
+    <div class="b-alert"><div class="blbl">Atenção — ponto de prova</div><p>${c.atencao}</p></div>
+    <div class="b-tip"><div class="blbl">Dica de memorização</div><p>${c.dica}</p></div>
+  `;
+
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = `${cur + 1} / ${filtered.length} fichas`;
+
+  const sh = t => t.length > 28 ? t.substring(0, 28) + '…' : t;
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map((x, i) =>
+      `<button class="topic-btn ${i === cur ? 'active' : ''}" onclick="go(${i})">${i + 1}. ${sh(x.title)}</button>`
+    ).join('') + `<span class="counter-pill">${cur + 1} / ${filtered.length}</span>`;
+}
+
+function flip() { document.getElementById('card').classList.toggle('flipped'); }
+function go(i) { cur = i; render(); }
+function prev() { cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next() { cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>

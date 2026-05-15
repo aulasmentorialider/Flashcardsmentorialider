@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas — Ações Constitucionais | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  header{background:var(--navy);padding:1.5rem 2rem 1.25rem;}
+  .hbadge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px;}
+  header h1{font-size:20px;font-weight:600;color:#fff;}
+  header p{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;}
+  .hrow{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+  .hcount{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-left:auto;}
+
+  .mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mode-label{font-size:12px;color:var(--muted);font-weight:500;}
+  .toggle-wrap{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;gap:2px;}
+  .toggle-opt{font-size:11.5px;padding:4px 14px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-weight:500;transition:all .15s;}
+  .toggle-opt.active{background:var(--navy);color:#fff;}
+  .mode-hint{font-size:11px;color:var(--faint);}
+
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+  main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .progress-wrap{height:3px;background:var(--border);border-radius:999px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-bar{height:100%;background:var(--navy-mid);border-radius:999px;transition:width .3s ease;}
+
+  .topic-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem;align-items:center;}
+  .topic-btn{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500;font-family:'Sora',sans-serif;}
+  .topic-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .topic-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .counter-pill{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);white-space:nowrap;}
+
+  .card-scene{perspective:1200px;margin-bottom:1.5rem;}
+  .card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);min-height:290px;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;display:flex;flex-direction:column;}
+  .face.back{transform:rotateY(180deg);position:absolute;top:0;left:0;right:0;}
+
+  .f-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:1.1rem;width:fit-content;}
+  .cat-navy{background:var(--navy-light);color:var(--navy);}
+  .cat-teal{background:var(--teal-light);color:var(--teal);}
+  .cat-coral{background:var(--coral-light);color:var(--coral);}
+  .cat-amber{background:var(--amber-light);color:var(--amber);}
+  .cat-purple{background:var(--purple-light);color:var(--purple);}
+
+  .f-title{font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+  .f-question{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;flex:1;}
+  .f-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+  .hint-line{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;}
+
+  .oral-answer{font-size:14px;color:var(--text);line-height:1.8;border-left:3px solid var(--navy-mid);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:9px;}
+  .blbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .oral-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;}
+  .oral-tip .blbl{color:var(--teal);}
+  .oral-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+
+  .b-block{background:var(--bg);border-radius:10px;padding:11px 15px;margin-bottom:9px;}
+  .b-block .blbl{color:var(--faint);}
+  .b-block p{font-size:13px;color:var(--text);line-height:1.65;}
+  .b-alert{border-left:3px solid var(--coral);background:var(--coral-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-alert .blbl{color:var(--coral);}
+  .b-alert p{font-size:13px;color:#5a2010;line-height:1.65;}
+  .b-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-tip .blbl{color:var(--teal);}
+  .b-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+
+  .btn-row{display:flex;gap:8px;margin-top:1.4rem;}
+  .btn{flex:1;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:var(--bg);color:var(--text);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:#17316b;}
+
+  footer{text-align:center;padding:2rem 1rem;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+
+  @media(max-width:540px){
+    main{padding:1.25rem 1rem 3rem;}
+    header,.filter-bar,.mode-bar{padding:.75rem 1rem;}
+    .f-title{font-size:18px;}
+    .face{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG · Direito Constitucional</div>
+      <h1>Ações Constitucionais</h1>
+      <p>Fichas para prova oral e estudo ativo — responda em voz alta antes de revelar</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">🎤 Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">📚 Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido — ideal para simular a banca</span>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todas</button>
+  <button class="filter-btn" onclick="setFilter('hc',this)">Habeas Corpus</button>
+  <button class="filter-btn" onclick="setFilter('ms',this)">Mandado de Segurança</button>
+  <button class="filter-btn" onclick="setFilter('mi',this)">Mandado de Injunção</button>
+  <button class="filter-btn" onclick="setFilter('hd',this)">Habeas Data</button>
+  <button class="filter-btn" onclick="setFilter('ap',this)">Ação Popular</button>
+  <button class="filter-btn" onclick="setFilter('comparativo',this)">Comparativo</button>
+</div>
+
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar — simule a banca
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta ↓</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">↑ ocultar</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>Mentoria Líder · CFO PMMG · Material de uso exclusivo dos alunos</footer>
+
+<script>
+let mode = 'oral';
+
+const allCards = [
+
+  // ── HABEAS CORPUS ───────────────────────────────────────────────
+  {
+    grupo:'hc', cat:'Habeas Corpus', catClass:'cat-navy',
+    title:'Habeas corpus — conceito, objeto e legitimidade',
+    question:'O que é o habeas corpus? Qual seu objeto? Quem pode impetrar e quem pode ser paciente?',
+    pills:['Art. 5º LXVIII CF','Art. 647 CPP','Liberdade de locomoção'],
+    fundamento:'Art. 5º, LXVIII, da CF/88 e arts. 647 a 667 do CPP.',
+    conceito:'O habeas corpus é ação constitucional destinada a proteger a liberdade de locomoção — direito de ir, vir e permanecer — contra ilegalidade ou abuso de poder. OBJETO: (1) preventivo (salvo-conduto): ameaça à liberdade de locomoção; (2) liberatório (repressivo): constrição já consumada. LEGITIMIDADE ATIVA: qualquer pessoa, nacional ou estrangeira, em nome próprio ou de terceiro, inclusive analfabeta, sem necessidade de advogado (ius postulandi próprio). O MP também pode impetrar. LEGITIMIDADE PASSIVA (coator): autoridade pública ou particular que ameaça ou constrange a liberdade de locomoção. PACIENTE: qualquer pessoa física — não cabe HC em favor de pessoa jurídica.',
+    atencao:'O STF (Súmula 693) não admite HC para trancar ação penal por falta de justa causa quando já houve condenação com trânsito em julgado. Súmula 694 STF: não cabe HC para impugnar aplicação da pena de multa — não afeta a liberdade de locomoção. Súmula 695 STF: não cabe HC para reexame do mérito de processo disciplinar militar. Súmula 606 STF: não cabe HC dirigido ao STF contra decisão de turma recursal de JEF — o competente é o TRF.',
+    oral:'O habeas corpus é a ação constitucional prevista no art. 5º, LXVIII da Constituição para proteger a liberdade de locomoção contra ilegalidade ou abuso de poder. Pode ser preventivo, quando há ameaça à liberdade — resultando em salvo-conduto — ou liberatório, quando a constrição já ocorreu. Quanto à legitimidade, qualquer pessoa pode impetrar habeas corpus, inclusive estrangeiro e analfabeto, sem necessidade de advogado, em nome próprio ou de terceiro. O paciente deve ser pessoa física — a ação não se presta à tutela de pessoa jurídica. A autoridade coatora pode ser pública ou particular.',
+    dica:'HC: locomoção + ilegalidade ou abuso de poder. Preventivo = salvo-conduto. Liberatório = soltura. Sem advogado obrigatório (ius postulandi). Pessoa jurídica: não cabe HC. Multa: não cabe HC (S. 694 STF). Mérito disciplinar militar: não cabe HC (S. 695 STF).'
+  },
+  {
+    grupo:'hc', cat:'Habeas Corpus', catClass:'cat-navy',
+    title:'Habeas corpus — competência e hipóteses de cabimento',
+    question:'Como se define a competência para julgamento do HC? Em quais situações é cabível para trancar o inquérito ou a ação penal?',
+    pills:['Art. 102 I d CF','Art. 105 I c CF','Trancamento de IP'],
+    fundamento:'Arts. 102, I, d e II, a; 105, I, c; 108, I, d; 109, VII; e 5º, LXVIII, todos da CF/88.',
+    conceito:'COMPETÊNCIA: segue a autoridade coatora — STF: quando o coator for Tribunal Superior, Presidente da República, membros do CN, ministros de Estado, comandantes militares, membros do STF e STJ; STJ: quando coator for TRF, TJ, ministros de Estado, comandantes militares (em matéria não sujeita ao STF); TRFs e TJs: quando coator for juiz federal ou estadual, respectivamente; Juízes: quando coator for autoridade policial. TRANCAMENTO DE IP/AÇÃO PENAL: o HC é cabível para trancar o IP quando for manifestamente ilegal (fato atípico, punibilidade extinta ou ausência de justa causa). Critério do STF e STJ: apenas em situações teratológicas — não substitui recurso ordinário.',
+    atencao:'O STF firmou jurisprudência restritiva ao uso do HC como substituto de recurso ordinário — Súmula 691 STF: não compete ao STF conhecer HC impetrado contra decisão do relator que, em HC requerido a tribunal superior, indefere a liminar. Exceção: flagrante ilegalidade ou teratologia. O trancamento do IP por HC é medida excepcionalíssima — só em caso de atipicidade manifesta, extinção da punibilidade evidente ou ausência de suporte probatório mínimo.',
+    oral:'A competência para julgamento do habeas corpus é definida pela autoridade coatora. Compete ao STF quando o coator for Tribunal Superior ou autoridade com prerrogativa de foro naquela Corte. Ao STJ, quando o coator for TRF ou TJ. Aos TRFs e TJs, quando o coator for juiz federal ou estadual, respectivamente. O habeas corpus é cabível para trancar inquérito policial ou ação penal em situações excepcionais: atipicidade manifesta do fato narrado, extinção evidente da punibilidade ou ausência de justa causa. O STF e o STJ têm jurisprudência restritiva quanto ao uso do HC como substituto de recurso ordinário, admitindo-o apenas em casos de flagrante ilegalidade.',
+    dica:'Competência: segue o coator. STF → TS ou autoridade com foro no STF. STJ → TRF ou TJ. TRF/TJ → juiz. Trancamento de IP: excepcional — atipicidade manifesta, punibilidade extinta ou ausência de justa causa. HC não substitui recurso (S. 691 STF).'
+  },
+
+  // ── MANDADO DE SEGURANÇA ────────────────────────────────────────
+  {
+    grupo:'ms', cat:'Mandado de Segurança', catClass:'cat-purple',
+    title:'Mandado de segurança — conceito, requisitos e objeto',
+    question:'O que é o mandado de segurança? Quais os requisitos constitucionais? O que é direito líquido e certo?',
+    pills:['Art. 5º LXIX CF','Lei 12.016/2009','Direito líquido e certo'],
+    fundamento:'Art. 5º, LXIX e LXX, da CF/88 e Lei nº 12.016/2009.',
+    conceito:'O mandado de segurança é ação constitucional destinada a proteger direito líquido e certo não amparado por habeas corpus ou habeas data contra ilegalidade ou abuso de poder praticado por autoridade pública ou agente de pessoa jurídica no exercício de atribuições do Poder Público. DIREITO LÍQUIDO E CERTO: direito comprovável de plano, mediante prova pré-constituída — sem dilação probatória. Não é direito incontestável; é direito demonstrável documentalmente de imediato. MODALIDADES: MS individual (art. 5º, LXIX) — impetrado pelo titular do direito; MS coletivo (art. 5º, LXX) — impetrado por partido político com representação no CN, organização sindical, entidade de classe ou associação legalmente constituída há pelo menos 1 ano, em defesa dos interesses de seus membros ou associados.',
+    atencao:'Prazo decadencial: 120 dias do conhecimento do ato impugnado (art. 23 Lei 12.016/09) — prazo de direito material, não processual; decadência extingue o próprio direito de impetrar. O MS NÃO cabe: contra lei em tese (Súmula 266 STF); contra decisão judicial da qual caiba recurso com efeito suspensivo (Súmula 267 STF); contra decisão transitada em julgado (Súmula 268 STF). Liminar em MS: pode ser concedida quando presentes fumus boni iuris e periculum in mora — vedada quando implicar entrega de mercadorias ou bens da Fazenda Pública ou pagamento de vencimentos (art. 7º, §2º Lei 12.016/09).',
+    oral:'O mandado de segurança é a ação constitucional do art. 5º, LXIX da Constituição, destinada a proteger direito líquido e certo não tutelado por habeas corpus ou habeas data contra ilegalidade ou abuso de poder de autoridade pública ou de agente de pessoa jurídica no exercício de atribuições públicas. Direito líquido e certo é aquele demonstrável de plano, por prova documental pré-constituída, sem necessidade de dilação probatória. O prazo para impetração é decadencial de cento e vinte dias, contado da ciência do ato impugnado. O MS não cabe contra lei em tese, contra decisão da qual caiba recurso com efeito suspensivo nem contra decisão transitada em julgado, conforme as Súmulas 266, 267 e 268 do STF.',
+    dica:'MS: direito líquido e certo + ilegalidade ou abuso de poder + autoridade pública. Prazo: 120 dias (decadencial). Não cabe: lei em tese (S.266), recurso com efeito suspensivo disponível (S.267), trânsito em julgado (S.268). Coletivo: partido + sindicato + entidade de classe + associação (1 ano).'
+  },
+  {
+    grupo:'ms', cat:'Mandado de Segurança', catClass:'cat-purple',
+    title:'MS coletivo — legitimidade e objeto',
+    question:'Quem pode impetrar MS coletivo? Ele exige autorização expressa dos associados? Qual a diferença para o MS individual?',
+    pills:['Art. 5º LXX CF','Art. 21 Lei 12.016/09','Substituição processual'],
+    fundamento:'Art. 5º, LXX, da CF/88 e art. 21 da Lei nº 12.016/2009.',
+    conceito:'LEGITIMADOS (art. 5º, LXX CF): (a) partido político com representação no Congresso Nacional; (b) organização sindical, entidade de classe ou associação legalmente constituída e em funcionamento há pelo menos 1 ano. OBJETO: no MS coletivo, as entidades atuam como SUBSTITUTAS PROCESSUAIS — defendem direito dos membros ou associados independentemente de autorização expressa (STF — RE 193.382). O STJ pacificou (Súmula 629): a impetração de MS coletivo por entidade de classe em favor dos associados independe da autorização destes. Diferença do MS individual: no individual, o titular do direito impetra em nome próprio; no coletivo, a entidade impetra em nome próprio defendendo direito alheio (substituição).',
+    atencao:'O STF (RE 573.232 — Tema 82) distinguiu representação de substituição processual nas ações coletivas: para propor ação em nome dos associados, as associações precisam de autorização expressa (representação). No MS coletivo, porém, a entidade atua como substituta processual — não precisa de autorização. Essa distinção é ponto de prova relevante. Partido político: pode impetrar MS coletivo em defesa de qualquer interesse difuso ou coletivo, não apenas de seus filiados.',
+    oral:'O mandado de segurança coletivo do art. 5º, LXX pode ser impetrado por partido político com representação no Congresso Nacional, organização sindical, entidade de classe ou associação legalmente constituída há pelo menos um ano. Esses legitimados atuam como substitutos processuais — ou seja, defendem direito dos membros ou associados em nome próprio, sem necessidade de autorização expressa de cada um deles, conforme a Súmula 629 do STJ. É importante distinguir do regime geral das ações coletivas: nas ações em que as associações atuam como representantes, o STF exige autorização expressa dos associados; no MS coletivo, a substituição processual afasta essa exigência.',
+    dica:'MS coletivo: substituição processual (não precisam de autorização dos membros — S.629 STJ). Atenção: ações coletivas em geral = representação = exige autorização (RE 573.232 STF). Partido político: pode defender qualquer interesse difuso, não só de filiados.'
+  },
+
+  // ── MANDADO DE INJUNÇÃO ─────────────────────────────────────────
+  {
+    grupo:'mi', cat:'Mandado de Injunção', catClass:'cat-amber',
+    title:'Mandado de injunção — conceito, requisitos e efeitos',
+    question:'O que é o mandado de injunção? Quais os requisitos? Qual a posição atual do STF sobre os efeitos da decisão?',
+    pills:['Art. 5º LXXI CF','Lei 13.300/2016','Omissão normativa'],
+    fundamento:'Art. 5º, LXXI, da CF/88 e Lei nº 13.300/2016 (Lei do Mandado de Injunção).',
+    conceito:'O mandado de injunção é ação constitucional cabível sempre que a falta de norma regulamentadora torne inviável o exercício de direitos e liberdades constitucionais e das prerrogativas inerentes à nacionalidade, soberania e cidadania. Requisitos: (1) direito previsto na CF dependente de regulamentação; (2) omissão do poder normativo competente (legislativa, executiva ou regulamentadora); (3) nexo de causalidade entre a omissão e a inviabilidade do exercício do direito. EFEITOS DA DECISÃO (evolução do STF): posição inicial (concretista restrita individual — MI 107): fixava prazo para o legislador suprir a omissão; posição atual (concretista geral — MI 670, 708, 712 sobre greve dos servidores): o STF supre a omissão com efeitos erga omnes, aplicando norma análoga ao caso.',
+    atencao:'A Lei 13.300/2016 positivou o entendimento do STF: o juiz pode, na decisão, determinar a aplicação, no caso concreto, de norma análoga ou outro instrumento normativo existente (posição concretista). Pode ter efeitos inter partes (regra) ou erga omnes (quando a natureza do direito exigir — posição concretista geral). Distinção com ADO: o MI tutela direito subjetivo do impetrante; a ADO é controle abstrato de omissão constitucional, sem tutela individual.',
+    oral:'O mandado de injunção do art. 5º, LXXI da Constituição é cabível quando a falta de norma regulamentadora torna inviável o exercício de direitos e liberdades constitucionais. Seus requisitos são a previsão constitucional do direito, a omissão do poder normativo competente e o nexo causal entre essa omissão e a inviabilidade do exercício. Quanto aos efeitos, o STF evoluiu de uma posição não concretista — em que apenas comunicava a omissão ao legislador — para a posição concretista, hoje positivada na Lei 13.300 de 2016: o juiz supre a omissão aplicando norma análoga, com efeitos em regra inter partes, podendo ser erga omnes quando a natureza do direito assim exigir.',
+    dica:'MI: omissão normativa + inviabiliza direito constitucional. Efeitos: concretista (STF atual + Lei 13.300/16) — aplica norma análoga. Inter partes (regra) ou erga omnes (quando necessário). Diferença MI x ADO: MI = direito subjetivo (concreto). ADO = controle abstrato (sem tutela individual).'
+  },
+
+  // ── HABEAS DATA ─────────────────────────────────────────────────
+  {
+    grupo:'hd', cat:'Habeas Data', catClass:'cat-teal',
+    title:'Habeas data — conceito, objeto e legitimidade',
+    question:'O que é o habeas data? Qual seu objeto? Quando é cabível e quem pode impetrar?',
+    pills:['Art. 5º LXXII CF','Lei 9.507/1997','Dados pessoais'],
+    fundamento:'Art. 5º, LXXII, da CF/88 e Lei nº 9.507/1997.',
+    conceito:'O habeas data é ação constitucional destinada a: (a) assegurar o conhecimento de informações relativas à pessoa do impetrante constantes de registros ou bancos de dados de entidades governamentais ou de caráter público; (b) retificação de dados, quando não se prefira fazê-lo por processo sigiloso judicial ou administrativo; (c) anotação nos assentamentos do interessado de contestação ou explicação sobre dado verdadeiro mas justificável. LEGITIMIDADE ATIVA: apenas o titular dos dados — ação personalíssima. Pessoa jurídica também tem legitimidade (STJ — RHD 22). LEGITIMIDADE PASSIVA: entidades governamentais e entidades de caráter público (bancos de dados públicos). Não alcança bancos de dados privados sem caráter público.',
+    atencao:'Pressuposto de cabimento: prévio requerimento administrativo negado ou sem resposta no prazo (art. 2º Lei 9.507/97). Sem o requerimento administrativo prévio, falta interesse de agir — o HD não será conhecido (STJ — RHD 22 e Súmula 2 STJ). Distinção HD x MS: o HD tutela dados pessoais do próprio impetrante; o MS tutela direito líquido e certo não amparado por HC ou HD. Se a entidade nega o acesso a dados pessoais, o instrumento correto é o HD — não o MS.',
+    oral:'O habeas data é a ação constitucional prevista no art. 5º, LXXII da Constituição, destinada a assegurar ao titular o acesso a informações pessoais constantes de registros ou bancos de dados governamentais ou de caráter público, bem como sua retificação ou a inclusão de anotação contestando dado verdadeiro mas sujeito à explicação. É ação personalíssima — somente o titular dos dados pode impetrar, embora o STJ reconheça legitimidade também à pessoa jurídica quanto a seus próprios dados. Pressuposto indispensável de cabimento é o prévio requerimento administrativo negado ou não respondido no prazo, conforme a Súmula 2 do STJ — sem esse requisito, falta interesse de agir.',
+    dica:'HD: dados pessoais do próprio impetrante. Pressuposto: requerimento administrativo negado ou sem resposta (S.2 STJ). Sem requerimento prévio = sem interesse de agir. Entidade passiva: governamental ou de caráter público. Banco de dados privado sem caráter público: não cabe HD.'
+  },
+
+  // ── AÇÃO POPULAR ───────────────────────────────────────────────
+  {
+    grupo:'ap', cat:'Ação Popular', catClass:'cat-coral',
+    title:'Ação popular — conceito, legitimidade e objeto',
+    question:'O que é a ação popular? Quem pode propô-la? Qual seu objeto e quais os requisitos?',
+    pills:['Art. 5º LXXIII CF','Lei 4.717/1965','Cidadão — eleitor'],
+    fundamento:'Art. 5º, LXXIII, da CF/88 e Lei nº 4.717/1965.',
+    conceito:'A ação popular é instrumento de participação direta do cidadão na defesa do patrimônio público, da moralidade administrativa, do meio ambiente e do patrimônio histórico e cultural. LEGITIMIDADE ATIVA: qualquer CIDADÃO — nacional no pleno gozo dos direitos políticos (comprovado pelo título de eleitor). Estrangeiro, apátrida, pessoa jurídica, MP e partido político NÃO têm legitimidade. OBJETO (CF/88): anular ato lesivo ao patrimônio público ou de entidade de que o Estado participe; à moralidade administrativa; ao meio ambiente; ao patrimônio histórico e cultural. Requisitos: (1) ato administrativo (ou omissão) comissivo ou omissivo; (2) ilegalidade ou imoralidade; (3) lesividade ao patrimônio público ou valores protegidos.',
+    atencao:'Lesividade: o STF e o STJ pacificaram que, na ação popular por imoralidade administrativa, não é necessário demonstrar lesão patrimonial econômica — a lesão à moralidade é suficiente. O réu principal é o agente público que praticou o ato; a pessoa jurídica prejudicada (Fazenda Pública, autarquia) é litisconsorte passiva necessária — mas pode mudar de lado e defender o autor popular (art. 6º, §3º Lei 4.717/65). Sentença: eficácia erga omnes, salvo improcedência por insuficiência de provas — permite repropositura.',
+    oral:'A ação popular é o instrumento constitucional que confere ao cidadão a legitimidade para anular ato lesivo ao patrimônio público, à moralidade administrativa, ao meio ambiente ou ao patrimônio histórico e cultural. Somente o cidadão — nacional no pleno gozo dos direitos políticos, comprovado pelo título de eleitor — tem legitimidade para propô-la. Estrangeiros, pessoas jurídicas, Ministério Público e partidos políticos não têm legitimidade ativa. Os requisitos são a existência de ato administrativo, comissivo ou omissivo, ilegalidade ou imoralidade, e lesividade ao bem jurídico protegido. Quanto à lesividade, o STF dispensa a prova de dano patrimonial econômico quando o fundamento for a imoralidade administrativa.',
+    dica:'Ação popular: só CIDADÃO (eleitor). MP, PJ, partido, estrangeiro: não têm legitimidade. Objeto: patrimônio público + moralidade + meio ambiente + patrimônio histórico. Imoralidade: dispensa prova de lesão econômica (STF). Sentença: erga omnes, salvo improcedência por falta de provas (repropositura possível).'
+  },
+  {
+    grupo:'ap', cat:'Ação Popular', catClass:'cat-coral',
+    title:'Ação popular — competência, custas e MP',
+    question:'Qual a competência para julgamento da ação popular? O autor é isento de custas? Qual o papel do MP?',
+    pills:['Art. 5º LXXIII CF','Art. 6º Lei 4.717/65','Custas — litigância de má-fé'],
+    fundamento:'Art. 5º, LXXIII, da CF/88 e arts. 6º, 7º e 9º da Lei nº 4.717/1965.',
+    conceito:'COMPETÊNCIA: segue a origem do ato impugnado — ato federal: Justiça Federal; ato estadual ou municipal: Justiça Estadual. O STF tem competência originária quando o ato impugnado for praticado pelo Presidente da República, pelo Congresso Nacional ou por outros agentes com foro privilegiado no STF. CUSTAS: o autor popular é isento de custas e ônus de sucumbência, salvo comprovada má-fé (art. 5º, LXXIII CF). Se agir de má-fé, paga as custas em décuplo e os honorários. PAPEL DO MP: o MP atua como fiscal da lei (custos legis) na ação popular — não pode desistir da ação nem ser o autor. Se o autor desistir, o MP pode assumir a titularidade da ação (art. 9º Lei 4.717/65). Pessoa jurídica lesada: pode também atuar ao lado do autor popular.',
+    atencao:'A ação popular não tem prazo prescricional para impugnar atos nulos — apenas para atos anuláveis (5 anos — art. 21 Lei 4.717/65). Atos absolutamente nulos são imprescritíveis (STJ e STF). O STF já admitiu ação popular contra ato de particular que pratica função pública delegada. Coisa julgada: a improcedência por insuficiência de provas não faz coisa julgada material — qualquer cidadão pode repropor a ação com novas provas.',
+    oral:'A competência para julgamento da ação popular segue a origem do ato impugnado: Justiça Federal para atos federais e Justiça Estadual para atos estaduais e municipais. O autor popular goza de isenção de custas e de ônus de sucumbência, salvo comprovada má-fé, hipótese em que pagará as custas em décuplo e os honorários advocatícios. O Ministério Público atua na ação popular como fiscal da lei e, se o autor desistir da ação, pode assumir sua titularidade. A sentença de improcedência por insuficiência de provas não produz coisa julgada material, permitindo a repropositura por qualquer cidadão que disponha de novas provas.',
+    dica:'AP: gratuita para o autor (exceto má-fé — décuplo). MP = custos legis, pode assumir se autor desistir. Improcedência por falta de provas: sem coisa julgada material — pode repropor. Atos nulos: imprescritíveis. Atos anuláveis: 5 anos (art. 21 Lei 4.717/65).'
+  },
+
+  // ── COMPARATIVO ─────────────────────────────────────────────────
+  {
+    grupo:'comparativo', cat:'Quadro comparativo', catClass:'cat-teal',
+    title:'Ações constitucionais — quadro comparativo geral',
+    question:'Como comparar sistematicamente as cinco ações constitucionais quanto ao objeto, legitimidade, prazo e competência?',
+    pills:['HC, MS, MI, HD, AP','Art. 5º CF/88','Ponto mais cobrado'],
+    fundamento:'Arts. 5º, LXVIII a LXXIII, e art. 102 da CF/88.',
+    conceito:'HABEAS CORPUS: objeto = liberdade de locomoção; legitimado = qualquer pessoa; sem prazo; sem advogado obrigatório; isento de custas. MANDADO DE SEGURANÇA: objeto = direito líquido e certo (não amparado por HC ou HD); legitimado = titular do direito ou entidade (coletivo); prazo = 120 dias (decadencial); advogado obrigatório; custas. MANDADO DE INJUNÇÃO: objeto = omissão normativa que inviabiliza direito constitucional; legitimado = titular do direito; sem prazo fixo; advogado obrigatório. HABEAS DATA: objeto = dados pessoais em banco de dados público; legitimado = titular dos dados; pressuposto = requerimento prévio negado; sem prazo; advogado obrigatório. AÇÃO POPULAR: objeto = ato lesivo ao patrimônio público, moralidade, meio ambiente, patrimônio histórico; legitimado = cidadão (eleitor); prazo = 5 anos (atos anuláveis); gratuita (exceto má-fé); advogado obrigatório.',
+    atencao:'Pontos de distinção mais cobrados: (1) só o HC dispensa advogado; (2) só o HD exige requerimento administrativo prévio (S.2 STJ); (3) só a AP exige qualidade de cidadão-eleitor; (4) só o MS tem prazo decadencial de 120 dias; (5) MI e ADO ambos combatem omissão — MI tutela direito subjetivo, ADO é controle abstrato; (6) AP é gratuita, HC é gratuito, HD é gratuito — MS e MI têm custas. Essas comparações são o ponto de maior incidência em provas de CFO.',
+    oral:'As cinco ações constitucionais do art. 5º da Constituição têm objetos e requisitos distintos. O habeas corpus tutela a liberdade de locomoção, pode ser impetrado por qualquer pessoa sem advogado e sem prazo. O mandado de segurança protege direito líquido e certo não amparado por HC ou HD, exige prova pré-constituída e tem prazo decadencial de cento e vinte dias. O mandado de injunção combate omissão normativa que inviabiliza direito constitucional, com efeitos hoje concretistas. O habeas data assegura acesso, retificação ou anotação de dados pessoais em registros públicos, pressupondo requerimento administrativo prévio negado. A ação popular é exclusiva do cidadão-eleitor e visa anular atos lesivos ao patrimônio público, à moralidade, ao meio ambiente e ao patrimônio histórico.',
+    dica:'Só dispensa advogado: HC. Só exige requerimento prévio: HD (S.2 STJ). Só para cidadão-eleitor: AP. Prazo de 120 dias: MS. Omissão normativa: MI (concreto) e ADO (abstrato). Gratuitos: HC, HD e AP. Com custas: MS e MI. Essa tabela é o roteiro da banca.'
+  },
+  {
+    grupo:'comparativo', cat:'Quadro comparativo', catClass:'cat-teal',
+    title:'MI x ADO — distinções essenciais',
+    question:'Qual a diferença entre o mandado de injunção e a ação direta de inconstitucionalidade por omissão? Podem ser usados cumulativamente?',
+    pills:['Art. 5º LXXI CF','Art. 103 §2º CF','Lei 13.300/2016'],
+    fundamento:'Art. 5º, LXXI (MI) e art. 103, §2º (ADO), ambos da CF/88. Lei nº 13.300/2016.',
+    conceito:'MANDADO DE INJUNÇÃO: ação constitucional de natureza subjetiva — tutela direito individual ou coletivo inviabilizado por omissão normativa. Qualquer titular do direito pode impetrar. Competência: STF (omissões de órgãos federais com prerrogativa de foro), STJ, TSE, STM, TJs. Efeitos: em regra inter partes (concretista individual) ou erga omnes (concretista geral — quando necessário). AÇÃO DIRETA DE INCONSTITUCIONALIDADE POR OMISSÃO (ADO): controle concentrado abstrato de omissão inconstitucional. Legitimados: os mesmos da ADI (art. 103 CF). Competência: STF (omissão de norma federal ou estadual em face da CF). Efeitos: se procedente — ciência ao órgão omisso e, para omissão de órgão administrativo, prazo de 30 dias para suprir a omissão. Não concede o direito diretamente ao impetrante — não tem natureza subjetiva.',
+    atencao:'O STF admite a concomitância de MI e ADO quando a mesma omissão viola tanto um direito subjetivo (MI) quanto a Constituição em abstrato (ADO). Exemplos clássicos: greve dos servidores (MI 670, 708, 712 — STF aplicou Lei de Greve por analogia, efeitos erga omnes); aposentadoria especial do servidor público (MI 758 — STF). A Lei 13.300/2016 regulamentou o MI, consolidando a posição concretista do STF.',
+    oral:'O mandado de injunção e a ação direta de inconstitucionalidade por omissão combatem a mesma patologia constitucional — a omissão normativa —, mas se diferenciam estruturalmente. O mandado de injunção é ação de natureza subjetiva: qualquer titular do direito inviabilizado pode impetrar, e a decisão, em regra, produz efeitos inter partes, aplicando norma análoga ao caso concreto. A ADO é instrumento de controle abstrato: os legitimados são os do art. 103 da Constituição, e a decisão apenas comunica a omissão ao órgão omisso — não confere o direito diretamente ao interessado. O STF admite a utilização concomitante de ambas quando a mesma omissão viola um direito subjetivo e a Constituição em abstrato.',
+    dica:'MI: subjetivo, qualquer titular, inter partes (regra), aplica norma análoga. ADO: abstrato, legitimados do art. 103, erga omnes, só comunica a omissão — não confere o direito. Mesma omissão pode ensejar MI + ADO cumulativamente. MI 670/708/712: greve servidores — STF aplicou Lei 7.783/89 por analogia (posição concretista geral).'
+  },
+  {
+    grupo:'comparativo', cat:'Quadro comparativo', catClass:'cat-teal',
+    title:'HC x MS — quando usar cada um',
+    question:'Como identificar na prova se o instrumento correto é o HC ou o MS? Quais os casos de fronteira?',
+    pills:['Art. 5º LXVIII e LXIX CF','Liberdade de locomoção','Direito líquido e certo'],
+    fundamento:'Art. 5º, LXVIII e LXIX, da CF/88. Súmulas 269 e 271 STF.',
+    conceito:'REGRA DE IDENTIFICAÇÃO: HC → ameaça ou lesão à liberdade de locomoção. MS → direito líquido e certo que não seja liberdade de locomoção nem dados pessoais. CASOS DE FRONTEIRA: (1) pena de multa: não cabe HC (S. 694 STF) → cabe MS se houver direito líquido e certo; (2) pena restritiva de direitos: STF admite HC quando a conversão em privativa de liberdade for possível; (3) direito do preso que não seja a liberdade: MS (ex: progressão de regime negada ilegalmente — STJ admite HC por ser conexo à liberdade); (4) impetração em processo administrativo disciplinar militar: STF não admite HC para reexame do mérito (S. 695); (5) servidor público — direito a cargo, vencimento: MS; (6) ato judicial sem recurso ou com efeito suspensivo negado: MS (S. 267 STF — vedado quando há recurso com efeito suspensivo).',
+    atencao:'Súmula 269 STF: MS não é substituto de ação de cobrança. Súmula 271 STF: concessão de MS não produz efeitos patrimoniais em relação a período pretérito — só a partir da impetração. Súmula 266 STF: não cabe MS contra lei em tese. Quando há dúvida entre HC e MS na prova, o critério é simples: toca na liberdade de locomoção? HC. Não toca? MS (se direito líquido e certo). HD se envolve dados pessoais.',
+    oral:'A identificação do instrumento correto passa por um critério claro: se a lesão ou ameaça atinge a liberdade de locomoção, o instrumento é o habeas corpus; se envolve dados pessoais em registros públicos, o habeas data; nos demais casos de direito líquido e certo, o mandado de segurança. Nos casos de fronteira, destacam-se: a pena de multa, que não autoriza HC por não afetar a locomoção; a pena restritiva de direitos, em que o STF admite HC quando há risco de conversão em pena privativa de liberdade; e o processo administrativo disciplinar, em que o STF veda o HC para reexame do mérito, mas admite para vícios formais graves. As Súmulas 266, 267, 268, 269 e 271 do STF delimitam os contornos do mandado de segurança.',
+    dica:'Locomoção → HC. Dados pessoais → HD. Direito líquido e certo (resto) → MS. Pena de multa → sem HC (S.694). PAD militar — mérito → sem HC (S.695). MS não cobra (S.269). MS: efeitos só a partir da impetração — não retroativos (S.271). Decorar as súmulas = acertar as questões de fronteira.'
+  }
+];
+
+let filtered = [...allCards];
+let cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido — ideal para simular a banca'
+    : 'Resposta em blocos estruturados — ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? [...allCards] : allCards.filter(c => c.grupo === f);
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  const c = filtered[cur];
+
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(p => `<span class="pill">${p}</span>`).join('');
+
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+
+  document.getElementById('b-blocks').innerHTML = mode === 'oral' ? `
+    <div class="oral-answer">${c.oral}</div>
+    <div class="oral-tip"><div class="blbl">Dica para a banca</div><p>${c.dica}</p></div>
+  ` : `
+    <div class="b-block"><div class="blbl">Fundamento legal</div><p>${c.fundamento}</p></div>
+    <div class="b-block"><div class="blbl">Conceito e distinções</div><p>${c.conceito}</p></div>
+    <div class="b-alert"><div class="blbl">Atenção — ponto de prova</div><p>${c.atencao}</p></div>
+    <div class="b-tip"><div class="blbl">Dica de memorização</div><p>${c.dica}</p></div>
+  `;
+
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = `${cur + 1} / ${filtered.length} fichas`;
+
+  const sh = t => t.length > 28 ? t.substring(0, 28) + '…' : t;
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map((x, i) =>
+      `<button class="topic-btn ${i === cur ? 'active' : ''}" onclick="go(${i})">${i + 1}. ${sh(x.title)}</button>`
+    ).join('') + `<span class="counter-pill">${cur + 1} / ${filtered.length}</span>`;
+}
+
+function flip() { document.getElementById('card').classList.toggle('flipped'); }
+function go(i) { cur = i; render(); }
+function prev() { cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next() { cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>

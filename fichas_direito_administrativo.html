@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas — Direito Administrativo | Prova Oral CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F3864; --navy-mid: #2E5FA3; --navy-light: #dce8f8;
+    --teal: #0F6E56; --teal-light: #E1F5EE;
+    --coral: #993C1D; --coral-light: #FAECE7;
+    --amber: #854F0B; --amber-light: #FAEEDA;
+    --purple: #534AB7; --purple-light: #EEEDFE;
+    --bg: #f4f6fb; --surface: #fff;
+    --border: rgba(31,56,100,0.12);
+    --text: #1a1f2e; --muted: #5a6580; --faint: #9ba4bc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header { background: var(--navy); padding: 1.5rem 2rem 1.25rem; }
+  .hbadge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .12em; color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); padding: 4px 10px; border-radius: 4px; text-transform: uppercase; display: inline-block; margin-bottom: 6px; }
+  header h1 { font-size: 20px; font-weight: 600; color: #fff; line-height: 1.2; }
+  header p { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 3px; }
+  .hrow { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+  .hcount { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.35); margin-left: auto; }
+
+  /* MODO ORAL TOGGLE */
+  .mode-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: .65rem 2rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .mode-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .toggle-wrap { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 2px; gap: 2px; }
+  .toggle-opt { font-size: 11.5px; padding: 4px 14px; border-radius: 999px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: 'Sora', sans-serif; font-weight: 500; transition: all .15s; }
+  .toggle-opt.active { background: var(--navy); color: #fff; }
+  .mode-hint { font-size: 11px; color: var(--faint); margin-left: 4px; }
+
+  .filter-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: .65rem 2rem; display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn { font-family: 'Sora', sans-serif; font-size: 11.5px; font-weight: 500; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .15s; }
+  .filter-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  main { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .progress-wrap { height: 3px; background: var(--border); border-radius: 999px; margin-bottom: 1.5rem; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--navy-mid); border-radius: 999px; transition: width .3s ease; }
+
+  .topic-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.75rem; align-items: center; }
+  .topic-btn { font-family: 'Sora', sans-serif; font-size: 11px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all .15s; font-weight: 500; }
+  .topic-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .topic-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .counter-pill { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--faint); white-space: nowrap; }
+
+  /* CARD */
+  .card-scene { perspective: 1200px; margin-bottom: 1.5rem; }
+  .card-inner { position: relative; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.4,0,.2,1); min-height: 290px; }
+  .card-inner.flipped { transform: rotateY(180deg); }
+  .face { backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem 2rem; display: flex; flex-direction: column; }
+  .face.back { transform: rotateY(180deg); position: absolute; top: 0; left: 0; right: 0; }
+
+  .f-cat { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 1.1rem; width: fit-content; }
+  .cat-navy   { background: var(--navy-light);   color: var(--navy); }
+  .cat-teal   { background: var(--teal-light);   color: var(--teal); }
+  .cat-coral  { background: var(--coral-light);  color: var(--coral); }
+  .cat-amber  { background: var(--amber-light);  color: var(--amber); }
+  .cat-purple { background: var(--purple-light); color: var(--purple); }
+
+  .f-title    { font-size: 21px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: .6rem; }
+  .f-question { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 1.25rem; flex: 1; }
+  .f-pills    { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.4rem; }
+  .pill { font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 3px 9px; border-radius: 4px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+  .hint-line  { font-size: 11.5px; color: var(--faint); display: flex; align-items: center; gap: 6px; margin-bottom: 1.25rem; }
+
+  /* MODO ORAL: resposta em texto contínuo */
+  .oral-answer { font-size: 14px; color: var(--text); line-height: 1.8; margin-bottom: 1rem; flex: 1; border-left: 3px solid var(--navy-mid); padding-left: 14px; background: var(--navy-light); border-radius: 0 10px 10px 0; padding: 14px 16px; }
+  .oral-tip { border-left: 3px solid var(--teal); background: var(--teal-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-top: 9px; }
+  .oral-tip .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--teal); margin-bottom: 5px; }
+  .oral-tip p { font-size: 13px; color: #0a3d2e; line-height: 1.65; }
+
+  /* MODO ESTUDO: blocos */
+  .b-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 1.1rem; }
+  .b-block { background: var(--bg); border-radius: 10px; padding: 11px 15px; margin-bottom: 9px; }
+  .b-block .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 5px; }
+  .b-block p { font-size: 13px; color: var(--text); line-height: 1.65; }
+  .b-alert { border-left: 3px solid var(--coral); background: var(--coral-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-bottom: 9px; }
+  .b-alert .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--coral); margin-bottom: 5px; }
+  .b-alert p { font-size: 13px; color: #5a2010; line-height: 1.65; }
+  .b-tip { border-left: 3px solid var(--teal); background: var(--teal-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-bottom: 9px; }
+  .b-tip .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--teal); margin-bottom: 5px; }
+  .b-tip p { font-size: 13px; color: #0a3d2e; line-height: 1.65; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 1.4rem; }
+  .btn { flex: 1; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .15s; }
+  .btn:hover { background: var(--bg); color: var(--text); }
+  .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .btn-primary:hover { background: #17316b; }
+
+  footer { text-align: center; padding: 2rem 1rem; font-size: 11.5px; color: var(--faint); border-top: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; letter-spacing: .05em; }
+
+  @media (max-width: 540px) {
+    main { padding: 1.25rem 1rem 3rem; }
+    header { padding: 1.25rem 1rem; }
+    .filter-bar, .mode-bar { padding: .65rem 1rem; }
+    .f-title { font-size: 18px; }
+    .face { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG · Prova Oral · Direito Administrativo</div>
+      <h1>Direito Administrativo</h1>
+      <p>Fichas para prova oral e estudo ativo — responda em voz alta antes de revelar</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral', this)">🎤 Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo', this)">📚 Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido — ideal para simular a banca</span>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all', this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('principios', this)">Princípios</button>
+  <button class="filter-btn" onclick="setFilter('ato', this)">Ato Administrativo</button>
+  <button class="filter-btn" onclick="setFilter('licitacao', this)">Licitação</button>
+  <button class="filter-btn" onclick="setFilter('servidor', this)">Servidor Público</button>
+  <button class="filter-btn" onclick="setFilter('processo', this)">Processo Adm.</button>
+  <button class="filter-btn" onclick="setFilter('responsabilidade', this)">Responsabilidade</button>
+  <button class="filter-btn" onclick="setFilter('poder', this)">Poderes Adm.</button>
+</div>
+
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 18.5a6.5 6.5 0 100-13 6.5 6.5 0 000 13z"/><path d="M12 14v-4m0-2v-.5"/></svg>
+          Responda em voz alta antes de revelar — simule a banca
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta ↓</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" class="b-title"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">↑ ocultar</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>Mentoria Líder · CFO PMMG · Material de uso exclusivo dos alunos</footer>
+
+<script>
+let mode = 'oral';
+
+const allCards = [
+
+  // ── PRINCÍPIOS ──────────────────────────────────────────────────
+  {
+    grupo: 'principios', cat: 'Princípios', catClass: 'cat-navy',
+    title: 'Princípios expressos da Administração Pública',
+    question: 'Quais são os princípios expressos no art. 37 da CF/88? Explique cada um em uma frase.',
+    pills: ['Art. 37 CF/88', 'LIMPE', 'Caráter normativo'],
+    fundamento: 'Art. 37, caput, da CF/88.',
+    conceito: 'LEGALIDADE: a Administração só pode fazer o que a lei autoriza — ao contrário do particular, que pode fazer tudo o que a lei não proíbe. IMPESSOALIDADE: a atuação administrativa deve ser dirigida ao interesse público, sem favoritismos ou perseguições; o ato é do órgão, não do agente. MORALIDADE: exige probidade, boa-fé e ética na conduta administrativa — não basta a legalidade formal. PUBLICIDADE: os atos administrativos devem ser divulgados, ressalvadas as hipóteses de sigilo previstas em lei. EFICIÊNCIA (EC 19/1998): a Administração deve atuar com qualidade, celeridade e economicidade, buscando os melhores resultados com os recursos disponíveis.',
+    atencao: 'A LIMPE tem caráter normativo — vincula todos os Poderes e esferas. A moralidade é autônoma em relação à legalidade: um ato pode ser legal e imoral (ex: nepotismo cruzado antes da Súmula Vinculante 13). A eficiência foi acrescentada pela EC 19/98 — não constava da redação original.',
+    oral: 'Os princípios expressos no art. 37 da CF/88 formam o acrônimo LIMPE: Legalidade, Impessoalidade, Moralidade, Publicidade e Eficiência. A legalidade submete a Administração à lei — ela só age onde a lei autoriza. A impessoalidade veda favorecimentos e perseguições, orientando a atuação ao interesse público. A moralidade exige conduta proba e ética, indo além da mera legalidade formal. A publicidade impõe transparência nos atos, ressalvados os casos de sigilo. A eficiência, acrescentada pela EC 19/1998, exige qualidade, celeridade e economicidade na prestação dos serviços públicos.',
+    dica: 'Na prova oral: cite o artigo, o acrônimo, e explique cada princípio em uma frase curta e precisa. Encerre mencionando que são normas de eficácia imediata e vinculam todos os Poderes.'
+  },
+  {
+    grupo: 'principios', cat: 'Princípios', catClass: 'cat-navy',
+    title: 'Princípio da legalidade vs. princípio da reserva legal',
+    question: 'Qual a diferença entre o princípio da legalidade administrativa e o princípio da reserva legal? Como o STF os distingue?',
+    pills: ['Art. 5º II CF', 'Art. 37 CF', 'Legalidade ampla x estrita'],
+    fundamento: 'Art. 5º, II (legalidade geral) e art. 37, caput (legalidade administrativa) da CF/88.',
+    conceito: 'LEGALIDADE GERAL (art. 5º, II): ninguém é obrigado a fazer ou deixar de fazer algo senão em virtude de lei — vínculo negativo para o particular. LEGALIDADE ADMINISTRATIVA (art. 37): a Administração só pode agir com fundamento em lei — vínculo positivo (a lei é condição habilitante). RESERVA LEGAL: exige que determinada matéria seja regulada especificamente por lei formal (lei em sentido estrito), não bastando ato normativo secundário (decreto, portaria). Ex: crimes e penas só por lei (art. 5º, XXXIX). O STF distingue reserva legal absoluta (exige lei em sentido formal) de reserva legal relativa (admite regulamentação por ato infralegal desde que a lei fixe os parâmetros).',
+    atencao: 'O STF admite regulamentação infralegal de direitos quando há autorização legal expressa e parâmetros definidos em lei — não há violação à legalidade. A Administração NÃO pode inovar na ordem jurídica por decreto autônomo, salvo nas hipóteses do art. 84, VI da CF (organização administrativa e extinção de cargos vagos).',
+    oral: 'A legalidade geral do art. 5º, II impõe ao particular que só é obrigado ao que a lei determina — é um vínculo negativo. A legalidade administrativa do art. 37 é mais intensa: a Administração só pode agir onde a lei autoriza — é um vínculo positivo ou habilitante. Já a reserva legal diz respeito à fonte normativa exigida: certas matérias só podem ser disciplinadas por lei em sentido formal, não por decreto ou portaria. O STF distingue reserva absoluta — como em matéria penal — de reserva relativa, onde a lei pode delegar parâmetros para regulamentação infralegal.',
+    dica: 'Particular: pode tudo que a lei não proíbe. Administração: só pode o que a lei permite. Reserva legal: a matéria exige lei formal, não basta ato infralegal. Três conceitos distintos que a banca frequentemente mistura.'
+  },
+  {
+    grupo: 'principios', cat: 'Princípios', catClass: 'cat-navy',
+    title: 'Supremacia do interesse público e indisponibilidade',
+    question: 'O que são os princípios da supremacia do interesse público e da indisponibilidade? São absolutos? Há críticas doutrinárias?',
+    pills: ['Interesse público primário', 'Interesse público secundário', 'Humberto Ávila'],
+    fundamento: 'Princípios implícitos — base da atuação administrativa. Doutrina: Celso Antônio Bandeira de Mello, Maria Sylvia Di Pietro, Humberto Ávila.',
+    conceito: 'SUPREMACIA: o interesse público prevalece sobre o privado, justificando prerrogativas da Administração (autoexecutoriedade, imperatividade, autotutela). INDISPONIBILIDADE: o administrador não pode dispor do interesse público — não é titular, é gestor. Obriga a observância da lei e vedação de renúncia a poderes. Distinção: interesse público PRIMÁRIO (da coletividade) x SECUNDÁRIO (do Estado como pessoa jurídica — patrimonial). A supremacia tutela o primário, não o secundário.',
+    atencao: 'Humberto Ávila e a corrente neoconstitucionalista questionam a supremacia como princípio absoluto: sustentam que não há hierarquia a priori entre interesse público e direitos fundamentais — a colisão exige ponderação. O STF, na prática, aplica a proporcionalidade para resolver conflitos, sem reconhecer supremacia automática. Posição majoritária ainda aceita a supremacia como vetor, mas não como absoluta.',
+    oral: 'A supremacia do interesse público é princípio implícito que justifica as prerrogativas da Administração sobre o particular — autotutela, imperatividade, autoexecutoriedade. A indisponibilidade complementa: o administrador é gestor, não titular do interesse público, e não pode renunciar às competências que a lei lhe confere. É importante destacar que a doutrina mais moderna, como a de Humberto Ávila, questiona a supremacia como princípio absoluto, defendendo que conflitos entre interesse público e direitos fundamentais devem ser resolvidos por ponderação. O STF tem adotado esse entendimento ao aplicar a proporcionalidade nesses casos.',
+    dica: 'Na prova oral: cite a posição clássica (Celso Antônio) e a crítica moderna (Ávila). Demonstrar conhecimento do debate doutrinário é diferencial em banca de CFO.'
+  },
+
+  // ── ATO ADMINISTRATIVO ──────────────────────────────────────────
+  {
+    grupo: 'ato', cat: 'Ato Administrativo', catClass: 'cat-purple',
+    title: 'Elementos (requisitos) do ato administrativo',
+    question: 'Quais são os elementos do ato administrativo? O que torna um ato válido ou inválido?',
+    pills: ['Art. 2º Lei 4.717/65', 'CFMOF', 'Vício em cada elemento'],
+    fundamento: 'Art. 2º da Lei nº 4.717/1965 (Ação Popular). Doutrina: Hely Lopes Meirelles, Celso Antônio Bandeira de Mello.',
+    conceito: 'Os cinco elementos são: COMPETÊNCIA (sujeito): aptidão legal para praticar o ato — vício gera nulidade (exceto aparência e convalidação). FINALIDADE: resultado previsto em lei — desvio de finalidade gera nulidade insanável. FORMA: modo de exteriorização do ato — vício em regra é sanável (convalidação), salvo se a forma for essencial. MOTIVO: situação de fato e de direito que fundamenta o ato — sujeito à Teoria dos Motivos Determinantes (o motivo alegado vincula a validade). OBJETO (conteúdo): efeito jurídico produzido — deve ser lícito, possível, determinado.',
+    atencao: 'Teoria dos Motivos Determinantes: se a Administração fundamenta o ato em motivo falso ou inexistente, o ato é inválido — ainda que não fosse obrigada a motivar. Vício de finalidade e objeto são INSANÁVEIS (não admitem convalidação). Vício de competência e forma admitem convalidação em regra. Vício de motivo depende do caso.',
+    oral: 'O ato administrativo tem cinco elementos: competência, finalidade, forma, motivo e objeto. A competência é a aptidão legal do agente para agir; seu vício, em regra, gera nulidade, ressalvada a convalidação nos casos de competência exclusiva não infringida. A finalidade é o resultado de interesse público previsto em lei; o desvio de finalidade é vício insanável. A forma é o modo de exteriorização do ato; salvo quando essencial, admite convalidação. O motivo é a situação fática e jurídica que fundamenta o ato, sujeito à Teoria dos Motivos Determinantes. E o objeto é o efeito jurídico produzido, que deve ser lícito e possível.',
+    dica: 'Mnemônico: C-F-F-M-O (Competência, Finalidade, Forma, Motivo, Objeto). Insanáveis: finalidade e objeto. Sanáveis: competência e forma (regra). Na prova oral: mencione a Teoria dos Motivos Determinantes — diferencia o candidato.'
+  },
+  {
+    grupo: 'ato', cat: 'Ato Administrativo', catClass: 'cat-purple',
+    title: 'Atributos do ato administrativo',
+    question: 'Quais os atributos do ato administrativo? O que é autoexecutoriedade e em que casos ela se aplica?',
+    pills: ['Presunção de legitimidade', 'Imperatividade', 'Autoexecutoriedade'],
+    fundamento: 'Doutrina majoritária (Hely, Di Pietro, Celso Antônio). Não há previsão expressa em artigo único.',
+    conceito: 'PRESUNÇÃO DE LEGITIMIDADE E VERACIDADE: o ato presume-se válido e verdadeiro até prova em contrário — presunção relativa (iuris tantum). Inverte o ônus da prova: quem alega a invalidade deve provar. IMPERATIVIDADE: o ato impõe obrigações unilateralmente, independentemente da concordância do particular. Não se aplica a atos enunciativos (certidões, atestados). AUTOEXECUTORIEDADE: a Administração pode executar o ato diretamente, sem necessidade de autorização judicial prévia. Aplica-se: (a) quando a lei expressamente autorizar; (b) em situações de urgência. Não é atributo geral — depende de previsão legal ou urgência.',
+    atencao: 'A autoexecutoriedade NÃO é regra absoluta — a Administração não pode demolir imóvel, cobrar crédito tributário ou aplicar sanção grave sem processo. A presunção de legitimidade é relativa — o STF admite controle judicial de atos discricionários quanto à razoabilidade e proporcionalidade. Tipicidade é atributo reconhecido pela doutrina moderna: o ato deve corresponder a figura prevista em lei.',
+    oral: 'Os atributos do ato administrativo são a presunção de legitimidade e veracidade, a imperatividade e a autoexecutoriedade. A presunção é relativa — inverte o ônus da prova em favor da Administração. A imperatividade permite impor obrigações ao particular de forma unilateral. A autoexecutoriedade é o atributo mais relevante para a prova oral: autoriza a Administração a executar o ato sem prévia autorização judicial, mas apenas quando a lei o autorizar expressamente ou em situações de urgência — não é atributo geral. A doutrina moderna acrescenta a tipicidade: o ato deve ter figura prevista em lei, vedando o atípico.',
+    dica: 'Autoexecutoriedade: não é sempre — só com lei expressa ou urgência. Presunção: relativa, não absoluta. Na oral: demonstre que conhece os limites dos atributos, não apenas sua enunciação.'
+  },
+  {
+    grupo: 'ato', cat: 'Ato Administrativo', catClass: 'cat-purple',
+    title: 'Revogação x Anulação x Convalidação',
+    question: 'Qual a diferença entre revogação, anulação e convalidação de atos administrativos? Quais os prazos e limites?',
+    pills: ['Súmula 473 STF', 'Art. 54 Lei 9.784/99', '5 anos para anular'],
+    fundamento: 'Súmula 473 do STF. Art. 54 da Lei nº 9.784/1999 (processo administrativo federal).',
+    conceito: 'REVOGAÇÃO: retirada do ato válido por razões de conveniência e oportunidade (mérito). Efeitos ex nunc (não retroage). Só a Administração pode revogar. Não cabível em atos vinculados, atos que exauriram efeitos, atos que geram direitos adquiridos ou atos já apreciados definitivamente pelo Judiciário. ANULAÇÃO: retirada do ato inválido (vício de legalidade). Efeitos ex tunc (retroativos). Pode ser feita pela Administração (autotutela) ou pelo Judiciário. Prazo decadencial: 5 anos para a Administração anular atos que geraram efeitos favoráveis ao administrado de boa-fé (art. 54, Lei 9.784/99 — âmbito federal). CONVALIDAÇÃO: sanar o vício do ato inválido, tornando-o válido retroativamente. Admitida apenas para vícios sanáveis (competência e forma, em regra).',
+    atencao: 'Súmula 473 STF: a Administração pode anular seus atos quando eivados de vícios que os tornem ilegais, ou revogá-los por motivo de conveniência ou oportunidade. O prazo de 5 anos do art. 54 da Lei 9.784/99 aplica-se apenas à esfera federal e somente a atos que geraram efeitos favoráveis — não é prazo universal. Atos com efeitos desfavoráveis ao administrado podem ser anulados a qualquer tempo.',
+    oral: 'Revogação, anulação e convalidação são formas distintas de desfazimento ou saneamento do ato administrativo. A revogação atinge ato válido por razões de mérito — conveniência e oportunidade — com efeitos ex nunc. A anulação atinge ato inválido por vício de legalidade, com efeitos ex tunc, podendo ser realizada pela própria Administração, em autotutela, ou pelo Judiciário. Para atos que geraram efeitos favoráveis ao administrado de boa-fé, o art. 54 da Lei 9.784/99 estabelece prazo decadencial de cinco anos. A convalidação, por sua vez, sana o vício do ato inválido de forma retroativa, sendo admitida apenas para vícios de competência e forma, em regra.',
+    dica: 'Resumo: revogação = válido + mérito + ex nunc. Anulação = inválido + legalidade + ex tunc. Convalidação = inválido + vício sanável + ex tunc. Prazos: anulação de ato favorável = 5 anos (Lei 9.784 — federal).'
+  },
+
+  // ── LICITAÇÃO ───────────────────────────────────────────────────
+  {
+    grupo: 'licitacao', cat: 'Licitação', catClass: 'cat-teal',
+    title: 'Licitação — fundamento constitucional e finalidade',
+    question: 'Qual o fundamento constitucional da licitação? Quais suas finalidades? A Lei 14.133/2021 revogou a Lei 8.666/93?',
+    pills: ['Art. 37 XXI CF', 'Lei 14.133/2021', 'Nova Lei de Licitações'],
+    fundamento: 'Art. 37, XXI, da CF/88. Lei nº 14.133/2021 (Nova Lei de Licitações e Contratos — NLLC).',
+    conceito: 'Fundamento constitucional: art. 37, XXI — ressalvados os casos especificados na legislação, as obras, serviços, compras e alienações serão contratados mediante processo de licitação pública. Finalidades (art. 11, NLLC): assegurar isonomia entre os licitantes; selecionar a proposta mais vantajosa; promover o desenvolvimento nacional sustentável; fortalecer a integridade e a eficiência administrativa. A Lei 14.133/2021 revogou a Lei 8.666/93, a Lei 10.520/2002 (pregão) e parte da Lei 12.462/2011 (RDC), com período de transição de 2 anos (até abril/2023). Atualmente a NLLC é a norma vigente.',
+    atencao: 'Dispensável ≠ dispensada: a licitação dispensável (art. 75 NLLC) é hipótese em que a lei autoriza a dispensa — mas o administrador ainda avalia a conveniência. A inexigibilidade (art. 74) ocorre quando a competição é impossível (fornecedor exclusivo, notória especialização, artistas consagrados). Toda dispensa e inexigibilidade deve ser motivada e publicada.',
+    oral: 'A licitação tem fundamento no art. 37, XXI da Constituição Federal, que impõe ao poder público a contratação mediante processo isonômico de seleção. A Lei 14.133 de 2021 — Nova Lei de Licitações — revogou a Lei 8.666/93 e unificou o regime licitatório. Suas finalidades são: assegurar isonomia, selecionar a proposta mais vantajosa para a Administração e promover o desenvolvimento nacional sustentável. A lei prevê hipóteses de dispensa — quando a competição é viável mas a lei a afasta por razões de conveniência — e de inexigibilidade — quando a competição é inviável por natureza, como nos casos de fornecedor exclusivo ou notória especialização.',
+    dica: 'NLLC (14.133/21): revogou 8.666/93, 10.520/02 (pregão) e parte da 12.462/11 (RDC). Modalidades: pregão, concorrência, concurso, leilão e diálogo competitivo. Dispensável: lei autoriza mas não obriga. Inexigível: competição impossível.'
+  },
+  {
+    grupo: 'licitacao', cat: 'Licitação', catClass: 'cat-teal',
+    title: 'Modalidades de licitação — Lei 14.133/2021',
+    question: 'Quais as modalidades de licitação previstas na Lei 14.133/2021? O que é diálogo competitivo?',
+    pills: ['Art. 28 Lei 14.133/21', '5 modalidades', 'Sem valor como critério'],
+    fundamento: 'Art. 28 da Lei nº 14.133/2021.',
+    conceito: 'Modalidades (art. 28): (I) PREGÃO: bens e serviços comuns — obrigatoriamente eletrônico, julgado por menor preço ou maior desconto. (II) CONCORRÊNCIA: obras, serviços e compras de grande vulto ou alta complexidade — ampla concorrência, qualquer critério de julgamento. (III) CONCURSO: escolha de trabalho técnico, científico ou artístico — julgado por comissão especializada. (IV) LEILÃO: alienação de bens ou concessões — melhor lance. (V) DIÁLOGO COMPETITIVO: contratação de obra, serviço ou compra com inovação tecnológica ou técnica, quando a Administração não consegue definir o objeto — diálogo prévio com licitantes para desenvolver a solução. NOVIDADE: a NLLC eliminou o critério de valor como determinante da modalidade — a escolha passa a depender do objeto e das características da contratação.',
+    atencao: 'A tomada de preços e o convite foram extintos pela Lei 14.133/2021 — eram modalidades da Lei 8.666/93 vinculadas a faixas de valor. O diálogo competitivo é inovação da NLLC, inspirado no direito europeu — adequado para contratações complexas em que a Administração não sabe exatamente o que precisa. Pregão é obrigatório para bens e serviços comuns (art. 6º, XIII).',
+    oral: 'A Lei 14.133 de 2021 prevê cinco modalidades de licitação: pregão, concorrência, concurso, leilão e diálogo competitivo. Uma mudança estrutural relevante é que a nova lei abandonou o critério de valor como determinante da modalidade — a escolha passa a depender do objeto e da natureza da contratação. O pregão é obrigatório para bens e serviços comuns. O diálogo competitivo é a grande novidade: aplica-se quando a Administração não consegue definir previamente o objeto por se tratar de solução inovadora, realizando-se diálogo prévio com os licitantes para desenvolvimento conjunto da solução antes da fase competitiva.',
+    dica: 'Extinta: tomada de preços e convite (eram da 8.666 — critério de valor). Mantidas/novas: pregão, concorrência, concurso, leilão + diálogo competitivo (nova). Na oral: o diálogo competitivo é o ponto que mais diferencia o candidato atualizado.'
+  },
+
+  // ── SERVIDOR PÚBLICO ────────────────────────────────────────────
+  {
+    grupo: 'servidor', cat: 'Servidor Público', catClass: 'cat-amber',
+    title: 'Estabilidade — requisitos e perda',
+    question: 'Quais os requisitos para aquisição da estabilidade? Em quais hipóteses o servidor estável pode perder o cargo?',
+    pills: ['Art. 41 CF/88', 'EC 19/1998', '3 anos + avaliação'],
+    fundamento: 'Art. 41 da CF/88, com redação dada pela EC nº 19/1998.',
+    conceito: 'Requisitos para a estabilidade: (1) nomeação para cargo de provimento efetivo; (2) aprovação em concurso público; (3) 3 anos de efetivo exercício; (4) avaliação especial de desempenho por comissão instituída para essa finalidade (exigência da EC 19/98 — muitas vezes ignorada na prática). Hipóteses de perda do cargo pelo servidor estável (art. 41, §1º): (I) sentença judicial transitada em julgado; (II) processo administrativo disciplinar com ampla defesa; (III) avaliação periódica de desempenho insuficiente, na forma de lei complementar, assegurada ampla defesa; (IV) excesso de despesa com pessoal, nos termos do art. 169, §4º.',
+    atencao: 'A avaliação especial de desempenho ao final do estágio probatório é condição constitucional para a aquisição da estabilidade — não basta o decurso do prazo de 3 anos. O STF entendeu que a ausência de regulamentação não dispensa o servidor do requisito, mas a omissão da Administração em realizar a avaliação não pode prejudicar o servidor (RE 1.140.384). A perda por avaliação periódica (inc. III) ainda depende de lei complementar regulamentadora — não foi implementada amplamente.',
+    oral: 'O art. 41 da CF/88 estabelece que são estáveis após três anos de efetivo exercício os servidores nomeados para cargo de provimento efetivo em virtude de concurso público. A EC 19/98 acrescentou um quarto requisito: a avaliação especial de desempenho por comissão instituída para essa finalidade. O servidor estável somente pode perder o cargo por sentença judicial transitada em julgado, processo administrativo disciplinar com ampla defesa, avaliação periódica de desempenho insuficiente — sujeita à lei complementar — ou por excesso de despesa com pessoal nos termos do art. 169, §4º.',
+    dica: 'Requisitos da estabilidade: 4 condições (cargo efetivo + concurso + 3 anos + avaliação). Perda: 4 hipóteses (sentença + PAD + avaliação periódica + excesso de despesa). A avaliação especial ao final do estágio é requisito constitucional — não mero ato formal.'
+  },
+  {
+    grupo: 'servidor', cat: 'Servidor Público', catClass: 'cat-amber',
+    title: 'Acumulação de cargos públicos',
+    question: 'A CF/88 proíbe a acumulação de cargos públicos? Quais as exceções? A regra se aplica a empregos e funções?',
+    pills: ['Art. 37 XVI e XVII CF', 'Compatibilidade de horários', 'Teto remuneratório'],
+    fundamento: 'Art. 37, XVI e XVII, e art. 38 da CF/88.',
+    conceito: 'Regra: proibição de acumulação remunerada de cargos, empregos e funções públicas (art. 37, XVI). Exceções constitucionais: (a) dois cargos de professor; (b) um cargo de professor com outro técnico ou científico; (c) dois cargos ou empregos privativos de profissionais de saúde, com profissões regulamentadas. Condição para todas: compatibilidade de horários e observância do teto remuneratório. A proibição abrange: servidores ativos, aposentados (art. 37, §10) e militares (art. 142, §3º, II). Extensão: aplica-se a cargos, empregos e funções — em qualquer esfera ou Poder.',
+    atencao: 'O STF e o STJ firmaram que a acumulação ilícita é improbidade administrativa (art. 11 da Lei 8.429/92) e pode gerar demissão por PAD. Na acumulação lícita, a remuneração total não pode superar o teto constitucional (subsídio do Ministro do STF). Médico que é servidor e atua em plantão hospitalar público — possível se houver compatibilidade de horários e se enquadrar na exceção de profissional de saúde.',
+    oral: 'A Constituição proíbe como regra a acumulação remunerada de cargos, empregos e funções públicas. As exceções constitucionais são taxativas: dois cargos de professor; um cargo de professor e outro técnico ou científico; e dois cargos ou empregos de profissionais de saúde com profissão regulamentada. Em todos os casos, é imprescindível a compatibilidade de horários e a observância do teto remuneratório. A proibição alcança servidores ativos, aposentados e militares, em qualquer esfera ou Poder, e a acumulação ilícita configura improbidade administrativa.',
+    dica: 'Exceções: professor + professor; professor + técnico/científico; saúde + saúde. Condição sempre: compatibilidade de horários + teto. Aposentado também está sujeito à proibição — salvo cargo eletivo. Militar: regra ainda mais restritiva (art. 142, §3º, II).'
+  },
+
+  // ── PROCESSO ADMINISTRATIVO ─────────────────────────────────────
+  {
+    grupo: 'processo', cat: 'Processo Administrativo', catClass: 'cat-coral',
+    title: 'Processo Administrativo — princípios da Lei 9.784/99',
+    question: 'Quais os princípios do processo administrativo federal previstos na Lei 9.784/99? Qual a diferença entre contraditório e ampla defesa nesse contexto?',
+    pills: ['Lei 9.784/1999', 'Art. 5º LV CF', 'Devido processo legal'],
+    fundamento: 'Lei nº 9.784/1999 (processo administrativo federal) e art. 5º, LV, da CF/88.',
+    conceito: 'Princípios da Lei 9.784/99 (art. 2º): legalidade, finalidade, motivação, razoabilidade, proporcionalidade, moralidade, ampla defesa, contraditório, segurança jurídica, interesse público e eficiência. CONTRADITÓRIO: direito de ser informado e de reagir às alegações e provas da parte contrária — bilateralidade da relação processual. AMPLA DEFESA: conjunto de meios e recursos à disposição do acusado para defender-se: defesa prévia, produção de provas, defesa técnica (advogado), recurso. O STF (Súmula Vinculante 5) entendeu que a falta de defesa técnica por advogado em PAD não viola a CF por si só — mas a ausência de defesa efetiva pode gerar nulidade.',
+    atencao: 'Súmula Vinculante 3: nos processos perante o TCU, assegura-se o contraditório e a ampla defesa quando da decisão puder resultar anulação ou revogação de ato administrativo que beneficie o interessado — exceto na fase de apreciação da legalidade do ato de concessão inicial de aposentadoria, reforma e pensão. Prazo para decisão: a Administração tem 30 dias para decidir, prorrogáveis por igual período (art. 49, Lei 9.784/99).',
+    oral: 'A Lei 9.784 de 1999 disciplina o processo administrativo no âmbito federal e elenca como princípios, entre outros, a legalidade, finalidade, motivação, razoabilidade, proporcionalidade, ampla defesa, contraditório, segurança jurídica e eficiência. O contraditório garante a bilateralidade — o direito de ser informado e de reagir às alegações adversas. A ampla defesa é mais ampla: compreende a defesa prévia, a produção de provas, a defesa técnica e o direito ao recurso. O STF, pela Súmula Vinculante 5, entendeu que a ausência de advogado em processo administrativo disciplinar não viola per se a Constituição, mas a ausência de defesa efetiva pode gerar nulidade.',
+    dica: 'SV 5: ausência de advogado em PAD não viola CF por si só. SV 3: TCU deve assegurar contraditório antes de anular ato que beneficiou o interessado — exceto ato de concessão inicial de aposentadoria. Esses dois enunciados são frequentíssimos em provas orais.'
+  },
+  {
+    grupo: 'processo', cat: 'Processo Administrativo', catClass: 'cat-coral',
+    title: 'Autotutela administrativa',
+    question: 'O que é autotutela administrativa? A Administração tem prazo para exercê-la? O Judiciário pode controlar?',
+    pills: ['Súmula 346 STF', 'Súmula 473 STF', 'Art. 54 Lei 9.784/99'],
+    fundamento: 'Súmulas 346 e 473 do STF. Art. 54 da Lei nº 9.784/1999.',
+    conceito: 'Autotutela: poder da Administração de revisar seus próprios atos, sem necessidade de provocação do Judiciário. Abrange: anulação (ato ilegal — ex tunc) e revogação (ato legal mas inconveniente — ex nunc). Súmula 346 STF: a Administração pode declarar a nulidade de seus próprios atos. Súmula 473 STF: a Administração pode anulá-los por vício ou revogá-los por conveniência — salvo direitos adquiridos e ressalvada, em todos os casos, a apreciação judicial. Limites: prazo decadencial de 5 anos para anular atos favoráveis ao administrado de boa-fé (art. 54, Lei 9.784/99); observância do contraditório e ampla defesa antes da anulação de ato que beneficiou o particular.',
+    atencao: 'A autotutela não é ilimitada: o STF exige contraditório e ampla defesa antes de anular ato que gerou benefícios ao particular (ex: cancelamento de aposentadoria). O prazo de 5 anos não se aplica a atos obtidos mediante fraude ou má-fé do administrado — atos fraudulentos podem ser anulados a qualquer tempo. O Judiciário sempre pode controlar o exercício da autotutela quanto à legalidade.',
+    oral: 'A autotutela é o poder que a Administração possui de revisar seus próprios atos independentemente de provocação judicial, consagrado nas Súmulas 346 e 473 do STF. Pode resultar em anulação — quando o ato é inválido, com efeitos retroativos — ou em revogação — quando o ato é válido mas inconveniente, com efeitos prospectivos. Esse poder tem limites importantes: o art. 54 da Lei 9.784/99 estabelece prazo decadencial de cinco anos para anular atos que geraram efeitos favoráveis ao administrado de boa-fé. Além disso, o STF exige contraditório e ampla defesa antes da anulação de ato que beneficiou o particular, sob pena de nulidade do procedimento.',
+    dica: 'Autotutela = anulação (ilegal, ex tunc) + revogação (inconveniente, ex nunc). Limite: 5 anos para atos favoráveis de boa-fé. Fraude: sem prazo. Sempre: contraditório antes de anular ato que gerou benefício.'
+  },
+
+  // ── RESPONSABILIDADE CIVIL DO ESTADO ───────────────────────────
+  {
+    grupo: 'responsabilidade', cat: 'Responsabilidade Civil', catClass: 'cat-coral',
+    title: 'Responsabilidade civil do Estado — teoria objetiva',
+    question: 'Qual a teoria adotada pela CF/88 para a responsabilidade civil do Estado? Quais os requisitos? Há excludentes?',
+    pills: ['Art. 37 §6º CF/88', 'Risco administrativo', 'Nexo causal'],
+    fundamento: 'Art. 37, §6º, da CF/88.',
+    conceito: 'A CF/88 adota a teoria da responsabilidade objetiva por risco administrativo para atos comissivos do Estado. Requisitos: (1) conduta do agente público nessa qualidade; (2) dano (material, moral ou estético); (3) nexo causal entre conduta e dano. Prescinde de culpa — não é necessário provar que o agente agiu com negligência, imprudência ou imperícia. Excludentes: culpa exclusiva da vítima (exclui a responsabilidade); caso fortuito ou força maior (exclui); culpa concorrente (reduz proporcionalmente). Distinção: risco administrativo (admite excludentes) x risco integral (não admite — aplicável em casos excepcionais: dano nuclear, dano ambiental, terrorismo em aeronaves).',
+    atencao: 'Responsabilidade por OMISSÃO: o STF adota a teoria subjetiva para omissões genéricas — exige comprovação de culpa do Estado (falha do serviço — faute du service). Para omissões específicas (Estado assumiu dever de proteção individualizado — ex: morte de detento, vítima sob custódia), a responsabilidade é objetiva (RE 841.526 — Tema 592). O agente público responde regressivamente ao Estado quando agir com dolo ou culpa.',
+    oral: 'O art. 37, §6º da CF/88 adota a responsabilidade objetiva do Estado com fundamento na teoria do risco administrativo. Isso significa que, para atos comissivos, basta demonstrar a conduta do agente público, o dano e o nexo causal — a culpa é dispensável. As excludentes de responsabilidade são a culpa exclusiva da vítima, o caso fortuito e a força maior; a culpa concorrente reduz proporcionalmente o dever de indenizar. Para omissões, o STF distingue: omissões genéricas sujeitam-se à responsabilidade subjetiva — exige-se falha do serviço — enquanto omissões específicas, como a morte de detento sob custódia do Estado, geram responsabilidade objetiva, conforme o Tema 592.',
+    dica: 'Ação = objetiva (risco administrativo, com excludentes). Omissão genérica = subjetiva (culpa anônima do serviço). Omissão específica = objetiva (detento, vítima sob proteção). Risco integral (sem excludentes): nuclear, ambiental, terrorismo aéreo.'
+  },
+
+  // ── PODERES ADMINISTRATIVOS ────────────────────────────────────
+  {
+    grupo: 'poder', cat: 'Poderes Administrativos', catClass: 'cat-teal',
+    title: 'Poder disciplinar — conceito e limites',
+    question: 'O que é o poder disciplinar? Quem está sujeito a ele? O Judiciário pode controlar a sanção disciplinar?',
+    pills: ['PAD', 'Art. 5º LV CF', 'Proporcionalidade'],
+    fundamento: 'Lei nº 8.112/1990 (estatuto federal). Princípios constitucionais do contraditório e ampla defesa (art. 5º, LV, CF).',
+    conceito: 'Poder disciplinar: prerrogativa da Administração de aplicar sanções a seus agentes (servidores e militares) e a particulares com vínculo especial com o Estado (contratados, permissionários, concessionários) por infrações funcionais. Procedimento: processo administrativo disciplinar (PAD) com contraditório e ampla defesa. Sanções possíveis (Lei 8.112/90): advertência, suspensão, demissão, cassação de aposentadoria, destituição de cargo em comissão, destituição de função comissionada. Requisitos do PAD: comissão processante, indiciação, defesa escrita, relatório, julgamento pela autoridade competente.',
+    atencao: 'O Judiciário pode controlar o PAD quanto aos aspectos formais (observância do devido processo) e à proporcionalidade da sanção aplicada — mas não adentra o mérito disciplinar. A súmula do STJ (MS 12.983): a autoridade coatora é a que aplica a penalidade, não a que instaura o PAD. O STF entendeu que a demissão por improbidade exige PAD próprio, com rito da Lei 8.429/92, não apenas o PAD administrativo comum.',
+    oral: 'O poder disciplinar é a prerrogativa da Administração de aplicar sanções aos seus agentes e a particulares com vínculo especial de sujeição, como contratados e permissionários. Difere do poder punitivo geral do Estado — este é exercido pelo Poder Judiciário por meio do processo penal. O exercício do poder disciplinar exige processo administrativo disciplinar com contraditório e ampla defesa, conforme o art. 5º, LV da Constituição. O controle judicial é possível quanto à regularidade formal do processo, à competência da autoridade julgadora e à proporcionalidade da sanção, mas o mérito do julgamento disciplinar é preservado à Administração.',
+    dica: 'Poder disciplinar: agentes e particulares com vínculo especial. Processo: PAD com contraditório e ampla defesa. Controle judicial: forma + proporcionalidade, não mérito. Diferente do poder punitivo estatal (processo penal).'
+  },
+  {
+    grupo: 'poder', cat: 'Poderes Administrativos', catClass: 'cat-teal',
+    title: 'Poder regulamentar e poder normativo',
+    question: 'O que é o poder regulamentar? O Presidente pode editar decretos autônomos? Qual a diferença para o poder normativo das agências?',
+    pills: ['Art. 84 IV e VI CF', 'Decreto regulamentar', 'Agências reguladoras'],
+    fundamento: 'Art. 84, IV e VI, da CF/88. Lei nº 9.986/2000 e leis específicas das agências reguladoras.',
+    conceito: 'PODER REGULAMENTAR: competência do Chefe do Executivo para expedir regulamentos de execução das leis — decretos que detalham a lei sem inovar. Fundamento: art. 84, IV, CF. Não pode criar obrigações novas nem contrariar a lei. DECRETO AUTÔNOMO: art. 84, VI, CF autoriza decreto presidencial para organização e funcionamento da Administração Federal, quando não implicar aumento de despesa ou criação de órgão — única hipótese de decreto sem base legal específica. PODER NORMATIVO DAS AGÊNCIAS: as agências reguladoras (ANATEL, ANVISA, ANEEL etc.) expedem normas técnicas com força vinculante no setor regulado — poder normativo delegado por lei, dentro dos parâmetros fixados pelo legislador (delegação intralegislativa).',
+    atencao: 'O decreto regulamentar (art. 84, IV) exige lei prévia — é instrumento de execução, não de criação. O decreto autônomo (art. 84, VI) é limitadíssimo: só organização administrativa e extinção de cargos vagos. As agências têm poder normativo técnico, mas estão sujeitas ao controle do Congresso e do Judiciário. O STF admite a delegação técnica às agências como constitucional, desde que a lei fixe os parâmetros (standarts).',
+    oral: 'O poder regulamentar é a prerrogativa do Chefe do Executivo de expedir regulamentos que detalham e operacionalizam a lei, sem inovar na ordem jurídica — fundado no art. 84, IV da Constituição. O decreto regulamentar é instrumento de execução, não de criação. O art. 84, VI admite decretos autônomos em hipóteses estritas: organização administrativa e extinção de cargos vagos — único caso em que o decreto atua sem base legal específica. As agências reguladoras, por sua vez, exercem poder normativo técnico delegado por lei, editando normas vinculantes para os setores regulados dentro dos parâmetros estabelecidos pelo legislador — o que o STF reconhece como delegação intralegislativa constitucional.',
+    dica: 'Regulamentar (art. 84, IV): executa a lei, não inova. Autônomo (art. 84, VI): só organização + cargos vagos. Agências: poder normativo técnico delegado — constitucional desde que a lei fixe parâmetros. Três figuras distintas que a banca mistura.'
+  },
+  {
+    grupo: 'poder', cat: 'Poderes Administrativos', catClass: 'cat-teal',
+    title: 'Poder de polícia — conceito, atributos e delegação',
+    question: 'O que é poder de polícia? Quais seus atributos? É possível delegar poder de polícia a particulares?',
+    pills: ['Art. 78 CTN', 'Ciclo de polícia', 'STJ — Tema 532'],
+    fundamento: 'Art. 78 do CTN. RE 633.782/MG (STF — Tema 532 do STJ).',
+    conceito: 'Poder de polícia: atividade da Administração de restringir e condicionar o exercício de direitos e liberdades individuais em benefício do interesse público. Atributos: discricionariedade (margem de escolha no exercício), autoexecutoriedade (execução direta, sem Judiciário) e coercibilidade (imposição independente da vontade do particular). Ciclo de polícia (STJ/STF): (1) ordem de polícia (lei); (2) consentimento de polícia (licenças e autorizações); (3) fiscalização de polícia; (4) sanção de polícia. Fases 1 e 4 são indelegáveis a particulares. Fases 2 e 3 podem ser delegadas a pessoas jurídicas de direito público e, em certos casos, a entidades privadas integrantes da Administração (ex: autarquias).',
+    atencao: 'STJ (Tema 532) e STF: é constitucional a delegação das fases de consentimento e fiscalização a pessoas jurídicas de direito privado integrantes da Administração Indireta, desde que com capital majoritariamente público — ex: sociedade de economia mista. A fase de sanção (aplicação de multa) NÃO pode ser delegada a entidade privada sem vínculo com a Administração. Guardas municipais: STF reconheceu poder de polícia em âmbito municipal (RE 662.186 — Tema 656).',
+    oral: 'O poder de polícia é a prerrogativa administrativa de restringir e condicionar o exercício de direitos individuais em prol do interesse público, definido no art. 78 do CTN. Seus atributos são a discricionariedade, a autoexecutoriedade e a coercibilidade. A doutrina moderna organiza o poder de polícia em ciclo de quatro fases: ordem, consentimento, fiscalização e sanção. As fases de consentimento e fiscalização podem ser delegadas a pessoas jurídicas de direito privado integrantes da Administração com capital majoritariamente público, conforme entendimento consolidado pelo STJ no Tema 532 e pelo STF. Já as fases de ordem e sanção são indelegáveis a particulares sem vínculo de Administração.',
+    dica: 'Ciclo: ordem → consentimento → fiscalização → sanção. Delegáveis a ente privado da Adm. Indireta: fases 2 e 3. Indelegáveis a particulares em geral: fases 1 e 4. Guarda municipal: tem poder de polícia municipal (STF — Tema 656).'
+  }
+];
+
+let filtered = [...allCards];
+let cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const hint = document.getElementById('mode-hint');
+  hint.textContent = m === 'oral'
+    ? 'Resposta em texto corrido — ideal para simular a banca'
+    : 'Resposta detalhada em blocos — ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? [...allCards] : allCards.filter(c => c.grupo === f);
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  const scene = document.querySelector('.card-scene');
+  if (filtered.length === 0) { scene.style.display = 'none'; return; }
+  scene.style.display = 'block';
+
+  const c = filtered[cur];
+
+  // Frente
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(p => `<span class="pill">${p}</span>`).join('');
+
+  // Verso
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+
+  if (mode === 'oral') {
+    document.getElementById('b-blocks').innerHTML = `
+      <div class="oral-answer">${c.oral}</div>
+      <div class="oral-tip"><div class="blbl">Dica para a banca</div><p>${c.dica}</p></div>
+    `;
+  } else {
+    document.getElementById('b-blocks').innerHTML = `
+      <div class="b-block"><div class="blbl">Fundamento legal</div><p>${c.fundamento}</p></div>
+      <div class="b-block"><div class="blbl">Conceito e distinções</div><p>${c.conceito}</p></div>
+      <div class="b-alert"><div class="blbl">Atenção — ponto de prova</div><p>${c.atencao}</p></div>
+      <div class="b-tip"><div class="blbl">Dica de memorização</div><p>${c.dica}</p></div>
+    `;
+  }
+
+  document.getElementById('card').classList.remove('flipped');
+
+  const pct = ((cur + 1) / filtered.length * 100).toFixed(0);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('hdr-count').textContent = `${cur + 1} / ${filtered.length} fichas`;
+
+  const sh = t => t.length > 28 ? t.substring(0, 28) + '…' : t;
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map((x, i) => `<button class="topic-btn ${i === cur ? 'active' : ''}" onclick="go(${i})">${i + 1}. ${sh(x.title)}</button>`).join('') +
+    `<span class="counter-pill">${cur + 1} / ${filtered.length}</span>`;
+}
+
+function flip() { document.getElementById('card').classList.toggle('flipped'); }
+function go(i) { cur = i; render(); }
+function prev() { cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next() { cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>

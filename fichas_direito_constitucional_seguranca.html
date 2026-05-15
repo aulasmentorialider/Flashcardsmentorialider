@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas — Direito Constitucional: Segurança e Defesa do Estado | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F3864;
+    --navy-mid: #2E5FA3;
+    --navy-light: #dce8f8;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --coral: #993C1D;
+    --coral-light: #FAECE7;
+    --amber: #854F0B;
+    --amber-light: #FAEEDA;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --border: rgba(31,56,100,0.12);
+    --text: #1a1f2e;
+    --muted: #5a6580;
+    --faint: #9ba4bc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header { background: var(--navy); padding: 1.5rem 2rem 1.25rem; display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+  .header-badge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 4px; text-transform: uppercase; margin-bottom: 4px; }
+  header h1 { font-size: 20px; font-weight: 600; color: #fff; line-height: 1.2; }
+  header p { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+  .header-info { flex: 1; }
+  .card-count-badge { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.4); align-self: flex-start; margin-top: 4px; }
+
+  .filter-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.75rem 2rem; display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-btn { font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .filter-btn.fa.active   { background: #1F3864; border-color: #1F3864; }
+  .filter-btn.ed.active   { background: #854F0B; border-color: #854F0B; }
+  .filter-btn.es.active   { background: #993C1D; border-color: #993C1D; }
+  .filter-btn.if.active   { background: #534AB7; border-color: #534AB7; }
+  .filter-btn.sp.active   { background: #0F6E56; border-color: #0F6E56; }
+
+  main { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .progress-wrap { height: 3px; background: var(--border); border-radius: 999px; margin-bottom: 1.5rem; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--navy-mid); border-radius: 999px; transition: width 0.3s ease; }
+
+  .topic-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.75rem; align-items: center; }
+  .topic-btn { font-family: 'Sora', sans-serif; font-size: 11px; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
+  .topic-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .topic-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .counter-pill { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--faint); white-space: nowrap; }
+
+  .card-scene { perspective: 1200px; margin-bottom: 1.5rem; }
+  .card-inner { position: relative; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(.4,0,.2,1); min-height: 290px; }
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .face { backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem 2rem; display: flex; flex-direction: column; }
+  .face.back { transform: rotateY(180deg); position: absolute; top: 0; left: 0; right: 0; }
+
+  .f-cat { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 1.1rem; width: fit-content; }
+  .cat-navy   { background: var(--navy-light);   color: var(--navy); }
+  .cat-teal   { background: var(--teal-light);   color: var(--teal); }
+  .cat-coral  { background: var(--coral-light);  color: var(--coral); }
+  .cat-amber  { background: var(--amber-light);  color: var(--amber); }
+  .cat-purple { background: var(--purple-light); color: var(--purple); }
+
+  .f-title    { font-size: 21px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 0.6rem; }
+  .f-question { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 1.25rem; flex: 1; }
+  .f-pills    { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+  .pill { font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 3px 9px; border-radius: 4px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+  .hint-line  { font-size: 11.5px; color: var(--faint); display: flex; align-items: center; gap: 6px; margin-bottom: 1.25rem; }
+
+  .b-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 1.1rem; }
+  .b-block { background: var(--bg); border-radius: 10px; padding: 11px 15px; margin-bottom: 9px; }
+  .b-block .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-bottom: 5px; }
+  .b-block p { font-size: 13px; color: var(--text); line-height: 1.65; }
+  .b-alert { border-left: 3px solid var(--coral); background: var(--coral-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-bottom: 9px; }
+  .b-alert .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--coral); margin-bottom: 5px; }
+  .b-alert p { font-size: 13px; color: #5a2010; line-height: 1.65; }
+  .b-tip { border-left: 3px solid var(--teal); background: var(--teal-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-bottom: 9px; }
+  .b-tip .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 5px; }
+  .b-tip p { font-size: 13px; color: #0a3d2e; line-height: 1.65; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 1.4rem; }
+  .btn { flex: 1; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: var(--bg); color: var(--text); }
+  .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .btn-primary:hover { background: #17316b; color: #fff; }
+
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--faint); font-size: 14px; }
+  footer { text-align: center; padding: 2rem 1rem; font-size: 11.5px; color: var(--faint); border-top: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em; }
+
+  @media (max-width: 540px) {
+    main { padding: 1.25rem 1rem 3rem; }
+    header { padding: 1.25rem 1rem; }
+    .filter-bar { padding: 0.75rem 1rem; }
+    .f-title { font-size: 18px; }
+    .face { padding: 1.25rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-info">
+    <div class="header-badge">CFO PMMG · Direito Constitucional</div>
+    <h1>Forças Armadas, Defesa do Estado e Segurança Pública</h1>
+    <p>Fichas temáticas para revisão e estudo ativo — Arts. 136 a 144 CF/88</p>
+  </div>
+  <div class="card-count-badge" id="hdr-count"></div>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active"   onclick="setFilter('all', this)">Todas</button>
+  <button class="filter-btn fa"       onclick="setFilter('fa', this)">Forças Armadas</button>
+  <button class="filter-btn ed"       onclick="setFilter('ed', this)">Estado de Defesa</button>
+  <button class="filter-btn es"       onclick="setFilter('es', this)">Estado de Sítio</button>
+  <button class="filter-btn if"       onclick="setFilter('if', this)">Intervenção Federal</button>
+  <button class="filter-btn sp"       onclick="setFilter('sp', this)">Segurança Pública</button>
+</div>
+
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat cat-navy"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Tente responder mentalmente antes de revelar
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta ↓</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat cat-navy"></div>
+        <div id="b-title" class="b-title"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">↑ ocultar</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="empty-state" id="empty" style="display:none">Nenhuma ficha nesta categoria.</div>
+</main>
+
+<footer>Mentoria Líder · CFO PMMG · Material de uso exclusivo dos alunos</footer>
+
+<script>
+const allCards = [
+
+  // ── FORÇAS ARMADAS ──────────────────────────────────────────────
+  {
+    grupo: "fa", cat: "Forças Armadas", catClass: "cat-navy",
+    title: "Forças Armadas — missão constitucional",
+    question: "Qual a missão constitucional das Forças Armadas? A quem se subordinam e quando podem atuar na segurança pública?",
+    pills: ["Art. 142 CF/88", "Lei Complementar 97/99", "GLO"],
+    fundamento: "Art. 142 da CF/88. As Forças Armadas são compostas pela Marinha, Exército e Aeronáutica.",
+    conceito: "Missão: defesa da Pátria, garantia dos poderes constitucionais e, por iniciativa de qualquer destes, da lei e da ordem. Subordinam-se ao Presidente da República. Integram-se ao sistema de segurança pública quando convocadas — Garantia da Lei e da Ordem (GLO), regulada pela Lei Complementar nº 97/1999 e LC nº 136/2010. Na GLO, os militares das Forças Armadas exercem poder de polícia, podendo efetuar prisões em flagrante, buscas e apreensões, sob coordenação do Ministério da Justiça e Segurança Pública.",
+    atencao: "As Forças Armadas NÃO integram o rol do art. 144 CF (órgãos de segurança pública). A atuação delas na segurança pública é excepcional e depende de decreto presidencial. O STF entende que militares em GLO se submetem às normas do direito internacional humanitário e respondem civil e penalmente por excessos.",
+    dica: "Macete: Forças Armadas = defesa externa + garantia dos poderes (art. 142). Segurança pública = art. 144. A GLO é a ponte entre os dois — excepcional, temporária, depende de decreto. Não confundir com estado de defesa ou estado de sítio."
+  },
+  {
+    grupo: "fa", cat: "Forças Armadas", catClass: "cat-navy",
+    title: "Forças Armadas — garantia dos poderes constitucionais",
+    question: "O que significa a missão de 'garantia dos poderes constitucionais'? Quem pode acionar as Forças Armadas para essa finalidade?",
+    pills: ["Art. 142 CF/88", "Iniciativa dos Poderes", "Moderador?"],
+    fundamento: "Art. 142, caput, da CF/88: 'por iniciativa de qualquer destes' — Executivo, Legislativo ou Judiciário.",
+    conceito: "As Forças Armadas podem ser acionadas para garantir o funcionamento dos Poderes constitucionais quando qualquer um deles solicitar. A iniciativa pode partir do Presidente da República (Executivo), do Congresso Nacional (Legislativo) ou do STF (Judiciário). Não atuam de ofício — exige convocação formal pelo Poder interessado. A missão é restaurativa e temporária: cessado o motivo, cessa a atuação.",
+    atencao: "O STF firmou, no julgamento das ADPFs 854 e 856 (2023), que as Forças Armadas NÃO exercem poder moderador autônomo. Não há na CF/88 qualquer fundamento para atuação autônoma das FFAA fora das hipóteses previstas nos arts. 136 a 142. A subordinação ao Presidente é institucional — não política.",
+    dica: "Lembre: 'por iniciativa de qualquer destes' = qualquer dos três Poderes pode acionar. Mas as FFAA não agem por conta própria. Poder moderador não existe na CF/88 — doutrina do 'quarto poder' não tem amparo constitucional."
+  },
+
+  // ── ESTADO DE DEFESA ─────────────────────────────────────────────
+  {
+    grupo: "ed", cat: "Estado de Defesa", catClass: "cat-amber",
+    title: "Estado de Defesa — hipóteses e competência",
+    question: "Quais as hipóteses de decretação do estado de defesa? Quem decreta e qual o papel do Congresso Nacional?",
+    pills: ["Art. 136 CF/88", "Decreto presidencial", "Congresso: 24h"],
+    fundamento: "Art. 136 da CF/88. Decreto do Presidente da República, ouvidos o Conselho da República e o Conselho de Defesa Nacional.",
+    conceito: "Hipóteses: (1) preservação ou restabelecimento da ordem pública ou da paz social ameaçadas por grave e iminente instabilidade institucional; (2) calamidades de grandes proporções na natureza. O decreto presidencial delimita a área de abrangência, o tempo de duração (máx. 30 dias, prorrogável uma vez por igual período — máx. 60 dias no total) e as medidas coercitivas. O Congresso Nacional deve ser comunicado dentro de 24 horas. Aprovação: maioria absoluta de cada Casa, em votação nominal.",
+    atencao: "O estado de defesa NÃO exige aprovação prévia do Congresso — é decretado pelo Presidente e submetido a posteriori. O Congresso pode REJEITAR o decreto, caso em que cessa imediatamente. Se o Congresso estiver em recesso, será convocado extraordinariamente pelo Presidente do Senado Federal em 5 dias. Prazo máximo total: 60 dias (30 + 30).",
+    dica: "Comparativo rápido: Estado de defesa = Presidente decreta → Congresso aprova depois (24h para comunicar, maioria absoluta para aprovar). Estado de sítio = Presidente solicita → Congresso autoriza ANTES. Essa inversão é o ponto mais cobrado."
+  },
+  {
+    grupo: "ed", cat: "Estado de Defesa", catClass: "cat-amber",
+    title: "Estado de Defesa — restrições e garantias",
+    question: "Quais direitos podem ser restringidos durante o estado de defesa? Existe controle sobre as medidas adotadas?",
+    pills: ["Art. 136 §§1º e 3º CF", "Restrições taxativas", "Mesa do CN"],
+    fundamento: "Art. 136, §§1º a 7º, da CF/88. As medidas coercitivas são taxativas — rol fechado.",
+    conceito: "Restrições admitidas (§1º): reunião, ainda que exercida no seio das associações; sigilo de correspondência; sigilo de comunicação telegráfica e telefônica. Na área abrangida: prisão por crime contra o Estado — determinada pelo executor da medida, sem flagrante, com comunicação ao juiz competente em 24h, que a relaxará se não for legal. Vedada incomunicabilidade do preso. Controle: Mesa do Congresso designa comissão para acompanhar e fiscalizar a execução das medidas.",
+    atencao: "Durante o estado de defesa, a prisão NÃO depende de ordem judicial prévia — mas deve ser comunicada ao juiz em 24h, que pode relaxá-la. O preso tem direito a advogado e não pode ficar incomunicável. A duração da prisão não pode ultrapassar 10 dias, salvo autorização judicial.",
+    dica: "O que NÃO pode ser restringido no estado de defesa: habeas corpus, direito à vida, dignidade, integridade física. O que pode: reunião, correspondência, telecomunicações — e prisão administrativa (comunicada ao juiz em 24h)."
+  },
+
+  // ── ESTADO DE SÍTIO ──────────────────────────────────────────────
+  {
+    grupo: "es", cat: "Estado de Sítio", catClass: "cat-coral",
+    title: "Estado de Sítio — hipóteses e autorização",
+    question: "Quais as hipóteses do estado de sítio? Qual a diferença entre as duas modalidades e qual o papel do Congresso?",
+    pills: ["Art. 137 CF/88", "Autorização prévia", "Maioria absoluta"],
+    fundamento: "Art. 137 da CF/88. Requer autorização prévia do Congresso Nacional.",
+    conceito: "Hipóteses: (1) comoção grave de repercussão nacional ou ocorrência de fatos que comprovem a ineficácia do estado de defesa (art. 137, I) — prazo de até 30 dias, prorrogável por igual período enquanto persistir a situação; (2) declaração de estado de guerra ou resposta a agressão armada estrangeira (art. 137, II) — pelo tempo que durar a guerra ou agressão. Procedimento: Presidente solicita autorização ao Congresso Nacional, que decide por maioria absoluta de cada Casa. Só então o Presidente decreta.",
+    atencao: "Estado de sítio = autorização PRÉVIA do Congresso (diferente do estado de defesa, que é decretado primeiro e aprovado depois). O Presidente não pode decretar sem autorização. Se o Congresso estiver em recesso, será convocado extraordinariamente em 5 dias. O Congresso não pode ser dissolvido durante o estado de sítio.",
+    dica: "Hipótese I (comoção interna): 30 dias prorrogáveis. Hipótese II (guerra/agressão externa): dura enquanto persistir a situação — sem prazo fixo. A hipótese II é a mais grave e admite restrições mais amplas."
+  },
+  {
+    grupo: "es", cat: "Estado de Sítio", catClass: "cat-coral",
+    title: "Estado de Sítio — medidas cabíveis e controle",
+    question: "Quais restrições são admitidas no estado de sítio? Há diferença entre as duas hipóteses quanto às medidas?",
+    pills: ["Art. 138 CF/88", "Art. 139 CF/88", "Hipóteses I e II"],
+    fundamento: "Arts. 138 e 139 da CF/88. As medidas devem constar expressamente do decreto.",
+    conceito: "Hipótese I (comoção interna — art. 139): obrigação de permanência em localidade determinada; detenção em edifício não destinado a acusados/condenados; restrições a reuniões; busca e apreensão em domicílio; intervenção nas empresas de serviços públicos; requisição de bens. Hipótese II (guerra/agressão externa): além das anteriores, pode suspender garantias constitucionais de forma mais ampla — inclusive habeas corpus em caso de crime contra o Estado (única hipótese em que o HC pode ser suspenso). Controle: Mesa do CN, comissão de acompanhamento, cessação imediata após o prazo.",
+    atencao: "Vedações expressas no estado de sítio (art. 139, parágrafo único): proibido suspender direitos políticos de parlamentares; proibido fechar o Congresso Nacional; proibido suprimir a liberdade de imprensa para fatos estranhos à ordem pública. O STF continua funcionando. Habeas corpus: só pode ser suspenso na hipótese II (guerra), não na hipótese I.",
+    dica: "Resumo das vedações no sítio: CN não fecha, parlamentares não perdem direitos políticos, STF não para, imprensa não é censurada (salvo fatos ligados diretamente à ordem pública). HC suspenso APENAS na hipótese II (guerra)."
+  },
+  {
+    grupo: "es", cat: "Estado de Sítio", catClass: "cat-coral",
+    title: "Estado de Defesa x Estado de Sítio — quadro comparativo",
+    question: "Como comparar sistematicamente estado de defesa e estado de sítio quanto a decretação, prazo, restrições e controle?",
+    pills: ["Arts. 136–139 CF", "Comparativo", "Ponto mais cobrado"],
+    fundamento: "Arts. 136 a 139 da CF/88. Tema de altíssima incidência em provas de CFO e carreiras jurídicas.",
+    conceito: "ESTADO DE DEFESA: decretado pelo Presidente (sem autorização prévia); Congresso aprova depois (24h para comunicar); prazo máximo 30+30 = 60 dias; área localizada; restrições: reunião, correspondência, telecomunicações, prisão administrativa (comunicada em 24h); aprovação por maioria absoluta. ESTADO DE SÍTIO: autorização prévia do Congresso (maioria absoluta); Presidente decreta após; hipótese I: 30 dias prorrogáveis (comoção interna); hipótese II: duração da guerra; medidas mais amplas; pode suspender HC (só na hipótese II).",
+    atencao: "Os dois institutos exigem: oitiva do Conselho da República e do Conselho de Defesa Nacional (caráter consultivo — pareceres não vinculam o Presidente); aprovação ou autorização do Congresso por maioria absoluta; decreto com delimitação de área, prazo e medidas; controle parlamentar durante a execução; cessação das medidas após o prazo, com responsabilização dos executores por excessos.",
+    dica: "Mnemônico: De-fesa = Decreta primeiro (D de Defesa = D de Decreta). Sítio = Solicita primeiro (S de Sítio = S de Solicita). Essa inversão é o ponto campeão de questões em concursos militares e jurídicos."
+  },
+
+  // ── INTERVENÇÃO FEDERAL ──────────────────────────────────────────
+  {
+    grupo: "if", cat: "Intervenção Federal", catClass: "cat-purple",
+    title: "Intervenção Federal — hipóteses",
+    question: "Quais as hipóteses taxativas de intervenção federal nos Estados? Como se classificam doutrinariamente?",
+    pills: ["Art. 34 CF/88", "Rol taxativo", "Espontânea x provocada"],
+    fundamento: "Art. 34 da CF/88. A intervenção é medida excepcional que mitiga o pacto federativo — interpretação restritiva.",
+    conceito: "Hipóteses (art. 34, I a VII): (I) manter a integridade nacional; (II) repelir invasão estrangeira ou de uma unidade na outra; (III) pôr termo a grave comprometimento da ordem pública; (IV) garantir o livre exercício dos Poderes nas unidades; (V) reorganizar as finanças (não pagamento de dívida fundada por 2 anos consecutivos; não entrega de repasses municipais); (VI) prover execução de lei federal, ordem ou decisão judicial; (VII) assegurar a observância dos princípios constitucionais sensíveis (art. 34, VII, a–e). Classificação: espontânea (I, II, III, V — ato de ofício do Presidente); provocada por solicitação (IV — pedido dos Poderes locais) ou por requisição (IV — STF, STJ, TSE; VI — STF/STJ/TSE; VII — após provimento de representação interventiva pelo PGR no STF).",
+    atencao: "Princípios constitucionais sensíveis (art. 34, VII): forma republicana, sistema representativo e regime democrático; direitos da pessoa humana; autonomia municipal; prestação de contas da administração pública; aplicação do mínimo em saúde e educação. A intervenção por esses princípios exige Representação Interventiva (Ação direta) proposta pelo PGR ao STF.",
+    dica: "Espontânea = Presidente age de ofício (hipóteses I, II, III, V). Provocada por solicitação = pedido dos Poderes Legislativo/Executivo locais (hipótese IV, parte). Provocada por requisição = obrigatória para o Presidente, não há discricionariedade (STF, STJ, TSE — hipóteses IV parte e VI). Representação interventiva (VII) = PGR + STF."
+  },
+  {
+    grupo: "if", cat: "Intervenção Federal", catClass: "cat-purple",
+    title: "Intervenção Federal — procedimento e controle",
+    question: "Qual o procedimento de decretação da intervenção federal? Qual o papel do Congresso e quais são os limites?",
+    pills: ["Art. 36 CF/88", "Decreto interventivo", "Apreciação do CN"],
+    fundamento: "Art. 36 da CF/88. O decreto de intervenção federal é ato privativo do Presidente da República.",
+    conceito: "Procedimento: (1) Presidente decreta a intervenção, especificando amplitude, prazo, condições e, se necessário, nomeia interventor; (2) o decreto é submetido à apreciação do Congresso Nacional em 24 horas; (3) o Congresso aprova ou rejeita por decreto legislativo (sem sanção presidencial); (4) se o Congresso estiver em recesso, é convocado extraordinariamente em 24 horas. Exceção: não precisa de apreciação do Congresso quando a intervenção for para prover execução de lei federal ou decisão judicial (art. 36, §3º) — cessa quando atendida a decisão ou executada a lei. Limites: vedação de emenda à CF durante a intervenção (art. 60, §1º).",
+    atencao: "Distinção crítica: na intervenção decretada para cumprir decisão judicial (art. 34, VI) ou assegurar princípios sensíveis (art. 34, VII), o Congresso NÃO aprecia — a intervenção cessa com o cumprimento da decisão ou representação. A apreciação do Congresso é dispensada nessas hipóteses (art. 36, §3º). Essa exceção é bastante cobrada.",
+    dica: "Congresso aprecia SEMPRE — exceto nas hipóteses de cumprimento de decisão judicial (art. 34, VI) e princípios sensíveis via representação interventiva (art. 34, VII). Nesses casos, a intervenção cessa automaticamente com o cumprimento da decisão."
+  },
+  {
+    grupo: "if", cat: "Intervenção Federal", catClass: "cat-purple",
+    title: "Intervenção Federal x Intervenção Estadual",
+    question: "Quais as semelhanças e diferenças entre a intervenção federal (nos Estados) e a intervenção estadual (nos Municípios)?",
+    pills: ["Art. 34 CF/88", "Art. 35 CF/88", "Simetria constitucional"],
+    fundamento: "Art. 34 (intervenção federal nos Estados) e art. 35 (intervenção estadual nos Municípios) da CF/88.",
+    conceito: "Intervenção estadual nos Municípios (art. 35): hipóteses — não pagamento da dívida fundada por 2 anos; não prestação de contas devidas; não aplicação do mínimo em saúde e educação; Tribunal de Justiça der provimento a representação para assegurar princípios da CE ou execução de lei. Decretada pelo Governador. Apreciação pela Assembleia Legislativa (simetria com intervenção federal). Municípios de Territórios Federais: sujeitos à intervenção federal (não há Estado interposto).",
+    atencao: "Municípios NÃO estão sujeitos à intervenção federal direta — apenas à intervenção estadual (art. 35), salvo os localizados em Territórios Federais. Não existe representação interventiva do PGR ao STF para assegurar princípios sensíveis em face de Municípios — o instrumento correto é a representação ao TJ para fins de intervenção estadual.",
+    dica: "Federal → Estado. Estadual → Município. União não intervém diretamente em Município (exceto em Território Federal). Essa regra é frequentemente usada em pegadinhas de prova: 'a União decretou intervenção no Município X' — errado, salvo se for Território."
+  },
+
+  // ── SEGURANÇA PÚBLICA ────────────────────────────────────────────
+  {
+    grupo: "sp", cat: "Segurança Pública", catClass: "cat-teal",
+    title: "Segurança pública — órgãos do art. 144 CF/88",
+    question: "Quais são os órgãos de segurança pública previstos no art. 144 CF/88? Como se distribuem entre União e Estados?",
+    pills: ["Art. 144 CF/88", "EC 104/2019", "PF, PRF, PC, PM, CBM"],
+    fundamento: "Art. 144 da CF/88, com redação alterada pela EC nº 104/2019 (que incluiu as polícias penais).",
+    conceito: "Órgãos federais: Polícia Federal (PF); Polícia Rodoviária Federal (PRF); Polícia Ferroviária Federal (PFF); Polícia Penal Federal. Órgãos estaduais: Polícias Civis; Polícias Militares; Corpos de Bombeiros Militares; Polícias Penais Estaduais. Órgãos municipais: Guardas Municipais (proteção de bens, serviços e instalações — art. 144, §8º). Polícia Federal: apuração de infrações penais contra a ordem política e social, contra bens e serviços da União, tráfico internacional de entorpecentes, além de polícia marítima, aeroportuária e de fronteiras.",
+    atencao: "EC 104/2019: incluiu as Polícias Penais (federal e estaduais) no art. 144. Antes, a administração dos presídios era matéria infraconstitucional. Guardas Municipais: não são polícias no sentido estrito — não têm poder de polícia ostensivo pleno, mas o STF reconhece poder de polícia em âmbito municipal (Tema 656). As Forças Armadas NÃO constam do art. 144.",
+    dica: "Rol do art. 144: PF, PRF, PFF, Polícia Penal Federal (federais) + PC, PM, CBM, Polícia Penal Estadual (estaduais) + Guardas Municipais (municipais). Total: 9 órgãos/categorias. Forças Armadas = art. 142, não art. 144."
+  },
+  {
+    grupo: "sp", cat: "Segurança Pública", catClass: "cat-teal",
+    title: "Polícia Militar e Polícia Civil — atribuições constitucionais",
+    question: "Quais as atribuições constitucionais da PM e da PC? O que é policiamento ostensivo e investigação criminal?",
+    pills: ["Art. 144 §§4º e 5º CF", "Polícia judiciária", "Polícia ostensiva"],
+    fundamento: "Art. 144, §§4º e 5º, da CF/88.",
+    conceito: "Polícia Militar (§5º): policiamento ostensivo e preservação da ordem pública. Força auxiliar e reserva do Exército. Subordinada ao Governador. Polícia Civil (§4º): funções de polícia judiciária e apuração de infrações penais — exceto as militares. Dirigida por Delegados de Polícia de carreira. Distinção operacional: PM = presença ostensiva, prevenção, manutenção da ordem. PC = investigação, presidência do inquérito policial, lavratura de flagrante, indiciamento.",
+    atencao: "A CF não proíbe investigação criminal pela PM — o STF pacificou que a PM pode realizar atos investigativos, especialmente em crimes praticados por seus próprios membros (RE 702.617, com repercussão geral). A investigação civil de crimes militares cabe à Polícia Judiciária Militar (IPM), não à PC. Delegado de Polícia: carreira jurídica essencial à Justiça — art. 144, §4º.",
+    dica: "PM = ostensiva + ordem pública + reserva do Exército. PC = judiciária + investigação + Delegado de carreira. Polícia Judiciária Militar (IPM) = Forças Armadas/PMMG para crimes militares — não é a PC. Confundir PM com reserva do Exército e PM com polícia judiciária é erro clássico de prova."
+  },
+  {
+    grupo: "sp", cat: "Segurança Pública", catClass: "cat-teal",
+    title: "Segurança pública — dever do Estado e direito do cidadão",
+    question: "A segurança pública é dever exclusivo do Estado? Qual o papel da sociedade? Há direito subjetivo à segurança?",
+    pills: ["Art. 144 caput CF", "Art. 6º CF", "STF — RE 841.526"],
+    fundamento: "Art. 144, caput, e art. 6º da CF/88. Jurisprudência do STF sobre responsabilidade civil do Estado.",
+    conceito: "A segurança pública é dever do Estado, direito e responsabilidade de todos (art. 144, caput). É simultaneamente direito fundamental social (art. 6º CF) e dever de prestação positiva do Estado. A CF prevê a participação da sociedade na preservação da ordem pública — segurança como tarefa compartilhada. Responsabilidade civil do Estado: o STF (RE 841.526 — Tema 592) firmou que o Estado responde objetivamente pela morte de detento (art. 5º, XLIX CF) por omissão — responsabilidade objetiva por teoria do risco administrativo.",
+    atencao: "A segurança pública como direito social (art. 6º) gera obrigações positivas ao Estado — políticas públicas, aparelhamento, etc. No entanto, o STF tem sido restritivo quanto à condenação judicial do Estado por omissão genérica na prestação de segurança: exige nexo causal concreto entre a omissão estatal e o dano sofrido pelo particular. Omissão genérica ≠ responsabilidade automática.",
+    dica: "Segurança pública: dever do Estado + responsabilidade de todos. É direito social (art. 6º) E garantia constitucional. Estado responde objetivamente por morte de detento (RE 841.526). Mas omissão policial genérica não gera responsabilidade automática — exige nexo causal específico."
+  },
+  {
+    grupo: "sp", cat: "Segurança Pública", catClass: "cat-teal",
+    title: "Polícia Federal — atribuições e exclusividades",
+    question: "Quais as atribuições exclusivas da Polícia Federal? O que diferencia a PF das demais polícias?",
+    pills: ["Art. 144 §1º CF/88", "I a IV", "Polícia marítima"],
+    fundamento: "Art. 144, §1º, I a IV, da CF/88. Organizada e mantida pela União.",
+    conceito: "Atribuições da PF (§1º): (I) apurar infrações penais contra a ordem política e social ou em detrimento de bens, serviços e interesses da União ou de suas entidades autárquicas e empresas públicas; (II) prevenir e reprimir tráfico ilícito de entorpecentes e drogas afins, contrabando e descaminho, sem prejuízo da ação fazendária e de outros órgãos; (III) exercer as funções de polícia marítima, aeroportuária e de fronteiras; (IV) exercer com exclusividade as funções de polícia judiciária da União.",
+    atencao: "A exclusividade da PF é apenas quanto à polícia judiciária da União (inciso IV). As demais atribuições dos incisos I a III não são exclusivas — outros órgãos podem atuar em conjunto (ex: Receita Federal no descaminho). A PF não tem exclusividade sobre a investigação de tráfico de drogas — PC e MP também podem investigar (Súmula 234 STJ: MP pode realizar investigação criminal).",
+    dica: "Exclusividade da PF: APENAS polícia judiciária da União (inc. IV). Os demais incisos (I, II, III) são atribuições predominantes, mas não exclusivas. Erro clássico: afirmar que a PF tem exclusividade no combate ao tráfico internacional — não tem, apenas tem atribuição preferencial."
+  }
+];
+
+let filtered = [...allCards];
+let cur = 0;
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? [...allCards] : allCards.filter(c => c.grupo === f);
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  const empty = document.getElementById('empty');
+  const scene = document.querySelector('.card-scene');
+  if (filtered.length === 0) {
+    empty.style.display = 'block'; scene.style.display = 'none';
+    document.getElementById('topic-nav').innerHTML = '';
+    document.getElementById('hdr-count').textContent = '0 fichas';
+    return;
+  }
+  empty.style.display = 'none'; scene.style.display = 'block';
+
+  const c = filtered[cur];
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(p => `<span class="pill">${p}</span>`).join('');
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+  document.getElementById('b-blocks').innerHTML = `
+    <div class="b-block"><div class="blbl">Fundamento legal</div><p>${c.fundamento}</p></div>
+    <div class="b-block"><div class="blbl">Conceito e distinções</div><p>${c.conceito}</p></div>
+    <div class="b-alert"><div class="blbl">Atenção — ponto de prova</div><p>${c.atencao}</p></div>
+    <div class="b-tip"><div class="blbl">Dica de memorização</div><p>${c.dica}</p></div>
+  `;
+  document.getElementById('card').classList.remove('flipped');
+
+  const pct = ((cur + 1) / filtered.length * 100).toFixed(0);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('hdr-count').textContent = `${cur + 1} / ${filtered.length} fichas`;
+
+  const shorten = t => t.length > 30 ? t.substring(0, 30) + '…' : t;
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map((x, i) => `<button class="topic-btn ${i===cur?'active':''}" onclick="go(${i})">${i+1}. ${shorten(x.title)}</button>`).join('') +
+    `<span class="counter-pill">${cur+1} / ${filtered.length}</span>`;
+}
+
+function flip() { document.getElementById('card').classList.toggle('flipped'); }
+function go(i) { cur = i; render(); }
+function prev() { cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next() { cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>
