@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards | Mentoria Lider -- CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  header{background:var(--navy);padding:2.5rem 2rem 2rem;text-align:center;}
+  .logo-badge{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:5px 14px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:1rem;}
+  header h1{font-size:28px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:.5rem;}
+  header p{font-size:14px;color:rgba(255,255,255,.55);max-width:480px;margin:0 auto;line-height:1.6;}
+  .search-wrap{max-width:680px;margin:1.5rem auto 0;padding:0 1.5rem;}
+  .search-input{width:100%;font-family:'Sora',sans-serif;font-size:14px;padding:11px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);outline:none;transition:border-color .15s;}
+  .search-input:focus{border-color:var(--navy-mid);}
+  .search-input::placeholder{color:var(--faint);}
+  .filter-bar{max-width:680px;margin:.75rem auto 0;padding:0 1.5rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:12px;font-weight:500;padding:5px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  main{max-width:680px;margin:2rem auto 4rem;padding:0 1.5rem;}
+  .grid{display:flex;flex-direction:column;gap:10px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.4rem;text-decoration:none;color:inherit;display:flex;align-items:center;gap:1rem;transition:border-color .15s,box-shadow .15s;}
+  .card:hover{border-color:var(--navy-mid);box-shadow:0 2px 12px rgba(31,56,100,.08);}
+  .card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .card-body{flex:1;min-width:0;}
+  .card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card-sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card-meta{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;font-weight:500;white-space:nowrap;}
+  .arrow{font-size:16px;color:var(--faint);}
+  .empty-state{text-align:center;padding:3rem 1rem;color:var(--faint);font-size:14px;}
+  .loading{text-align:center;padding:3rem 1rem;color:var(--faint);font-size:13px;font-family:'IBM Plex Mono',monospace;}
+  footer{text-align:center;padding:2rem 1rem;font-size:11px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+  @media(max-width:540px){
+    header{padding:2rem 1rem 1.5rem;}
+    header h1{font-size:22px;}
+    main,.search-wrap,.filter-bar{padding:0 1rem;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo-badge">Mentoria Lider -- CFO PMMG 2026</div>
+  <h1>Flashcards de Estudo</h1>
+  <p>Material exclusivo para alunos da Mentoria Lider. As fichas sao carregadas automaticamente.</p>
+  <div class="search-wrap">
+    <input class="search-input" type="text" placeholder="Buscar disciplina ou tema..." oninput="onSearch(this.value)" />
+  </div>
+  <div class="filter-bar" id="filter-bar"></div>
+</header>
+<main>
+  <div id="grid" class="grid">
+    <div class="loading">Carregando fichas...</div>
+  </div>
+</main>
+<footer>Mentoria Lider -- CFO PMMG -- Material de uso exclusivo dos alunos</footer>
+
+<script>
+var GITHUB_USER = 'aulasmentorialider';
+var GITHUB_REPO = 'Flashcardsmentorialider';
+
+var META = {
+  'fichas_acoes_constitucionais.html':          { title:'Acoes Constitucionais',                         sub:'HC - MS - MI - HD - Acao Popular - Comparativos',                              icon:'⚖️',  grupo:'constitucional' },
+  'fichas_controle_constitucionalidade.html':   { title:'Controle de Constitucionalidade',              sub:'ADI - ADC - ADPF - ADO - Modulacao - Sumula Vinculante',                        icon:'🏛️',  grupo:'constitucional' },
+  'fichas_direito_constitucional_teoria.html':  { title:'Teoria da Constituicao, Direitos e Poderes',   sub:'Teoria da CF - Poder Constituinte - Direitos Fundamentais - Poderes',           icon:'📜',  grupo:'constitucional' },
+  'fichas_direito_constitucional_seguranca.html':{ title:'Forcas Armadas, Defesa e Seguranca',          sub:'FA - Estado de Defesa - Estado de Sitio - IF - Art. 144',                      icon:'🛡️',  grupo:'constitucional' },
+  'fichas_direito_penal_parte_geral.html':      { title:'Direito Penal -- Parte Geral',                 sub:'Principios - Teoria do Crime - Tipicidade - Pena - Prescricao',                 icon:'📖',  grupo:'penal' },
+  'fichas_direito_penal_parte_especial.html':   { title:'Direito Penal -- Parte Especial',              sub:'Crimes contra a pessoa - Patrimonio - Lei 14.994/2024 - Lei 15.397/2026',       icon:'🔍',  grupo:'penal' },
+  'fichas_notitia_criminis.html':               { title:'Notitia Criminis',                             sub:'Inquerito Policial - Flagrante - Representacao - Arquivamento',                 icon:'🗂️',  grupo:'processo' },
+  'fichas_processo_penal.html':                 { title:'Processo Penal -- Acao Penal, Prisao e Prova', sub:'Acao penal - ANPP - Competencia - Prova - Busca - Prisao',                      icon:'⚖️',  grupo:'processo' },
+  'fichas_direito_administrativo_oral.html':    { title:'Direito Administrativo',                       sub:'Principios - Ato Adm. - Licitacao - Servidor - Responsabilidade - Poderes',    icon:'🏢',  grupo:'administrativo' }
+};
+
+var GRUPOS = {
+  constitucional: { label:'Constitucional', tagColor:'#1F3864', tagBg:'#dce8f8' },
+  penal:          { label:'Penal',          tagColor:'#534AB7', tagBg:'#EEEDFE' },
+  processo:       { label:'Processo Penal', tagColor:'#993C1D', tagBg:'#FAECE7' },
+  administrativo: { label:'Administrativo', tagColor:'#0F6E56', tagBg:'#E1F5EE' },
+  civil:          { label:'Civil',          tagColor:'#854F0B', tagBg:'#FAEEDA' },
+  extravagante:   { label:'Extravagante',   tagColor:'#534AB7', tagBg:'#EEEDFE' },
+  outro:          { label:'Outros',         tagColor:'#5a6580', tagBg:'#f0f0f0'  }
+};
+
+var allDecks = [];
+var activeFilter = 'all';
+
+function loadDecks() {
+  var url = 'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/';
+  fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(files) {
+      allDecks = files
+        .filter(function(f){ return f.name.endsWith('.html') && f.name !== 'index.html' && f.name.startsWith('fichas_'); })
+        .map(function(f) {
+          var m = META[f.name] || { title: formatName(f.name), sub: f.name, icon: '📄', grupo: 'outro' };
+          return { file: f.name, title: m.title, sub: m.sub, icon: m.icon, grupo: m.grupo };
+        })
+        .sort(function(a, b) {
+          var keys = Object.keys(META);
+          var ka = keys.indexOf(a.file);
+          var kb = keys.indexOf(b.file);
+          if (ka === -1 && kb === -1) return a.title.localeCompare(b.title);
+          if (ka === -1) return 1;
+          if (kb === -1) return -1;
+          return ka - kb;
+        });
+      buildFilters();
+      renderGrid(allDecks);
+    })
+    .catch(function() {
+      allDecks = Object.keys(META).map(function(file) {
+        var m = META[file];
+        return { file: file, title: m.title, sub: m.sub, icon: m.icon, grupo: m.grupo };
+      });
+      buildFilters();
+      renderGrid(allDecks);
+    });
+}
+
+function formatName(f) {
+  return f.replace('fichas_','').replace('.html','').replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+}
+
+function buildFilters() {
+  var seen = ['all'];
+  allDecks.forEach(function(d){ if (seen.indexOf(d.grupo) === -1) seen.push(d.grupo); });
+  document.getElementById('filter-bar').innerHTML = seen.map(function(g) {
+    var label = g === 'all' ? 'Todas' : (GRUPOS[g] ? GRUPOS[g].label : g);
+    return '<button class="filter-btn ' + (g === activeFilter ? 'active' : '') + '" onclick="setFilter(\'' + g + '\',this)">' + label + '</button>';
+  }).join('');
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelector('.search-input').value = '';
+  renderGrid(f === 'all' ? allDecks : allDecks.filter(function(d){ return d.grupo === f; }));
+}
+
+function onSearch(q) {
+  var term = q.toLowerCase().trim();
+  var base = activeFilter === 'all' ? allDecks : allDecks.filter(function(d){ return d.grupo === activeFilter; });
+  renderGrid(!term ? base : base.filter(function(d){ return (d.title + d.sub).toLowerCase().includes(term); }));
+}
+
+function renderGrid(decks) {
+  var grid = document.getElementById('grid');
+  if (!decks.length) { grid.innerHTML = '<div class="empty-state">Nenhuma ficha encontrada.</div>'; return; }
+  grid.innerHTML = decks.map(function(d) {
+    var g = GRUPOS[d.grupo] || GRUPOS.outro;
+    return '<a class="card" href="' + d.file + '">' +
+      '<div class="card-icon" style="background:' + g.tagBg + '">' + d.icon + '</div>' +
+      '<div class="card-body"><div class="card-title">' + d.title + '</div><div class="card-sub">' + d.sub + '</div></div>' +
+      '<div class="card-meta"><span class="tag" style="background:' + g.tagBg + ';color:' + g.tagColor + '">' + g.label + '</span><span class="arrow">&#8594;</span></div>' +
+      '</a>';
+  }).join('');
+}
+
+loadDecks();
+</script>
+</body>
+</html>
