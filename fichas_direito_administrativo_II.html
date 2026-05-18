@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas -- Direito Administrativo II | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  header{background:var(--navy);padding:1.5rem 2rem 1.25rem;}
+  .hbadge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px;}
+  header h1{font-size:20px;font-weight:600;color:#fff;}
+  header p{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;}
+  .hrow{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+  .hcount{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-left:auto;}
+  .mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mode-label{font-size:12px;color:var(--muted);font-weight:500;}
+  .toggle-wrap{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;gap:2px;}
+  .toggle-opt{font-size:11.5px;padding:4px 14px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-weight:500;transition:all .15s;}
+  .toggle-opt.active{background:var(--navy);color:#fff;}
+  .mode-hint{font-size:11px;color:var(--faint);}
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .progress-wrap{height:3px;background:var(--border);border-radius:999px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-bar{height:100%;background:var(--navy-mid);border-radius:999px;transition:width .3s ease;}
+  .topic-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem;align-items:center;}
+  .topic-btn{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500;font-family:'Sora',sans-serif;}
+  .topic-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .topic-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .counter-pill{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);white-space:nowrap;}
+  .card-scene{perspective:1200px;margin-bottom:1.5rem;}
+  .card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);min-height:290px;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;display:flex;flex-direction:column;}
+  .face.back{transform:rotateY(180deg);position:absolute;top:0;left:0;right:0;}
+  .f-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:1.1rem;width:fit-content;}
+  .cat-navy{background:var(--navy-light);color:var(--navy);}
+  .cat-teal{background:var(--teal-light);color:var(--teal);}
+  .cat-coral{background:var(--coral-light);color:var(--coral);}
+  .cat-amber{background:var(--amber-light);color:var(--amber);}
+  .cat-purple{background:var(--purple-light);color:var(--purple);}
+  .f-title{font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+  .f-question{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;flex:1;}
+  .f-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+  .hint-line{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;}
+  .oral-answer{font-size:14px;color:var(--text);line-height:1.8;border-left:3px solid var(--navy-mid);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:9px;}
+  .blbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .oral-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;}
+  .oral-tip .blbl{color:var(--teal);}
+  .oral-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .b-block{background:var(--bg);border-radius:10px;padding:11px 15px;margin-bottom:9px;}
+  .b-block .blbl{color:var(--faint);}
+  .b-block p{font-size:13px;color:var(--text);line-height:1.65;}
+  .b-alert{border-left:3px solid var(--coral);background:var(--coral-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-alert .blbl{color:var(--coral);}
+  .b-alert p{font-size:13px;color:#5a2010;line-height:1.65;}
+  .b-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-tip .blbl{color:var(--teal);}
+  .b-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .btn-row{display:flex;gap:8px;margin-top:1.4rem;}
+  .btn{flex:1;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:var(--bg);color:var(--text);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:#17316b;}
+  footer{text-align:center;padding:2rem 1rem;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+  @media(max-width:540px){
+    main{padding:1.25rem 1rem 3rem;}
+    header,.filter-bar,.mode-bar{padding:.75rem 1rem;}
+    .f-title{font-size:18px;}
+    .face{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG -- Direito Administrativo II</div>
+      <h1>Direito Administrativo -- Temas Complementares</h1>
+      <p>Organizacao administrativa, agentes publicos, servicos publicos, contratos, intervencao na propriedade, LGPD e OSCs</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido -- ideal para simular a banca</span>
+</div>
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('organizacao',this)">Organizacao Adm.</button>
+  <button class="filter-btn" onclick="setFilter('agentes',this)">Agentes Publicos</button>
+  <button class="filter-btn" onclick="setFilter('servicos',this)">Servicos Publicos</button>
+  <button class="filter-btn" onclick="setFilter('intervencao',this)">Intervencao na Propriedade</button>
+  <button class="filter-btn" onclick="setFilter('contratos',this)">Contratos Adm.</button>
+  <button class="filter-btn" onclick="setFilter('lgpd',this)">LGPD e OSCs</button>
+</div>
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ocultar</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Mentoria Lider -- CFO PMMG -- Material de uso exclusivo dos alunos</footer>
+
+<script>
+var mode = 'oral';
+
+var allCards = [
+
+  // ORGANIZACAO ADMINISTRATIVA
+  {
+    grupo:'organizacao', cat:'Organizacao Administrativa', catClass:'cat-navy',
+    title:'Centralizacao, descentralizacao e desconcentracao',
+    question:'O que e centralizacao, descentralizacao e desconcentracao administrativa? Como se organiza a Administracao direta e indireta?',
+    pills:['Art. 37 CF/88','DL 200/1967','Tutela administrativa'],
+    fundamento:'Decreto-Lei no 200/1967. Arts. 37 e 41 da CF/88. Doutrina: Maria Sylvia Di Pietro, Celso Antonio Bandeira de Mello.',
+    conceito:'CENTRALIZACAO: o Estado executa diretamente as tarefas, por meio dos seus proprios orgaos -- Administracao direta (Uniao, Estados, DF, Municipios e seus orgaos). DESCONCENTRACAO: distribuicao de competencias dentro da mesma pessoa juridica, criando orgaos sem personalidade propria -- ex: ministerios, secretarias, delegacias de policia. Mantem relacao de hierarquia. DESCENTRALIZACAO: transferencia de competencias para outra pessoa juridica -- por outorga (lei cria nova entidade e lhe transfere a titularidade do servico) ou por delegacao (transfere apenas a execucao, mantendo a titularidade -- concessao, permissao, autorizacao). ADMINISTRACAO INDIRETA: entidades com personalidade juridica propria criadas pelo Estado -- autarquias (pessoa juridica de direito publico, criada por lei); fundacoes publicas; empresas publicas (capital exclusivamente publico); sociedades de economia mista (capital misto -- acao ordinaria majoritariamente publica); agencias reguladoras (autarquias de regime especial).',
+    atencao:'Distincao fundamental: desconcentracao = dentro da mesma PJ (hierarquia). Descentralizacao = para outra PJ (tutela ou supervisao -- nao hierarquia). O Estado exerce TUTELA (controle finalístico) sobre as entidades da Administracao indireta -- nao hierarquia. Autarquia: criada por lei especifica (art. 37, XIX CF). Empresa publica e SEM: autorizadas por lei -- constituidas por ato prévio. Agencias reguladoras: autarquias de regime especial -- seus dirigentes tem mandato fixo e estabilidade reforçada (nao podem ser exonerados ad nutum).',
+    oral:'A organizacao administrativa estrutura-se em torno de tres conceitos fundamentais. A centralizacao significa que o Estado executa as tarefas diretamente por seus proprios orgaos, configurando a Administracao direta. A desconcentracao e a distribuicao interna de competencias dentro da mesma pessoa juridica, criando orgaos sem personalidade propria e mantendo a relacao hierarquica -- como ministerios e secretarias. A descentralizacao, por sua vez, transfere competencias para outra pessoa juridica, podendo ser por outorga, quando a propria titularidade do servico e transferida por lei, ou por delegacao, quando apenas a execucao e repassada. A Administracao indireta e formada por autarquias, fundacoes publicas, empresas publicas e sociedades de economia mista, todas com personalidade juridica propria.',
+    dica:'Desconcentracao: mesma PJ, hierarquia, orgaos. Descentralizacao: nova PJ, tutela (nao hierarquia), por outorga (titularidade) ou delegacao (execucao). Adm. indireta: autarquia (lei, dir. publico) + fundacao + EP (capital publico) + SEM (capital misto, maioria publica). Tutela: controle finalístico -- nao e hierarquia.'
+  },
+  {
+    grupo:'organizacao', cat:'Organizacao Administrativa', catClass:'cat-navy',
+    title:'Entidades da Administracao indireta -- distincoes',
+    question:'Quais as diferencas entre autarquia, fundacao publica, empresa publica e sociedade de economia mista? O que sao agencias reguladoras?',
+    pills:['Art. 37 XIX-XX CF','DL 200/1967','Regime juridico'],
+    fundamento:'Arts. 37, XIX e XX, da CF/88. Decreto-Lei no 200/1967. Lei no 13.303/2016 (estatuto das estatais).',
+    conceito:'AUTARQUIA: pessoa juridica de direito publico, criada por lei especifica, para atividade tipica de Estado. Privilegios da Fazenda Publica (precatorios, prazos em dobro, imunidade tributaria sobre patrimonio vinculado as finalidades essenciais). Ex: INSS, Bacen, IBAMA, universidades federais. FUNDACAO PUBLICA: pessoa juridica de direito publico (se criada por lei) ou privado (se autorizada por lei e instituida por ato). Sem fins lucrativos, finalidade cultural, social ou educacional. EMPRESA PUBLICA: pessoa juridica de direito privado, capital exclusivamente publico, qualquer forma societaria. Ex: Correios, Caixa Economica Federal. SOCIEDADE DE ECONOMIA MISTA: pessoa juridica de direito privado, capital misto com maioria das acoes ordinarias nas maos do poder publico, necessariamente SA. Ex: Petrobras, Banco do Brasil. AGENCIAS REGULADORAS: autarquias de regime especial com independencia reforçada -- dirigentes com mandato fixo, nao exoneraveis ad nutum. Ex: ANATEL, ANVISA, ANEEL.',
+    atencao:'Empresa publica federal e SEM federal que explorem atividade economica: regime de direito privado, sujeitas a falencia, nao tem privilegios da Fazenda Publica. As que prestam servico publico: nao se sujeitam a falencia, podem ter privilegios. Lei 13.303/2016 (estatuto das estatais): regulamenta as empresas publicas e SEM -- exige processo seletivo para empregados, licitacao propria, compliance e governanca corporativa. Pessoal das EP e SEM: empregados publicos (CLT), nao estatutarios -- mas sujeitos ao concurso publico (art. 37, II CF).',
+    oral:'A Administracao indireta e composta por quatro categorias de entidades. As autarquias sao pessoas juridicas de direito publico criadas por lei especifica para atividades tipicas de Estado, gozando dos privilegios da Fazenda Publica. As fundacoes publicas podem ter regime de direito publico ou privado conforme a forma de criacao. As empresas publicas sao pessoas juridicas de direito privado com capital exclusivamente publico. As sociedades de economia mista distinguem-se por ter capital misto com maioria das acoes ordinarias nas maos do poder publico e por adotar obrigatoriamente a forma de sociedade anonima. As agencias reguladoras sao autarquias de regime especial, com independencia reforçada pela estabilidade de seus dirigentes durante o mandato fixo.',
+    dica:'Autarquia: lei especifica + dir. publico + privilegios da FP. EP: dir. privado + capital exclusivamente publico + qualquer forma societaria. SEM: dir. privado + capital misto + obrigatoriamente SA. Agencia reguladora: autarquia de regime especial, mandato fixo dos dirigentes. Lei 13.303/2016: estatuto das estatais -- licitacao propria, compliance, concurso.'
+  },
+
+  // AGENTES PUBLICOS
+  {
+    grupo:'agentes', cat:'Agentes Publicos', catClass:'cat-purple',
+    title:'Agentes publicos -- conceito, especies e regime juridico',
+    question:'O que sao agentes publicos? Quais as especies? Qual a diferenca entre cargo, emprego e funcao publica?',
+    pills:['Art. 37 CF/88','Lei 8.112/1990','Cargo x emprego x funcao'],
+    fundamento:'Arts. 37 a 41 da CF/88. Lei no 8.112/1990 (servidores publicos federais).',
+    conceito:'AGENTE PUBLICO: toda pessoa fisica que, em carater temporario ou permanente, exerce funcao publica -- conceito amplo. ESPECIES: (1) agentes politicos (mandato, eleicao ou nomeacao -- Presidente, governadores, parlamentares, ministros, magistrados, membros do MP); (2) servidores publicos estatutarios (ocupantes de cargo publico -- regime estatutario, lei especifica); (3) empregados publicos (ocupantes de emprego publico -- regime CLT, Administracao indireta de direito privado); (4) servidores temporarios (contrato por prazo determinado -- art. 37, IX CF); (5) particulares em colaboracao (jurados, mesarios, concessionarios). CARGO PUBLICO: conjunto de atribuicoes e responsabilidades criado por lei, com denominacao propria, numero certo e remuneracao pelo erario. EMPREGO PUBLICO: vínculo celetista em entidade da Adm. Indireta de direito privado. FUNCAO PUBLICA: atribuicao ou conjunto de atribuicoes sem cargo correspondente -- funcoes de confianca (art. 37, V CF: exclusivas para servidores efetivos) e cargos em comissao (livre nomeacao e exoneracao, percentual minimo de efetivos).',
+    atencao:'Funcoes de confianca: exercidas EXCLUSIVAMENTE por servidores ocupantes de cargo efetivo (art. 37, V CF). Cargos em comissao: livre nomeacao e exoneracao -- mas lei deve reservar percentual para servidores efetivos. Sumula Vinculante 13 (nepotismo): veda nomeacao de parentes ate 3o grau para cargos em comissao ou funcoes de confianca -- exceto cargos politicos (ministros de Estado, secretarios estaduais e municipais). Teto remuneratorio (art. 37, XI CF): subsidio do Ministro do STF -- acumulo legal sujeito ao teto individual por cargo.',
+    oral:'Agente publico e o genero que abrange toda pessoa fisica que, de forma permanente ou temporaria, exerce uma funcao publica. As especies mais relevantes sao os agentes politicos, vinculados por mandato ou nomeacao constitucional; os servidores publicos estatutarios, que ocupam cargos publicos criados por lei sob regime estatutario; os empregados publicos, que atuam sob regime celetista nas entidades de direito privado da Administracao indireta; e os servidores temporarios contratados por prazo determinado nos termos do art. 37, IX da Constituicao. Cargo publico e o conjunto de atribuicoes criado por lei, com denominacao propria e remuneracao pelos cofres publicos. As funcoes de confianca sao exercidas exclusivamente por servidores efetivos, enquanto os cargos em comissao admitem livre nomeacao com percentual reservado a efetivos.',
+    dica:'Agentes politicos: mandato/nomeacao constitucional -- regime especial. Servidores estatutarios: cargo publico + lei propria. Empregados publicos: emprego + CLT (EP e SEM). Temporarios: art. 37, IX -- necessidade temporaria de excepcional interesse publico. Funcao de confianca: so efetivos. Cargo em comissao: livre nomeacao, percentual de efetivos. SV 13: nepotismo vedado ate 3o grau (exceto cargo politico).'
+  },
+
+  // SERVICOS PUBLICOS
+  {
+    grupo:'servicos', cat:'Servicos Publicos', catClass:'cat-teal',
+    title:'Servicos publicos -- conceito, classificacao e delegacao',
+    question:'O que e servico publico? Como se classificam? Qual a diferenca entre concessao, permissao e autorizacao?',
+    pills:['Art. 175 CF/88','Lei 8.987/1995','Lei 14.133/2021'],
+    fundamento:'Art. 175 da CF/88. Lei no 8.987/1995 (concessao e permissao). Lei no 14.133/2021 (NLLC).',
+    conceito:'CONCEITO: servico publico e toda atividade material que a lei atribui ao Estado para que a exerça diretamente ou por meio de seus delegados, sob regime juridico de direito publico, visando satisfazer necessidades coletivas. CLASSIFICACAO: quanto a essencialidade (essenciais -- nao podem ser interrompidos; nao essenciais); quanto aos destinatarios (uti universi -- indistintos, indivisiveis; uti singuli -- divisiveis, remunerados por tarifa). DELEGACAO (art. 175 CF): CONCESSAO -- contrato administrativo, pessoa juridica ou consorcio, licitacao obrigatoria (concorrencia ou dialogo competitivo), prazo determinado, remuneracao por tarifa, risco do concessionario, rescisao exige indenizacao. PERMISSAO -- contrato de adesao, pessoa fisica ou juridica, licitacao obrigatoria, carater precario (revogavel). AUTORIZACAO -- ato administrativo unilateral, precario, sem licitacao, interesse predominantemente privado ou urgencia.',
+    atencao:'Principios dos servicos publicos (ADECON): adequacao, continuidade, eficiencia, generalidade (universalidade), modicidade das tarifas, seguranca e atualidade. INTERRUPCAO do servico publico essencial: vedada, salvo emergencia ou inadimplemento do usuario (apos aviso previo -- Lei 8.987/95, art. 6, paragrafo 3). STJ (Sumula 407): e legitima a suspensao do fornecimento de energia eletrica se, apos aviso previo, o usuario-pessoa juridica de direito publico (municipio, por exemplo) continuar inadimplente -- exceto se a suspensao afetar servico essencial a populacao.',
+    oral:'Servico publico e a atividade material que a lei atribui ao Estado para satisfazer necessidades coletivas, exercida diretamente ou por meio de delegatarios sob regime de direito publico. Classificam-se em uti universi, prestados indistintamente a toda a coletividade e insuscetíveis de individualizacao, e uti singuli, divisiveis e remunerados por tarifa. A delegacao do servico publico pode se dar por concessao, permissao ou autorizacao. A concessao e contrato administrativo com prazo determinado, exige licitacao por concorrencia ou dialogo competitivo, e o risco e do concessionario. A permissao e contrato de adesao de carater precario. A autorizacao e ato unilateral, precario e sem licitacao, voltada a interesse predominantemente privado.',
+    dica:'Concessao: contrato + PJ ou consorcio + licitacao + prazo + risco do concessionario + indenizacao na rescisao. Permissao: contrato de adesao + PF ou PJ + licitacao + precario. Autorizacao: ato unilateral + precario + sem licitacao. Principios (ADECON): adequacao + continuidade + eficiencia + generalidade + modicidade + seguranca + atualidade. Interrupcao essencial: vedada, salvo emergencia ou inadimplemento com aviso previo.'
+  },
+
+  // INTERVENCAO NA PROPRIEDADE
+  {
+    grupo:'intervencao', cat:'Intervencao na Propriedade', catClass:'cat-coral',
+    title:'Desapropriacao -- conceito, especies e indenizacao',
+    question:'O que e desapropriacao? Quais as especies? Quando e possivel desapropriar sem indenizacao previa?',
+    pills:['Art. 5 XXIV CF','DL 3.365/1941','Art. 182 e 184 CF'],
+    fundamento:'Art. 5, XXIV, e arts. 182, 184 e 243 da CF/88. Decreto-Lei no 3.365/1941.',
+    conceito:'DESAPROPRIACAO: forma originaria de aquisicao da propriedade pelo Estado, mediante indenizacao -- suprime o direito de propriedade do particular. ESPECIES: (1) Desapropriacao ordinaria (art. 5, XXIV CF + DL 3.365/41): por necessidade publica, utilidade publica ou interesse social -- indenizacao PREVIA, JUSTA e EM DINHEIRO. (2) Desapropriacao para reforma agraria (art. 184 CF): imovel rural que nao cumpre funcao social -- indenizacao em Titulos da Divida Agraria (TDA), com previa e justa compensacao; nao incide sobre pequena e media propriedade e propriedade produtiva. (3) Desapropriacao para politica urbana (art. 182, paragrafo 4, III CF): imovel urbano que nao cumpre plano diretor -- indenizacao em Titulos da Divida Publica (TDP). (4) Desapropriacao confisco (art. 243 CF): glebas utilizadas para cultivo ilegal de plantas psicoativas ou exploracao de trabalho escravo -- SEM INDENIZACAO.',
+    atencao:'A desapropriacao confisco do art. 243 CF e a unica hipotese de desapropriacao sem indenizacao -- e sancao pelo uso ilicito da propriedade. O STF (RE 543.974) ampliou o alcance do art. 243 para abranger toda a propriedade do expropriado (nao so a gleba onde ocorreu o ilicito) -- interpretacao sistematica. FASES DA DESAPROPRIACAO ORDINARIA: declaratoria (decreto do Poder Executivo ou lei) e executoria (administrativa ou judicial). Apos o decreto, o expropriante tem 5 anos (utilidade publica) ou 2 anos (interesse social) para iniciar a execucao -- prazo de caducidade.',
+    oral:'A desapropriacao e a forma mais intensa de intervencao do Estado na propriedade privada, caracterizando-se como modo originario de aquisicao. A regra constitucional do art. 5, XXIV exige indenizacao previa, justa e em dinheiro. Ha, porem, modalidades excepcionais: a desapropriacao para reforma agraria indeniza com titulos da divida agraria; a desapropriacao para politica urbana indeniza com titulos da divida publica; e a desapropriacao confiscatoria do art. 243, para glebas com cultivo de psicoativos ou trabalho escravo, e a unica hipotese sem qualquer indenizacao, por se tratar de sancao ao uso ilicito da propriedade.',
+    dica:'Ordinaria: previa + justa + em dinheiro. Reforma agraria: TDA (nao em dinheiro). Politica urbana: TDP. Confisco (art. 243): sem indenizacao -- cultivo de psicoativos ou trabalho escravo. STF: confisco abrange toda a propriedade do infrator. Caducidade do decreto: 5 anos (UP) ou 2 anos (IS) para iniciar a execucao.'
+  },
+  {
+    grupo:'intervencao', cat:'Intervencao na Propriedade', catClass:'cat-coral',
+    title:'Servidao, requisicao, ocupacao temporaria e tombamento',
+    question:'O que e servidao administrativa? Como se distingue de limitacao administrativa? O que e tombamento e requisicao?',
+    pills:['DL 3.365/1941','DL 25/1937','Art. 5 XXV CF'],
+    fundamento:'Arts. 5, XXV, e 216 da CF/88. Decreto-Lei no 25/1937 (tombamento). DL no 3.365/1941.',
+    conceito:'SERVIDAO ADMINISTRATIVA: direito real publico que impoe ao proprietario de bem particular o dever de suportar a utilizacao pelo Estado -- ex: faixa de passagem de gasoduto, linha de transmissao. Indenizacao: somente se houver prejuizo efetivo. LIMITACAO ADMINISTRATIVA: restricao geral, abstrata, imposta a propriedades indeterminadas, por razoes de interesse publico -- ex: recuo minimo de construcao, gabarito. Nao gera indenizacao (e o custo da vida em sociedade). REQUISICAO (art. 5, XXV CF): uso temporario de bens ou servicos privados pelo Estado em caso de iminente perigo publico -- indenizacao posterior se houver dano. OCUPACAO TEMPORARIA: uso transitorio de imovel privado para execucao de obras e servicos publicos -- ex: ocupacao de terreno para construir estrada proxima. Indenizacao: somente se houver dano. TOMBAMENTO (DL 25/1937): restricao a propriedade para preservacao de bens de valor historico, artistico, cultural ou natural -- nao exclui a propriedade, apenas limita o uso. Indenizacao: somente se houver esvaziamento economico.',
+    atencao:'Hierarquia da intervencao quanto a intensidade: limitacao (menor) < servidao < requisicao < ocupacao temporaria < desapropriacao (maior). Quanto a indenizacao: limitacao = sem indenizacao. Servidao = somente se houver prejuizo. Requisicao = posterior, se houver dano. Tombamento = somente se houver esvaziamento economico. Desapropriacao ordinaria = sempre previa, justa e em dinheiro.',
+    oral:'As formas de intervencao do Estado na propriedade privada variam em intensidade. A limitacao administrativa e a mais branda -- restricao geral, abstrata, sem indenizacao, imposta a propriedades indeterminadas. A servidao administrativa cria um direito real publico sobre bem determinado, com indenizacao apenas se houver prejuizo efetivo. A requisicao do art. 5, XXV da Constituicao permite o uso temporario de bens ou servicos em caso de iminente perigo publico, com indenizacao posterior se houver dano. O tombamento restringe o uso do bem para preservacao do patrimonio cultural, sem exclusao da propriedade e com indenizacao apenas se houver esvaziamento economico. A desapropriacao e a forma mais intensa, pois suprime o proprio direito de propriedade.',
+    dica:'Intensidade: limitacao < servidao < requisicao/ocupacao < desapropriacao. Indenizacao: limitacao = nunca. Servidao = se houver prejuizo. Requisicao = posterior se houver dano. Tombamento = se houver esvaziamento economico. Desapropriacao = sempre previa, justa, em dinheiro (regra). Requisicao: iminente perigo publico -- art. 5, XXV CF.'
+  },
+
+  // CONTRATOS ADMINISTRATIVOS
+  {
+    grupo:'contratos', cat:'Contratos Administrativos', catClass:'cat-amber',
+    title:'Contratos administrativos -- caracteristicas e clausulas exorbitantes',
+    question:'O que e contrato administrativo? Quais as clausulas exorbitantes? O que e equilíbrio economico-financeiro?',
+    pills:['Arts. 89-154 NLLC','Lei 14.133/2021','Clausulas exorbitantes'],
+    fundamento:'Arts. 89 a 154 da Lei no 14.133/2021 (Nova Lei de Licitacoes e Contratos -- NLLC).',
+    conceito:'CONTRATO ADMINISTRATIVO: acordos em que a Administracao Publica figura como parte, submetidos a regime juridico de direito publico, com clausulas exorbitantes que nao seriam admitidas em contratos entre particulares. CLAUSULAS EXORBITANTES (prerrogativas da Administracao): (1) alteracao unilateral do contrato -- em ate 25% do valor para obras e servicos; 50% para reformas de edificios e equipamentos; (2) rescisao unilateral por interesse publico; (3) fiscalizacao e aplicacao de sancoes; (4) ocupacao temporaria dos bens do contratado em caso de rescisao; (5) exigencia de garantia (ate 5% do valor -- ou 10% em obras de grande vulto). EQUILIBRIO ECONOMICO-FINANCEIRO: relacao entre encargos e remuneracao estabelecida no momento da contratacao -- deve ser mantida durante toda a execucao. Se houver alteracao unilateral onerosa ao contratado, ele tem direito a reequilibrio.',
+    atencao:'A alteracao qualitativa (objeto do contrato) pode ser feita sem limite percentual -- mas deve manter a natureza do objeto original. A alteracao quantitativa (valores) tem os limites dos 25%/50%. O contratado tem o dever de executar o contrato mesmo em caso de divergencia -- pode depois buscar o reequilibrio judicialmente (exceptio non adimpleti contractus nao se aplica ao contratado privado em contratos administrativos, salvo quando a Administracao nao paga por mais de 90 dias). Sancoes (art. 156 NLLC): advertencia; multa; impedimento de licitar e contratar (ate 3 anos); declaracao de inidoneidade (ate 6 anos).',
+    oral:'O contrato administrativo e regido pelo direito publico e se distingue dos contratos privados pela presenca de clausulas exorbitantes -- prerrogativas da Administracao que nao seriam admitidas em contratos entre particulares. Essas clausulas incluem a possibilidade de alteracao unilateral do contrato em ate vinte e cinco por cento do valor para obras e servicos e cinquenta por cento para reformas, a rescisao unilateral por interesse publico e a fiscalizacao e aplicacao de sancoes. O equilibrio economico-financeiro e a relacao entre encargos e remuneracao fixada no momento da licitacao, que deve ser mantida durante toda a execucao do contrato. Alteracoes onerosas ao contratado autorizam o pedido de reequilibrio.',
+    dica:'Clausulas exorbitantes: alteracao unilateral (25% obras/servicos, 50% reformas) + rescisao unilateral + fiscalizacao + sancoes + ocupacao temporaria. Equilibrio economico-financeiro: mantido durante toda a execucao -- alteracao onerosa = direito ao reequilibrio. Sancoes NLLC: advertencia + multa + impedimento (ate 3 anos) + inidoneidade (ate 6 anos). Exceptio: nao se aplica -- salvo atraso de pagamento superior a 90 dias.'
+  },
+  {
+    grupo:'contratos', cat:'Contratos Administrativos', catClass:'cat-amber',
+    title:'Inexecucao e extincao dos contratos administrativos',
+    question:'Quais as causas de inexecucao do contrato administrativo? Quando ocorre a extincao? O que e fato do principe e teoria da imprevisao?',
+    pills:['Arts. 137-139 NLLC','Fato do principe','Teoria da imprevisao'],
+    fundamento:'Arts. 137 a 139 da Lei no 14.133/2021.',
+    conceito:'INEXECUCAO TOTAL: descumprimento integral do objeto. INEXECUCAO PARCIAL: descumprimento de parte das obrigacoes. CAUSAS JUSTIFICADAS (excludentes de responsabilidade): caso fortuito, forca maior, fato da Administracao (inadimplemento que impede a execucao), fato do principe (ato geral do Estado que onera o contrato -- ex: aumento de imposto por lei). TEORIA DA IMPREVISAO (rebus sic stantibus): acontecimentos imprevistos e insuportaveis que alteram o equilibrio do contrato -- o contratado pode pedir revisao ou rescisao. EXTINCAO DO CONTRATO: (1) cumprimento do objeto; (2) rescisao administrativa (unilateral pela Adm.); (3) rescisao amigavel (acordo); (4) rescisao judicial; (5) rescisao por ato juridico unilateral do contratado (inadimplemento da Adm. por mais de 90 dias). EFEITOS DA RESCISAO UNILATERAL: assuncao imediata do objeto; ocupacao temporaria dos bens; retencao de creditos ate o limite dos prejuizos causados.',
+    atencao:'Fato do principe x fato da Administracao: o fato do principe e ato normativo geral do Estado (lei, decreto) que onera indiretamente o contrato -- o contratado tem direito ao reequilibrio mas nao a rescisao imediata. O fato da Administracao e ato especifico da propria parte contratante que impede a execucao (ex: nao entregar o terreno para a obra) -- pode justificar a rescisao pelo contratado apos 90 dias. A Lei 14.133/2021 extinguiu a figura do aditivo para inclusao de novos itens sem relacao com o objeto original.',
+    oral:'A inexecucao do contrato administrativo pode ser total ou parcial, e suas causas podem ser imputadas ao contratado, a Administracao ou ser de natureza exogena. As causas exogenas que excluem a responsabilidade do contratado incluem o caso fortuito, a forca maior, o fato do principe -- ato normativo geral do Estado que onera indiretamente o contrato -- e a teoria da imprevisao, que abrange acontecimentos imprevistos e imprevisíveis que tornam a execucao excessivamente onerosa. A extincao do contrato pode ocorrer pelo cumprimento do objeto, por rescisao administrativa unilateral, por acordo amigavel, por rescisao judicial ou por iniciativa do contratado nos casos de inadimplemento prolongado da Administracao.',
+    dica:'Fato do principe: ato normativo geral do Estado (lei) onera contrato indiretamente -- direito ao reequilibrio. Fato da Adm.: ato especifico da Administracao contratante impede execucao -- pode ensejar rescisao apos 90 dias. Teoria da imprevisao: evento imprevisível + insuportavel = revisao ou rescisao. Rescisao unilateral: assuncao imediata + ocupacao de bens + retencao de creditos.'
+  },
+
+  // LGPD E OSC
+  {
+    grupo:'lgpd', cat:'LGPD e Parcerias com OSCs', catClass:'cat-purple',
+    title:'LGPD -- principios, bases legais e direitos do titular',
+    question:'O que regula a LGPD? Quais seus principios? Quais as bases legais para tratamento de dados? Quais os direitos do titular?',
+    pills:['Lei 13.709/2018','ANPD','Dados sensiveis'],
+    fundamento:'Lei no 13.709, de 14 de agosto de 2018 (Lei Geral de Protecao de Dados Pessoais -- LGPD).',
+    conceito:'A LGPD regula o tratamento de dados pessoais por pessoas naturais ou juridicas, de direito publico ou privado, no territorio nacional ou quando o titular estiver no Brasil. PRINCIPIOS (art. 6): finalidade; adequacao; necessidade (minimizacao); livre acesso; qualidade dos dados; transparencia; seguranca; prevencao; nao discriminacao; responsabilizacao e prestacao de contas. BASES LEGAIS (art. 7): consentimento do titular; cumprimento de obrigacao legal; execucao de contrato; exercicio de direitos em processo judicial/adm.; protecao da vida; tutela da saude; interesse legitimo; protecao do credito. DADOS SENSIVEIS (art. 11): raca, origem etnica, convicao religiosa, opiniao politica, filiacao sindical, dado referente a saude, vida sexual, dado genetico ou biometrico -- tratamento mais restrito, bases legais proprias. DIREITOS DO TITULAR (art. 18): confirmacao de existencia de tratamento; acesso; correcao; anonimizacao; portabilidade; eliminacao; informacao sobre compartilhamento; revogacao do consentimento.',
+    atencao:'A LGPD aplica-se ao Poder Publico (arts. 23-32) com algumas especificidades -- o tratamento de dados pela Adm. Publica deve atender ao interesse publico. O ENCARREGADO (DPO -- Data Protection Officer) e a pessoa indicada pelo controlador para intermediar a relacao com o titular e a ANPD. A ANPD (Autoridade Nacional de Protecao de Dados) e autarquia federal de regime especial criada para fiscalizar o cumprimento da LGPD e aplicar sancoes (advertencia, multa de ate 2% do faturamento, ate R$ 50 milhoes por infracao, publicizacao da infracao, bloqueio dos dados).',
+    oral:'A Lei Geral de Protecao de Dados Pessoais de 2018 regula o tratamento de dados pessoais por entidades publicas e privadas no territorio nacional. Seus principios estruturantes incluem finalidade, necessidade, transparencia, seguranca e responsabilizacao. O tratamento de dados pessoais exige fundamento em uma das bases legais do art. 7, entre as quais o consentimento do titular, o cumprimento de obrigacao legal, a execucao de contrato e o interesse legitimo. Os dados sensiveis -- como dados de saude, geneticos, biometricos e de origem racial -- recebem tratamento mais restrito. O titular dos dados tem direito a confirmacao do tratamento, acesso, correcao, portabilidade e eliminacao dos dados. A fiscalizacao e a aplicacao de sancoes cabem a ANPD.',
+    dica:'LGPD: dados pessoais de PF identificada ou identificavel. Dados sensiveis: restricao maior (saude, genetico, biometrico, raca, religiao, opiniao politica). Bases legais (art. 7): 10 hipoteses -- consentimento e apenas uma delas. DPO/Encarregado: intermediario controlador-titular-ANPD. ANPD: autarquia federal de regime especial -- fiscaliza e sanciona (multa ate 2% do faturamento, max R$ 50 mi por infracao).'
+  },
+  {
+    grupo:'lgpd', cat:'LGPD e Parcerias com OSCs', catClass:'cat-purple',
+    title:'Lei 13.019/2014 -- parcerias com organizacoes da sociedade civil',
+    question:'O que regula a Lei 13.019/2014? Quais os instrumentos de parceria? Quais os requisitos das OSCs?',
+    pills:['Lei 13.019/2014','MROSC','Termo de colaboracao'],
+    fundamento:'Lei no 13.019, de 31 de julho de 2014 -- Marco Regulatorio das Organizacoes da Sociedade Civil (MROSC).',
+    conceito:'A Lei 13.019/2014 (MROSC) estabelece o regime juridico das parcerias entre a Administracao Publica e as organizacoes da sociedade civil (OSCs) para consecucao de finalidades de interesse publico e reciproco. INSTRUMENTOS: (1) TERMO DE COLABORACAO: quando a parceria for proposta pela Administracao -- exige chamamento publico; (2) TERMO DE FOMENTO: quando a parceria for proposta pela OSC -- exige chamamento publico; (3) ACORDO DE COOPERACAO: quando nao houver transferencia de recursos financeiros -- dispensa chamamento publico. REQUISITOS DAS OSCs: pessoa juridica de direito privado sem fins lucrativos; com pelo menos 1 ano de existencia com CNPJ; objetivos voltados a atividades de interesse publico e relevancia social. PLANO DE TRABALHO: documento que detalha o objeto, metas, cronograma e recursos da parceria -- elemento essencial.',
+    atencao:'Chamamento publico: procedimento destinado a selecionar OSCs para celebrar parcerias -- nao e licitacao, mas tem principios semelhantes (isonomia, transparencia, publicidade). Dispensa do chamamento publico: nos casos do art. 30 da Lei (urgencia, OSC indicada em lei, acordo de cooperacao sem recursos, entre outros). Vedacoes: e vedado celebrar parceria com OSC que tenha como dirigente membro de Poder ou do MP, servidor ou empregado publico, seu conjuge ou companheiro ou parente em linha reta ate 1o grau (art. 39 da Lei).',
+    oral:'O Marco Regulatorio das Organizacoes da Sociedade Civil, instituido pela Lei 13.019 de 2014, regula as parcerias entre a Administracao Publica e as OSCs para fins de interesse publico reciproco. Os instrumentos de parceria sao tres: o termo de colaboracao, quando a iniciativa parte da Administracao; o termo de fomento, quando a iniciativa parte da OSC; e o acordo de cooperacao, quando nao ha transferencia de recursos financeiros. Os dois primeiros exigem chamamento publico previo. As OSCs devem ser pessoas juridicas de direito privado sem fins lucrativos, com pelo menos um ano de existencia e objetivos voltados ao interesse publico. O plano de trabalho e elemento essencial de qualquer parceria, detalhando objeto, metas, cronograma e aplicacao dos recursos.',
+    dica:'Instrumentos MROSC: colaboracao (Adm. propoe + chamamento) + fomento (OSC propoe + chamamento) + cooperacao (sem recursos + sem chamamento). OSC: PJ privada + sem fins lucrativos + 1 ano de CNPJ + interesse publico. Chamamento publico: nao e licitacao mas tem principios similares. Vedacao: dirigente que seja servidor publico ou parente ate 1o grau.'
+  }
+];
+
+var filtered = allCards.slice();
+var cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido -- ideal para simular a banca'
+    : 'Resposta em blocos estruturados -- ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? allCards.slice() : allCards.filter(function(c){ return c.grupo === f; });
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  var c = filtered[cur];
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(function(p){ return '<span class="pill">' + p + '</span>'; }).join('');
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+  document.getElementById('b-blocks').innerHTML = mode === 'oral'
+    ? '<div class="oral-answer">' + c.oral + '</div><div class="oral-tip"><div class="blbl">Dica para a banca</div><p>' + c.dica + '</p></div>'
+    : '<div class="b-block"><div class="blbl">Fundamento legal</div><p>' + c.fundamento + '</p></div>' +
+      '<div class="b-block"><div class="blbl">Conceito e distincoes</div><p>' + c.conceito + '</p></div>' +
+      '<div class="b-alert"><div class="blbl">Atencao -- ponto de prova</div><p>' + c.atencao + '</p></div>' +
+      '<div class="b-tip"><div class="blbl">Dica de memorizacao</div><p>' + c.dica + '</p></div>';
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = (cur + 1) + ' / ' + filtered.length + ' fichas';
+  var sh = function(t){ return t.length > 28 ? t.substring(0,28) + '...' : t; };
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map(function(x,i){ return '<button class="topic-btn ' + (i===cur?'active':'') + '" onclick="go(' + i + ')">' + (i+1) + '. ' + sh(x.title) + '</button>'; }).join('') +
+    '<span class="counter-pill">' + (cur+1) + ' / ' + filtered.length + '</span>';
+}
+
+function flip(){ document.getElementById('card').classList.toggle('flipped'); }
+function go(i){ cur = i; render(); }
+function prev(){ cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next(){ cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>
