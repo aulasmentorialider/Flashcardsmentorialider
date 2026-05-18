@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas -- Direito Civil e Processual Civil | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  header{background:var(--navy);padding:1.5rem 2rem 1.25rem;}
+  .hbadge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px;}
+  header h1{font-size:20px;font-weight:600;color:#fff;}
+  header p{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;}
+  .hrow{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+  .hcount{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-left:auto;}
+  .mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mode-label{font-size:12px;color:var(--muted);font-weight:500;}
+  .toggle-wrap{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;gap:2px;}
+  .toggle-opt{font-size:11.5px;padding:4px 14px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-weight:500;transition:all .15s;}
+  .toggle-opt.active{background:var(--navy);color:#fff;}
+  .mode-hint{font-size:11px;color:var(--faint);}
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .progress-wrap{height:3px;background:var(--border);border-radius:999px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-bar{height:100%;background:var(--navy-mid);border-radius:999px;transition:width .3s ease;}
+  .topic-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem;align-items:center;}
+  .topic-btn{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500;font-family:'Sora',sans-serif;}
+  .topic-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .topic-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .counter-pill{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);white-space:nowrap;}
+  .card-scene{perspective:1200px;margin-bottom:1.5rem;}
+  .card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);min-height:290px;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;display:flex;flex-direction:column;}
+  .face.back{transform:rotateY(180deg);position:absolute;top:0;left:0;right:0;}
+  .f-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:1.1rem;width:fit-content;}
+  .cat-navy{background:var(--navy-light);color:var(--navy);}
+  .cat-teal{background:var(--teal-light);color:var(--teal);}
+  .cat-coral{background:var(--coral-light);color:var(--coral);}
+  .cat-amber{background:var(--amber-light);color:var(--amber);}
+  .cat-purple{background:var(--purple-light);color:var(--purple);}
+  .f-title{font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+  .f-question{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;flex:1;}
+  .f-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+  .hint-line{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;}
+  .oral-answer{font-size:14px;color:var(--text);line-height:1.8;border-left:3px solid var(--navy-mid);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:9px;}
+  .blbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .oral-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;}
+  .oral-tip .blbl{color:var(--teal);}
+  .oral-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .b-block{background:var(--bg);border-radius:10px;padding:11px 15px;margin-bottom:9px;}
+  .b-block .blbl{color:var(--faint);}
+  .b-block p{font-size:13px;color:var(--text);line-height:1.65;}
+  .b-alert{border-left:3px solid var(--coral);background:var(--coral-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-alert .blbl{color:var(--coral);}
+  .b-alert p{font-size:13px;color:#5a2010;line-height:1.65;}
+  .b-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-tip .blbl{color:var(--teal);}
+  .b-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .btn-row{display:flex;gap:8px;margin-top:1.4rem;}
+  .btn{flex:1;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:var(--bg);color:var(--text);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:#17316b;}
+  footer{text-align:center;padding:2rem 1rem;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+  @media(max-width:540px){
+    main{padding:1.25rem 1rem 3rem;}
+    header,.filter-bar,.mode-bar{padding:.75rem 1rem;}
+    .f-title{font-size:18px;}
+    .face{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG -- Direito Civil e Processual Civil</div>
+      <h1>Direito Civil e Processo Civil</h1>
+      <p>Fichas para prova oral e estudo ativo -- itens 8.1 a 8.3 do edital</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido -- ideal para simular a banca</span>
+</div>
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('pessoas',this)">Pessoas e Bens</button>
+  <button class="filter-btn" onclick="setFilter('fatos',this)">Fatos Juridicos</button>
+  <button class="filter-btn" onclick="setFilter('responsabilidade',this)">Responsabilidade Civil</button>
+  <button class="filter-btn" onclick="setFilter('coisas',this)">Posse e Propriedade</button>
+  <button class="filter-btn" onclick="setFilter('lindb',this)">LINDB</button>
+  <button class="filter-btn" onclick="setFilter('processo',this)">Processo Civil</button>
+</div>
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ocultar</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Mentoria Lider -- CFO PMMG -- Material de uso exclusivo dos alunos</footer>
+
+<script>
+var mode = 'oral';
+
+var allCards = [
+
+  // PESSOAS E BENS
+  {
+    grupo:'pessoas', cat:'Pessoas e Bens', catClass:'cat-navy',
+    title:'Pessoa natural -- capacidade e personalidade',
+    question:'O que e personalidade juridica? Quando se adquire? Quais as especies de capacidade? O que e incapacidade absoluta e relativa?',
+    pills:['Art. 1 CC','Arts. 3-4 CC','Estatuto da Pessoa com Deficiencia'],
+    fundamento:'Arts. 1 a 10 do CC/2002. Lei no 13.146/2015 (Estatuto da Pessoa com Deficiencia -- EPD).',
+    conceito:'PERSONALIDADE JURIDICA: aptidao para ser titular de direitos e obrigacoes. Adquire-se com o nascimento com vida -- o CC protege os direitos do nascituro desde a concepcao. CAPACIDADE DE DIREITO (gozo): toda pessoa natural tem -- e a personalidade juridica. CAPACIDADE DE FATO (exercicio): aptidao para exercer pessoalmente os atos da vida civil. ABSOLUTAMENTE INCAPAZES (art. 3 CC, apos EPD): apenas os menores de 16 anos. RELATIVAMENTE INCAPAZES (art. 4 CC): maiores de 16 e menores de 18 anos; ebrios habituais e viciados em toxicos; aqueles que por causa transitoria ou permanente nao puderem exprimir sua vontade. EMANCIPACAO (art. 5, paragrafo unico): voluntaria (pais, a partir de 16 anos, por escritura publica); judicial (juiz, a requerimento do menor); legal (casamento, emprego publico efetivo, colacao de grau em ensino superior, estabelecimento civil ou comercial com economia propria).',
+    atencao:'O EPD (Lei 13.146/2015) revolucionou o regime das incapacidades: a pessoa com deficiencia mental ou intelectual NAO e mais absolutamente incapaz -- e plenamente capaz, podendo ser submetida a curatela apenas para atos patrimoniais. O unico absolutamente incapaz e o menor de 16 anos. Nascituro: o CC protege seus direitos desde a concepcao, mas a personalidade so se adquire com o nascimento com vida -- teoria natalista (posicao majoritaria e do STJ).',
+    oral:'A personalidade juridica e a aptidao para ser titular de direitos e obrigacoes, adquirida com o nascimento com vida, embora o Codigo Civil proteja os direitos do nascituro desde a concepcao. A capacidade de direito ou de gozo e atributo de toda pessoa natural, enquanto a capacidade de fato ou de exercicio e a aptidao para praticar pessoalmente os atos da vida civil. Apos o Estatuto da Pessoa com Deficiencia de 2015, a unica hipotese de incapacidade absoluta e a menoridade -- menores de dezesseis anos. Os relativamente incapazes incluem os maiores de dezesseis e menores de dezoito anos e aqueles que, por causa transitoria ou permanente, nao possam exprimir sua vontade. A emancipacao pode ser voluntaria, judicial ou legal, sendo o casamento a hipotese legal mais frequentemente cobrada.',
+    dica:'Absolutamente incapaz: apenas menor de 16 anos (apos EPD 2015). Relativamente incapaz: 16-18 anos + causa transitoria/permanente de expressao da vontade. Pessoa com deficiencia: capaz -- curatela so para atos patrimoniais. Emancipacao legal: casamento + emprego publico efetivo + colacao de grau + atividade comercial com economia propria.'
+  },
+  {
+    grupo:'pessoas', cat:'Pessoas e Bens', catClass:'cat-navy',
+    title:'Pessoa juridica e bens',
+    question:'Quais as especies de pessoa juridica? O que e desconsideracao da personalidade juridica? Como se classificam os bens no CC?',
+    pills:['Arts. 40-69 CC','Art. 50 CC','Teoria da desconsideracao'],
+    fundamento:'Arts. 40 a 78 do CC/2002. Art. 28 do CDC. Art. 4 da Lei 9.605/98.',
+    conceito:'PESSOAS JURIDICAS DE DIREITO PUBLICO: interno (Uniao, Estados, DF, Municipios, autarquias, demais entidades de direito publico) e externo (Estados estrangeiros, organismos internacionais). PESSOAS JURIDICAS DE DIREITO PRIVADO (art. 44): associacoes; sociedades; fundacoes; organizacoes religiosas; partidos politicos; empresas individuais de responsabilidade limitada (EIRELI -- extinta e absorvida pela SLU). DESCONSIDERACAO DA PERSONALIDADE JURIDICA (art. 50 CC): quando ha abuso da personalidade juridica, caracterizado por desvio de finalidade ou confusao patrimonial -- o juiz pode desconsiderar para atingir o patrimonio dos socios. Teoria maior (CC e regra geral -- exige abuso). Teoria menor (CDC e ambiental -- basta insolvencia). CLASSIFICACAO DOS BENS: moveis x imoveis; fungíveis x infungiveis; consumiveis x inconsumíveis; divisíveis x indivisíveis; singulares x coletivos; publicos x particulares.',
+    atencao:'A desconsideracao da personalidade juridica no CC (teoria maior) exige PROVA do desvio de finalidade ou confusao patrimonial -- mero inadimplemento nao autoriza. No CDC (teoria menor), basta a insolvencia da pessoa juridica para atingir o socio. O CPC/2015 (arts. 133-137) criou o incidente de desconsideracao da personalidade juridica, com contraditorio e ampla defesa. Bens publicos (art. 98 CC): uso comum do povo (pracas, rios), uso especial (reparticoes publicas) e dominicais (patrimonio disponivel do Estado) -- uso comum e uso especial sao inalienáveis enquanto afetados.',
+    oral:'As pessoas juridicas dividem-se em pessoas de direito publico, interno e externo, e pessoas de direito privado, entre as quais associacoes, sociedades e fundacoes. A desconsideracao da personalidade juridica do art. 50 do Codigo Civil exige a demonstracao de abuso da personalidade juridica, caracterizado por desvio de finalidade ou confusao patrimonial -- e a teoria maior, que prevalece no direito civil. No Codigo de Defesa do Consumidor aplica-se a teoria menor, bastando a insolvencia para atingir o patrimonio do socio. Quanto aos bens, o Codigo Civil os classifica em moveis e imoveis, fungiveis e infungiveis, consumiveis e inconsumíveis, divisiveis e indivisiveis, singulares e coletivos e publicos e particulares.',
+    dica:'Desconsideracao CC (teoria maior): exige desvio de finalidade ou confusao patrimonial. CDC/ambiental (teoria menor): basta insolvencia. CPC: incidente com contraditorio. Bens publicos: uso comum + uso especial = inalienáveis enquanto afetados. Dominicais: alienáveis.'
+  },
+
+  // FATOS JURIDICOS
+  {
+    grupo:'fatos', cat:'Fatos Juridicos', catClass:'cat-purple',
+    title:'Fato juridico -- classificacao e negocio juridico',
+    question:'O que e fato juridico? Como se classificam? Quais os elementos do negocio juridico e os seus vícios?',
+    pills:['Arts. 104-184 CC','Plano da existencia','Escada Ponteana'],
+    fundamento:'Arts. 104 a 184 do CC/2002. Teoria de Pontes de Miranda (escada ponteana).',
+    conceito:'FATO JURIDICO: todo evento que produz efeitos no mundo juridico. Classificacao: fato juridico stricto sensu (evento natural -- morte, nascimento); ato-fato juridico (ato humano sem vontade qualificada -- achado); ato juridico em sentido estrito (ato humano licito sem margem de escolha dos efeitos); negocio juridico (ato humano licito com autonomia na determinacao dos efeitos). ELEMENTOS DO NEGOCIO JURIDICO (art. 104): agente capaz; objeto licito, possivel, determinado ou determinavel; forma prescrita ou nao defesa em lei. PLANOS (escada ponteana): EXISTENCIA (elementos minimos); VALIDADE (requisitos do art. 104); EFICACIA (producao de efeitos). VICIOS DO CONSENTIMENTO: erro (falsa nocao da realidade); dolo (induzimento a erro); coacao (violencia); estado de perigo; lesao. VICIOS SOCIAIS: simulacao (nulidade absoluta); fraude contra credores (anulabilidade -- acao pauliana).',
+    atencao:'Negocio juridico NULO (art. 166 CC): nao produz efeitos, nao convalesce, pode ser declarado de oficio pelo juiz, imprescritivel. Hipoteses: agente absolutamente incapaz; objeto ilicito/impossivel/indeterminavel; forma essencial preterida; simulacao. Negocio juridico ANULAVEL (art. 171): produz efeitos ate ser anulado, nao pode ser declarado de oficio, prazo decadencial de 4 anos (dolo, coacao, estado de perigo, lesao, fraude contra credores) ou 2 anos (incapacidade relativa). Convalidacao: sanavel por confirmacao.',
+    oral:'O fato juridico e todo evento relevante para o ordenamento juridico, classificando-se em fatos naturais e humanos. Entre os fatos humanos destaca-se o negocio juridico, que se caracteriza pela autonomia das partes na determinacao dos efeitos juridicos. Seus requisitos de validade estao no art. 104 do Codigo Civil: agente capaz, objeto licito possivel e determinavel, e forma prescrita ou nao defesa em lei. A doutrina organiza o negocio juridico em tres planos: existencia, validade e eficacia -- a chamada escada ponteana. Os vicios do consentimento -- erro, dolo, coacao, estado de perigo e lesao -- geram anulabilidade. A simulacao gera nulidade absoluta.',
+    dica:'Requisitos (art. 104): agente capaz + objeto licito/possivel/determinavel + forma. Nulo: nao convalesce, decretavel de oficio, imprescritivel -- simulacao, objeto ilicito, incapaz absoluto. Anulavel: convalesce, nao de oficio, prazo decadencial -- dolo, coacao, lesao, estado de perigo. Escada: existencia >> validade >> eficacia.'
+  },
+  {
+    grupo:'fatos', cat:'Fatos Juridicos', catClass:'cat-purple',
+    title:'Prescricao e decadencia',
+    question:'Qual a diferenca entre prescricao e decadencia? Quais os prazos gerais? O que suspende e interrompe a prescricao?',
+    pills:['Arts. 189-211 CC','Prazo geral: 10 anos','Decadencia: legal x convencional'],
+    fundamento:'Arts. 189 a 211 do CC/2002.',
+    conceito:'PRESCRICAO: extincao da pretensao (direito de exigir em juizo) pelo decurso do tempo. Prazo geral: 10 anos (art. 205). Prazos especiais: 5 anos (pretensao de cobranca de dividas liquidas), 3 anos (reparacao civil, enriquecimento sem causa), 1 ano (seguros, hospedeiros). DECADENCIA: extincao do proprio direito potestativo pelo decurso do prazo. Pode ser legal (conhecida de oficio pelo juiz, nao admite suspensao nem interrupcao, salvo disposicao legal) ou convencional (so pode ser alegada pela parte beneficiada). CAUSAS DE SUSPENSAO DA PRESCRICAO (art. 197-198): entre conjuge na constancia do casamento; contra absolutamente incapazes; contra ausentes do Brasil em servico publico. CAUSAS DE INTERRUPCAO (art. 202): despacho do juiz que ordenar a citacao; protesto judicial; apresentacao do titulo a inventario; qualquer ato inequivoco de reconhecimento do direito pelo devedor -- interrompe uma unica vez.',
+    atencao:'Distincao essencial: prescricao atinge a PRETENSAO (direito subjetivo violado que nao foi exercido). Decadencia atinge o DIREITO POTESTATIVO (direito de constituir, modificar ou extinguir relacao juridica). A prescricao pode ser renunciada apos sua consumacao; a decadencia legal nao pode ser renunciada. O juiz deve conhecer de oficio a prescricao (art. 332, paragrafo 1 CPC) e a decadencia legal -- nao pode conhecer de oficio a decadencia convencional.',
+    oral:'A prescricao e a decadencia sao institutos distintos. A prescricao extingue a pretensao -- o direito de exigir em juizo a satisfacao de um direito subjetivo violado. O prazo geral e de dez anos, com prazos especiais de tres anos para reparacao civil e cinco anos para cobranca de dividas liquidas. A decadencia, por sua vez, extingue o proprio direito potestativo pelo decurso do prazo. A decadencia legal e conhecida de oficio pelo juiz e nao admite suspensao nem interrupcao. A prescricao pode ser suspensa nas hipoteses dos arts. 197 e 198 e interrompida uma unica vez pelas causas do art. 202, como o despacho que ordena a citacao ou o reconhecimento da divida pelo devedor.',
+    dica:'Prescricao: extingue a PRETENSAO -- prazo geral 10 anos, 3 anos para dano civil. Decadencia: extingue o DIREITO POTESTATIVO. Legal: de oficio, nao suspende nem interrompe. Convencional: so pela parte beneficiada. Interrupcao da prescricao: uma unica vez. Suspensao: absolutamente incapaz, conjuge, ausente em servico publico.'
+  },
+
+  // RESPONSABILIDADE CIVIL
+  {
+    grupo:'responsabilidade', cat:'Responsabilidade Civil', catClass:'cat-coral',
+    title:'Responsabilidade civil -- pressupostos e especies',
+    question:'Quais os pressupostos da responsabilidade civil? Qual a diferenca entre responsabilidade subjetiva e objetiva? O que e abuso de direito?',
+    pills:['Art. 186 CC','Art. 927 CC','Paragrafo unico art. 927'],
+    fundamento:'Arts. 186, 187, 927 e 944 do CC/2002.',
+    conceito:'PRESSUPOSTOS: (1) conduta humana (acao ou omissao); (2) culpa ou dolo (na subjetiva) ou risco (na objetiva); (3) dano (material, moral ou estetico); (4) nexo de causalidade entre conduta e dano. RESPONSABILIDADE SUBJETIVA (regra -- art. 186): exige prova de culpa (negligencia, imprudencia ou imperícia) ou dolo. RESPONSABILIDADE OBJETIVA (art. 927, paragrafo unico): prescinde de culpa -- basta conduta + dano + nexo. Cabivel quando: a lei expressamente prever; ou a atividade normalmente desenvolvida pelo autor implicar risco para os direitos de outrem (teoria do risco criado). ABUSO DE DIREITO (art. 187): ato ilicito praticado no exercicio formal de um direito, mas de forma contraria a boa-fe, costumes ou fim economico/social. Gera responsabilidade sem necessidade de culpa -- e ato ilicito objetivo. DANO MORAL: lesao a direito da personalidade -- prescinde de prova do dano (dano in re ipsa em algumas hipoteses -- STJ).',
+    atencao:'A responsabilidade objetiva no CC e excecao -- aplica-se quando ha previsao legal ou atividade de risco. Nao se confunde com a responsabilidade objetiva do Estado (art. 37, paragrafo 6 CF), que e regra para atos comissivos. CAUSAS EXCLUDENTES do nexo causal: caso fortuito ou forca maior; fato exclusivo da vitima; fato exclusivo de terceiro. Culpa concorrente da vitima (art. 945): reduz proporcional-mente a indenizacao -- nao exclui. Dano estetico: reconhecido pelo STJ como categoria autonoma, cumulavel com o moral (Sumula 387 STJ).',
+    oral:'A responsabilidade civil exige quatro pressupostos: conduta humana, culpa ou dolo na modalidade subjetiva, dano e nexo de causalidade. A regra no Codigo Civil e a responsabilidade subjetiva do art. 186, que exige a prova de culpa ou dolo do agente. A responsabilidade objetiva, prevista no paragrafo unico do art. 927, dispensa a prova de culpa e se aplica quando a lei assim determinar ou quando a atividade normalmente desenvolvida pelo autor implicar risco especial aos direitos de outrem. O abuso de direito do art. 187 configura ato ilicito objetivo -- o agente age dentro dos limites formais do seu direito, mas de forma contraria a boa-fe, aos costumes ou ao fim social ou economico do direito.',
+    dica:'Subjetiva (art. 186): conduta + culpa/dolo + dano + nexo. Objetiva (art. 927, PU): conduta + dano + nexo -- sem culpa (lei ou atividade de risco). Abuso de direito (art. 187): ato ilicito objetivo -- exercicio contrario a boa-fe/costumes/fins sociais. Excludentes: caso fortuito + forca maior + fato exclusivo da vitima/terceiro. Culpa concorrente: reduz, nao exclui. Dano estetico: cumulavel com moral (S. 387 STJ).'
+  },
+  {
+    grupo:'responsabilidade', cat:'Responsabilidade Civil', catClass:'cat-coral',
+    title:'Responsabilidade civil por fato de terceiro e pelo produto',
+    question:'Quando os pais, empregadores e donos de animais respondem por danos causados por terceiros? O que e responsabilidade pelo produto?',
+    pills:['Art. 932 CC','Art. 936 CC','Responsabilidade indireta'],
+    fundamento:'Arts. 932 a 943 do CC/2002.',
+    conceito:'RESPONSABILIDADE INDIRETA (art. 932): SAO TAMBEM RESPONSAVEIS (objetivamente -- art. 933): (I) os pais pelos filhos menores que estiverem sob sua autoridade e em sua companhia; (II) o tutor e o curador pelos pupilos e curatelados; (III) o empregador ou comitente pelos empregados/prepostos no exercicio do trabalho; (IV) os donos de hoteis, hospedarias pelos hospedes; (V) os que participarem de produto criminoso. RESPONSABILIDADE POR ANIMAL (art. 936): o dono ou detentor do animal responde pelos danos que ele causar, salvo culpa exclusiva da vitima ou forca maior. RESPONSABILIDADE DOS PAIS: objetiva -- independe de culpa dos pais. O filho emancipado voluntariamente: os pais respondem solidariamente pelos danos que ele causar (Sumula 596 STJ). ACAO REGRESSIVA: o responsavel indireto que pagar a indenizacao pode cobrar do causador direto, salvo se ele for descendente seu (art. 934).',
+    atencao:'A responsabilidade do empregador pelos atos do preposto e objetiva e independe de culpa do empregador -- basta que o dano tenha sido causado no exercicio do trabalho ou em razao dele. O STJ entende que o empregador responde mesmo quando o empregado age com desvio de funcao, desde que a atividade tenha alguma relacao com o trabalho. Responsabilidade dos pais por filho emancipado voluntariamente: solidaria (S. 596 STJ) -- a emancipacao nao afasta a responsabilidade dos pais pelo ato ilicito do filho.',
+    oral:'O Codigo Civil, no art. 932, estabelece hipoteses de responsabilidade civil indireta ou por fato de terceiro, todas objetivas por forca do art. 933. Os pais respondem objetivamente pelos danos causados pelos filhos menores que estejam sob sua autoridade e companhia. O empregador ou comitente responde pelos atos dos empregados e prepostos praticados no exercicio do trabalho ou em razao dele. O dono ou detentor de animal responde pelos danos que ele causar, salvo culpa exclusiva da vitima ou forca maior. Em todos esses casos, o responsavel indireto que pagar a indenizacao tem acao regressiva contra o causador direto do dano, exceto quando for seu descendente.',
+    dica:'Responsabilidade indireta (art. 932): objetiva (art. 933). Pais: filhos menores sob sua autoridade. Empregador: preposto no exercicio do trabalho. Dono de animal: responde salvo culpa exclusiva da vitima ou forca maior. Filho emancipado voluntariamente: pais respondem solidariamente (S. 596 STJ). Acao regressiva: cabe -- exceto contra descendente.'
+  },
+
+  // POSSE E PROPRIEDADE
+  {
+    grupo:'coisas', cat:'Posse e Propriedade', catClass:'cat-teal',
+    title:'Posse -- conceito, classificacao e efeitos',
+    question:'O que e posse? Como se classifica? Quais os efeitos da posse? Qual a diferenca entre posse e detencao?',
+    pills:['Arts. 1196-1224 CC','Teoria de Jhering','Acoes possessorias'],
+    fundamento:'Arts. 1.196 a 1.224 do CC/2002.',
+    conceito:'CONCEITO (art. 1196): possuidor e aquem tem de fato o exercicio, pleno ou nao, de algum dos poderes inerentes a propriedade (usar, gozar, dispor, reivinicar). CC adotou a TEORIA OBJETIVA de Jhering -- nao exige animus domini (vontade de ser dono), basta o corpus (conduta de quem age como proprietario). CLASSIFICACAO: direta x indireta (locatario x locador); justa x injusta (violenta, clandestina ou precaria); de boa-fe x ma-fe; com justo titulo x sem justo titulo. DETENCAO (art. 1198): nao e posse -- e quem conserva a posse em nome de outro e em cumprimento de ordens (caseiro, empregado domestico). Detentor nao tem protecao possessoria. EFEITOS DA POSSE: protecao possessoria (interditos); percepcao dos frutos (possuidor de boa-fe tem direito aos frutos percebidos); usucapiao; indenizacao pelas benfeitorias.',
+    atencao:'Acoes possessorias: reintegracao de posse (esbulho -- perda total da posse); manutencao de posse (turbacao -- perturbacao parcial); interdito proibitorio (ameaca). Fungibilidade das acoes possessorias: o juiz pode conceder medida diferente da pedida se a situacao fatica mudar no curso do processo (art. 554 CPC). Possuidor de boa-fe: tem direito as benfeitorias necessarias e uteis (com retencao); nao responde pela deterioracao salvo culpa. Possuidor de ma-fe: so tem direito as necessarias (sem retencao); responde pela deterioracao.',
+    oral:'O Codigo Civil adotou a teoria objetiva de Jhering para definir a posse: e possuidor aquele que exerce de fato algum dos poderes inerentes a propriedade, sem necessidade de animus domini. A posse classifica-se em direta e indireta, justa e injusta, de boa-fe e ma-fe. A detencao, prevista no art. 1198, nao e posse -- e a relacao de quem conserva a coisa em nome de outro e por ordens suas, como o caseiro ou o empregado domestico, sem protecao possessoria. Os principais efeitos da posse sao a protecao pelos interditos possessorios, a percepcao dos frutos pelo possuidor de boa-fe e a possibilidade de usucapiao.',
+    dica:'Teoria objetiva (Jhering): so corpus, sem animus domini. Injusta: violenta + clandestina + precaria. Detencao: nao tem protecao possessoria (caseiro, empregado). Esbulho = reintegracao. Turbacao = manutencao. Ameaca = interdito proibitorio. Boa-fe: frutos percebidos + benfeitorias necessarias e uteis com retencao. Ma-fe: so necessarias, sem retencao.'
+  },
+  {
+    grupo:'coisas', cat:'Posse e Propriedade', catClass:'cat-teal',
+    title:'Propriedade -- conteudo, funcao social e usucapiao',
+    question:'Quais os poderes do proprietario? O que e funcao social da propriedade? Quais as especies de usucapiao?',
+    pills:['Art. 1228 CC','Art. 5 XXII-XXIII CF','Usucapiao -- prazos'],
+    fundamento:'Arts. 1.228 a 1.368 do CC/2002. Arts. 5, XXII e XXIII, e 182-186 da CF/88.',
+    conceito:'CONTEUDO (art. 1228): usar, gozar, dispor e reivinicar. FUNCAO SOCIAL (art. 1228, paragrafo 1): o direito de propriedade deve ser exercido em consonancia com suas finalidades economicas e sociais -- o proprietario pode perder a propriedade se nao a cumprir. USUCAPIAO -- PRINCIPAIS ESPECIES: extraordinaria (art. 1238): 15 anos, independe de justo titulo e boa-fe; com reducao a 10 anos se houver moradia ou trabalho. Ordinaria (art. 1242): 10 anos, justo titulo + boa-fe; com reducao a 5 anos se houver moradia ou trabalho e o imovel tiver sido adquirido onerosamente com registro cancelado. Especial rural (art. 1239 CC + art. 191 CF): 5 anos, area de ate 50 hectares, sem outra propriedade, com moradia e producao. Especial urbana (art. 1240 CC + art. 183 CF): 5 anos, area de ate 250m2, sem outra propriedade, com moradia -- nao se pode alegar mais de uma vez. Usucapiao familiar (art. 1240-A CC): 2 anos, area de ate 250m2, apos abandono do lar pelo ex-conjuge.',
+    atencao:'A funcao social da propriedade e clausula petrea (art. 5, XXIII CF) -- limite intrinseco ao direito de propriedade, nao e restricao externa. Usucapiao nao e modo originario de aquisicao de propriedade de bem publico -- bens publicos sao imprescritiveis (art. 183, paragrafo 3 CF + Sumula 340 STF). Acessao: modo de aquisicao da propriedade por uniao fisico de coisa acessoria a principal -- construcoes e plantacoes presumem-se do proprietario do solo (art. 1253 CC).',
+    oral:'O proprietario tem os poderes de usar, gozar, dispor e reivinicar a coisa. O exercicio desses poderes, porem, deve observar a funcao social da propriedade, garantia constitucional do art. 5, XXIII, que e tambem clausula petrea. A usucapiao e modo originario de aquisicao da propriedade pelo exercicio prolongado da posse. As principais especies sao: a extraordinaria, com prazo de quinze anos sem requisitos de titulo e boa-fe; a ordinaria, com dez anos e exigencia de justo titulo e boa-fe; a especial rural, com cinco anos para area ate cinquenta hectares com moradia e producao; a especial urbana, com cinco anos para area ate duzentos e cinquenta metros quadrados com moradia; e a familiar, com dois anos apos o abandono do lar pelo ex-conjuge.',
+    dica:'Poderes: usar + gozar + dispor + reivinicar. Usucapiao: extraordinaria (15 ou 10 anos) -- sem requisitos adicionais. Ordinaria (10 ou 5 anos) -- justo titulo + boa-fe. Especial rural (5 anos, 50ha, sem outra propriedade). Especial urbana (5 anos, 250m2, moradia, nao repetivel). Familiar (2 anos, abandono do lar). Bem publico: imprescritivel -- nao usucapivel.'
+  },
+
+  // LINDB
+  {
+    grupo:'lindb', cat:'LINDB', catClass:'cat-amber',
+    title:'LINDB -- vigencia, conflito de leis e hermeneutica',
+    question:'O que regula a LINDB? Quando a lei entra em vigor? O que e vacatio legis? Como resolver o conflito de normas no tempo?',
+    pills:['DL 4.657/1942','Art. 1 LINDB','Vacatio legis: 45 dias'],
+    fundamento:'Decreto-Lei no 4.657/1942, com redacao da Lei no 12.376/2010 e alteracoes da Lei no 13.655/2018.',
+    conceito:'VIGENCIA (art. 1): salvo disposicao contraria, a lei comeca a vigorar 45 dias depois de publicada no territorio nacional (no exterior: 3 meses). VACATIO LEGIS: periodo entre publicacao e entrada em vigor -- protetor da seguranca juridica. CONFLITO DE LEIS NO TEMPO: lei posterior revoga lei anterior expressamente, tacitamente (incompatibilidade) ou por regular inteiramente a materia. Lei especial nao revoga lei geral -- coexistem. REPRISTINACAO (art. 2, paragrafo 3): a lei revogada nao se restaura pelo simples fato de a lei revogadora ser revogada -- salvo disposicao expressa. APLICACAO DA LEI NO ESPACO: aplica-se a lei do pais em que domiciliado o individuo (estatuto pessoal); a lei do lugar da situacao do bem para imoveis (lex rei sitae); a lei do lugar em que foi contraida a obrigacao (locus regit actum). ANALOGIA, COSTUMES E PRINCIPIOS (art. 4): o juiz, quando a lei for omissa, usara a analogia, costumes e principios gerais de direito.',
+    atencao:'A Lei 13.655/2018 (Lei da Seguranca para a Inovacao Publica) alterou a LINDB para incluir normas de hermeneutica e de controle de decisoes publicas: o decisor deve considerar as consequencias praticas da decisao (art. 20); e vedado decidir com base em valores juridicos abstratos sem considerar as consequencias; as decisoes devem ser motivadas com a indicacao das alternativas consideradas. Essas alteracoes sao cobradas em provas recentes.',
+    oral:'A Lei de Introducao as Normas do Direito Brasileiro regula a vigencia, eficacia, interpretacao e aplicacao das leis em geral. Salvo disposicao contraria, a lei entra em vigor quarenta e cinco dias apos sua publicacao no territorio nacional. A repristinacao -- restauracao da lei revogada quando a lei revogadora e revogada -- nao ocorre automaticamente, exigindo disposicao expressa. No conflito de leis no espaco, aplicam-se os criterios do estatuto pessoal para questoes relativas a pessoa, da lex rei sitae para imoveis e do locus regit actum para obrigacoes. Quando a lei for omissa, o juiz recorre a analogia, aos costumes e aos principios gerais de direito.',
+    dica:'Vigencia: 45 dias (BR) ou 3 meses (exterior) -- salvo disposicao contraria. Repristinacao: nao automatica -- exige disposicao expressa. Conflito no tempo: lei posterior revoga anterior (expressa, tacita ou integralmente). Lei especial x lei geral: coexistem. Analogia > costumes > principios gerais. Lei 13.655/18: decisoes devem ponderar consequencias praticas -- cobrada em provas recentes.'
+  },
+
+  // PROCESSO CIVIL
+  {
+    grupo:'processo', cat:'Processo Civil', catClass:'cat-purple',
+    title:'Normas processuais civis -- principios e aplicacao',
+    question:'Quais os principios fundamentais do CPC/2015? O que e o principio da cooperacao? Como se aplica o CPC no tempo?',
+    pills:['Arts. 1-12 CPC','Principio da cooperacao','Isolamento dos atos processuais'],
+    fundamento:'Arts. 1 a 12 do CPC/2015 (Lei no 13.105/2015).',
+    conceito:'PRINCIPIOS DO CPC/2015: legalidade; igualdade; contraditorio e ampla defesa; publicidade; eficiencia; duração razoavel do processo; boa-fe processual (art. 5 CPC); cooperacao (art. 6 CPC -- todos devem cooperar para obtencao de decisao justa); primazia do julgamento de merito (art. 4 CPC -- preferencia pela resolucao do merito sobre a extincao por vicio formal); NONCORR -- nao surpresa (art. 10 CPC -- vedado decidir com base em fundamento nao submetido ao contraditorio). APLICACAO NO TEMPO: sistema do isolamento dos atos processuais -- a lei nova se aplica imediatamente aos atos processuais futuros, sem prejuizo dos ja praticados. APLICACAO NO ESPACO: lei processual e territorial -- aplica-se a lei do lugar onde tramita o processo (lex fori).',
+    atencao:'O principio da nao surpresa (art. 10 CPC) e novidade relevante do CPC/2015: o juiz nao pode decidir com base em fundamento juridico nao submetido ao contraditorio -- mesmo que seja questao de ordem publica que deva conhecer de oficio, deve antes intimar as partes para se manifestar. O principio da cooperacao (art. 6) vincula nao so as partes, mas tambem o juiz -- que deve apontar defeitos, esclarecer duvidas e prevenir irregularidades.',
+    oral:'O CPC de 2015 consolidou em seus arts. 1 a 12 um robusto conjunto de normas fundamentais. Entre os principios de destaque estao a boa-fe processual, que veda a utilizacao do processo para fins fraudulentos; a cooperacao, que impoe a todos os sujeitos processuais o dever de contribuir para uma decisao justa e efetiva; e a primazia do julgamento do merito, que determina a preferencia pela resolucao substantiva das questoes em detrimento de extincoes por vicio formal. O principio da nao surpresa, positivado no art. 10, e uma das novidades mais relevantes: o juiz nao pode decidir com base em fundamento nao submetido ao contraditorio, mesmo tratando-se de questao de ordem publica.',
+    dica:'Principios CPC/2015: boa-fe (art. 5) + cooperacao (art. 6) + primazia do merito (art. 4) + nao surpresa (art. 10). Cooperacao: vincula partes E juiz. Nao surpresa: juiz deve intimar antes de decidir de oficio. Aplicacao no tempo: isolamento dos atos processuais -- lei nova aplica-se imediatamente aos atos futuros.'
+  },
+  {
+    grupo:'processo', cat:'Processo Civil', catClass:'cat-purple',
+    title:'Jurisdicao, acao e capacidade processual',
+    question:'O que e jurisdicao no CPC? Quais as condicoes da acao? O que e capacidade processual e legitimidade?',
+    pills:['Arts. 16-20 CPC','Arts. 70-75 CPC','Condicoes da acao'],
+    fundamento:'Arts. 16 a 20 e 70 a 75 do CPC/2015.',
+    conceito:'JURISDICAO (art. 16 CPC): a jurisdicao civil e exercida pelos juizes e tribunais em todo o territorio nacional, conforme as disposicoes do CPC. CONDICOES DA ACAO (CPC/2015): o CPC adotou posicao de que as condicoes da acao sao: legitimidade das partes e interesse processual (art. 17). A possibilidade juridica do pedido foi absorvida pelo merito. CAPACIDADE PROCESSUAL (art. 70): toda pessoa pode ser parte. CAPACIDADE DE ESTAR EM JUIZO (art. 70): aptidao para praticar atos processuais pessoalmente -- os incapazes sao representados ou assistidos. LEGITIMIDADE AD CAUSAM: e a pertinencia subjetiva da acao -- quem pode ser autor e quem deve ser reu. REPRESENTACAO (art. 71): o incapaz sera representado ou assistido pelo responsavel legal; o ausente, por curador; a massa falida, pelo administrador judicial; a heranca jacente, pelo curador; a pessoa juridica, por quem seus atos constitutivos designarem.',
+    atencao:'O CPC/2015 reduziu as condicoes da acao para DUAS: legitimidade e interesse processual. A possibilidade juridica do pedido foi absorvida pelo merito -- se o pedido for juridicamente impossivel, a acao e julgada improcedente no merito (e nao extinta sem resolucao do merito). Legitimidade extraordinaria: em casos excepcionais, a lei pode autorizar alguem a demandar em nome proprio por direito alheio (substituicao processual) -- ex: MP em defesa de interesses coletivos.',
+    oral:'A jurisdicao civil e exercida pelos juizes e tribunais em todo o territorio nacional, nos termos do art. 16 do CPC. O codigo reduziu as condicoes da acao para duas: legitimidade das partes e interesse processual. A possibilidade juridica do pedido, que era condicao autonoma no CPC de 1973, foi absorvida pelo merito no codigo vigente. Toda pessoa tem capacidade de ser parte, mas a capacidade de estar em juizo exige aptidao para praticar atos processuais pessoalmente -- os incapazes devem ser representados ou assistidos por seus responsaveis legais. A legitimidade ordinaria exige que o autor demande em nome proprio por direito proprio; a extraordinaria, excepcionalmente admitida por lei, permite demandar em nome proprio por direito alheio.',
+    dica:'Condicoes da acao (CPC/2015): so duas -- legitimidade + interesse processual. Possibilidade juridica: absorvida pelo merito. Capacidade de ser parte: toda pessoa. Capacidade processual: aptidao para atos processuais pessoalmente -- incapaz: representado ou assistido. Legitimidade ordinaria: nome proprio por direito proprio. Extraordinaria: nome proprio por direito alheio (substituicao processual -- exige autorizacao legal).'
+  },
+  {
+    grupo:'processo', cat:'Processo Civil', catClass:'cat_purple',
+    title:'Responsabilidade por dano processual',
+    question:'Quando a parte responde por dano processual? O que e litigancia de ma-fe? Quais as condutas proibidas?',
+    pills:['Arts. 79-81 CPC','Litigancia de ma-fe','Multa processual'],
+    fundamento:'Arts. 79 a 81 do CPC/2015.',
+    conceito:'RESPONSABILIDADE POR DANO PROCESSUAL (art. 79): responde por perdas e danos quem litigar de ma-fe como autor, reu ou interveniente. LITIGANCIA DE MA-FE (art. 80): deduzir pretensao ou defesa contra texto expresso de lei ou fato incontroverso; alterar a verdade dos fatos; usar o processo para conseguir objetivo ilegal; opuser resistencia injustificada ao andamento do processo; proceder de modo temerario; provocar incidente manifestamente infundado; interpuser recurso com intuito manifestamente protelatório. SANCOES (art. 81): multa de 1% a 10% sobre o valor da causa; indenizacao a parte contraria pelos prejudicos que sofreu. A multa pode ser aplicada de oficio pelo juiz. BOA-FE PROCESSUAL (art. 5 CPC): as partes, seus procuradores e todos aqueles que participam do processo devem comportar-se de acordo com a boa-fe.',
+    atencao:'O juiz pode aplicar a multa por litigancia de ma-fe de oficio, independentemente de requerimento da parte contraria. A multa e devida a parte contraria -- nao ao Estado. O STJ entende que a litigancia de ma-fe e compativel com a gratuidade de justica -- o litigante de ma-fe que e beneficiario da justica gratuita pode ser multado, ficando a execucao suspensa ate que cesse a insuficiencia economica. O advogado nao pode ser condenado por litigancia de ma-fe no lugar da parte -- a responsabilidade e da parte, podendo o advogado responder disciplinarmente perante a OAB.',
+    oral:'O CPC de 2015 estrutura a responsabilidade por dano processual nos arts. 79 a 81. Responde por perdas e danos quem litigar de ma-fe na qualidade de autor, reu ou interveniente. As condutas caracterizadoras da litigancia de ma-fe estao elencadas no art. 80 e incluem deduzir pretensao contra texto expresso de lei, alterar a verdade dos fatos, usar o processo para objetivo ilegal e interpor recurso com intuito protelatório. As sancoes previstas no art. 81 sao multa de um a dez por cento sobre o valor da causa e indenizacao pelos prejuizos causados, podendo ser aplicadas de oficio pelo juiz. A responsabilidade e da parte -- o advogado responde disciplinarmente perante a OAB, nao por litigancia de ma-fe.',
+    dica:'Litigancia de ma-fe (art. 80): 7 hipoteses -- texto expresso de lei + alterar verdade + objetivo ilegal + resistencia injustificada + temeridade + incidente infundado + recurso protelatório. Multa: 1-10% sobre o valor da causa -- de oficio -- devida a parte contraria. Advogado: nao responde por litigancia de ma-fe da parte -- responde disciplinarmente perante OAB.'
+  }
+];
+
+var filtered = allCards.slice();
+var cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido -- ideal para simular a banca'
+    : 'Resposta em blocos estruturados -- ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? allCards.slice() : allCards.filter(function(c){ return c.grupo === f; });
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  var c = filtered[cur];
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(function(p){ return '<span class="pill">' + p + '</span>'; }).join('');
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+  document.getElementById('b-blocks').innerHTML = mode === 'oral'
+    ? '<div class="oral-answer">' + c.oral + '</div><div class="oral-tip"><div class="blbl">Dica para a banca</div><p>' + c.dica + '</p></div>'
+    : '<div class="b-block"><div class="blbl">Fundamento legal</div><p>' + c.fundamento + '</p></div>' +
+      '<div class="b-block"><div class="blbl">Conceito e distincoes</div><p>' + c.conceito + '</p></div>' +
+      '<div class="b-alert"><div class="blbl">Atencao -- ponto de prova</div><p>' + c.atencao + '</p></div>' +
+      '<div class="b-tip"><div class="blbl">Dica de memorizacao</div><p>' + c.dica + '</p></div>';
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = (cur + 1) + ' / ' + filtered.length + ' fichas';
+  var sh = function(t){ return t.length > 28 ? t.substring(0,28) + '...' : t; };
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map(function(x,i){ return '<button class="topic-btn ' + (i===cur?'active':'') + '" onclick="go(' + i + ')">' + (i+1) + '. ' + sh(x.title) + '</button>'; }).join('') +
+    '<span class="counter-pill">' + (cur+1) + ' / ' + filtered.length + '</span>';
+}
+
+function flip(){ document.getElementById('card').classList.toggle('flipped'); }
+function go(i){ cur = i; render(); }
+function prev(){ cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next(){ cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>
