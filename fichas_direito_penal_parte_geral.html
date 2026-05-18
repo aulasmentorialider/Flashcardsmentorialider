@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas — Direito Penal: Parte Geral | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F3864; --navy-mid: #2E5FA3; --navy-light: #dce8f8;
+    --teal: #0F6E56; --teal-light: #E1F5EE;
+    --coral: #993C1D; --coral-light: #FAECE7;
+    --amber: #854F0B; --amber-light: #FAEEDA;
+    --purple: #534AB7; --purple-light: #EEEDFE;
+    --bg: #f4f6fb; --surface: #fff;
+    --border: rgba(31,56,100,0.12);
+    --text: #1a1f2e; --muted: #5a6580; --faint: #9ba4bc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sora', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header { background: var(--navy); padding: 1.5rem 2rem 1.25rem; }
+  .hbadge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .12em; color: rgba(255,255,255,.5); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); padding: 4px 10px; border-radius: 4px; text-transform: uppercase; display: inline-block; margin-bottom: 6px; }
+  header h1 { font-size: 20px; font-weight: 600; color: #fff; }
+  header p { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 3px; }
+  .hrow { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+  .hcount { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.35); margin-left: auto; }
+
+  .mode-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: .65rem 2rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .mode-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .toggle-wrap { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 2px; gap: 2px; }
+  .toggle-opt { font-size: 11.5px; padding: 4px 14px; border-radius: 999px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: 'Sora', sans-serif; font-weight: 500; transition: all .15s; }
+  .toggle-opt.active { background: var(--navy); color: #fff; }
+  .mode-hint { font-size: 11px; color: var(--faint); }
+
+  .filter-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: .65rem 2rem; display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn { font-family: 'Sora', sans-serif; font-size: 11.5px; font-weight: 500; padding: 5px 13px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .15s; }
+  .filter-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .filter-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  main { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .progress-wrap { height: 3px; background: var(--border); border-radius: 999px; margin-bottom: 1.5rem; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--navy-mid); border-radius: 999px; transition: width .3s ease; }
+
+  .topic-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.75rem; align-items: center; }
+  .topic-btn { font-size: 11px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all .15s; font-weight: 500; font-family: 'Sora', sans-serif; }
+  .topic-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .topic-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .counter-pill { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--faint); white-space: nowrap; }
+
+  .card-scene { perspective: 1200px; margin-bottom: 1.5rem; }
+  .card-inner { position: relative; transform-style: preserve-3d; transition: transform .5s cubic-bezier(.4,0,.2,1); min-height: 290px; }
+  .card-inner.flipped { transform: rotateY(180deg); }
+  .face { backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem 2rem; display: flex; flex-direction: column; }
+  .face.back { transform: rotateY(180deg); position: absolute; top: 0; left: 0; right: 0; }
+
+  .f-cat { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 1.1rem; width: fit-content; }
+  .cat-navy   { background: var(--navy-light);   color: var(--navy); }
+  .cat-teal   { background: var(--teal-light);   color: var(--teal); }
+  .cat-coral  { background: var(--coral-light);  color: var(--coral); }
+  .cat-amber  { background: var(--amber-light);  color: var(--amber); }
+  .cat-purple { background: var(--purple-light); color: var(--purple); }
+
+  .f-title    { font-size: 21px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: .6rem; }
+  .f-question { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 1.25rem; flex: 1; }
+  .f-pills    { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.4rem; }
+  .pill { font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 3px 9px; border-radius: 4px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+  .hint-line  { font-size: 11.5px; color: var(--faint); display: flex; align-items: center; gap: 6px; margin-bottom: 1.25rem; }
+
+  .oral-answer { font-size: 14px; color: var(--text); line-height: 1.8; border-left: 3px solid var(--navy-mid); background: var(--navy-light); border-radius: 0 10px 10px 0; padding: 14px 16px; margin-bottom: 9px; }
+  .oral-tip { border-left: 3px solid var(--teal); background: var(--teal-light); border-radius: 0 10px 10px 0; padding: 11px 15px; }
+  .oral-tip .blbl, .b-block .blbl, .b-alert .blbl, .b-tip .blbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 5px; }
+  .oral-tip .blbl { color: var(--teal); }
+  .oral-tip p { font-size: 13px; color: #0a3d2e; line-height: 1.65; }
+
+  .b-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 1.1rem; }
+  .b-block { background: var(--bg); border-radius: 10px; padding: 11px 15px; margin-bottom: 9px; }
+  .b-block .blbl { color: var(--faint); }
+  .b-block p { font-size: 13px; color: var(--text); line-height: 1.65; }
+  .b-alert { border-left: 3px solid var(--coral); background: var(--coral-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-bottom: 9px; }
+  .b-alert .blbl { color: var(--coral); }
+  .b-alert p { font-size: 13px; color: #5a2010; line-height: 1.65; }
+  .b-tip { border-left: 3px solid var(--teal); background: var(--teal-light); border-radius: 0 10px 10px 0; padding: 11px 15px; margin-bottom: 9px; }
+  .b-tip .blbl { color: var(--teal); }
+  .b-tip p { font-size: 13px; color: #0a3d2e; line-height: 1.65; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 1.4rem; }
+  .btn { flex: 1; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 500; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all .15s; }
+  .btn:hover { background: var(--bg); color: var(--text); }
+  .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .btn-primary:hover { background: #17316b; }
+
+  footer { text-align: center; padding: 2rem 1rem; font-size: 11.5px; color: var(--faint); border-top: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; letter-spacing: .05em; }
+
+  @media (max-width: 540px) {
+    main { padding: 1.25rem 1rem 3rem; }
+    header, .filter-bar, .mode-bar { padding: .75rem 1rem; }
+    .f-title { font-size: 18px; }
+    .face { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG · Direito Penal · Parte Geral</div>
+      <h1>Direito Penal — Parte Geral</h1>
+      <p>Fichas para prova oral e estudo ativo — responda em voz alta antes de revelar</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">🎤 Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">📚 Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido — ideal para simular a banca</span>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('principios',this)">Princípios</button>
+  <button class="filter-btn" onclick="setFilter('crime',this)">Teoria do Crime</button>
+  <button class="filter-btn" onclick="setFilter('tipicidade',this)">Tipicidade</button>
+  <button class="filter-btn" onclick="setFilter('ilicitude',this)">Ilicitude</button>
+  <button class="filter-btn" onclick="setFilter('culpabilidade',this)">Culpabilidade</button>
+  <button class="filter-btn" onclick="setFilter('pena',this)">Pena</button>
+  <button class="filter-btn" onclick="setFilter('punicao',this)">Punibilidade</button>
+</div>
+
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar — simule a banca
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta ↓</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" class="b-title"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">↑ ocultar</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>Mentoria Líder · CFO PMMG · Material de uso exclusivo dos alunos</footer>
+
+<script>
+let mode = 'oral';
+
+const allCards = [
+
+  // ── PRINCÍPIOS ──────────────────────────────────────────────────
+  {
+    grupo: 'principios', cat: 'Princípios', catClass: 'cat-navy',
+    title: 'Princípio da legalidade penal',
+    question: 'O que é o princípio da legalidade penal? Quais seus desdobramentos? Medida provisória pode criar crime?',
+    pills: ['Art. 5º XXXIX CF', 'Art. 1º CP', 'Nullum crimen'],
+    fundamento: 'Art. 5º, XXXIX, da CF/88 e art. 1º do CP: "Não há crime sem lei anterior que o defina. Não há pena sem prévia cominação legal."',
+    conceito: 'Desdobramentos: (1) LEX SCRIPTA -- somente a lei escrita pode criar crimes e penas (vedado o costume incriminador); (2) LEX STRICTA -- proibição da analogia in malam partem; (3) LEX PRAEVIA -- irretroatividade da lei penal mais gravosa; (4) LEX CERTA -- lei penal deve ser taxativa, clara e determinada (mandado de certeza). Medida Provisória: o STF (ADI 1.430) firmou que MP NÃO pode criar crimes ou cominar penas -- matéria reservada à lei em sentido formal.',
+    atencao: 'A analogia in bonam partem é admitida -- aplica-se lei a caso semelhante em favor do réu. A interpretação extensiva também é admitida, desde que não ultrapasse o sentido possível da norma. A lei penal em branco (tipo que remete a norma complementadora) é constitucional desde que o núcleo essencial do tipo esteja na lei formal.',
+    oral: 'O princípio da legalidade penal está consagrado no art. 5º, XXXIX da Constituição e no art. 1º do Código Penal: não há crime sem lei anterior que o defina, não há pena sem prévia cominação legal. Seus desdobramentos são quatro: a lex scripta, que exige lei escrita e veda o costume incriminador; a lex stricta, que proíbe a analogia em prejuízo do réu; a lex praevia, que consagra a irretroatividade da lei mais grave; e a lex certa, que exige tipo penal taxativo e determinado. Quanto à medida provisória, o STF é firme: MP não pode criar crimes nem cominar penas, matéria sujeita à reserva de lei formal.',
+    dica: 'Quatro desdobramentos: scripta (lei escrita), stricta (sem analogia prejudicial), praevia (irretroatividade), certa (taxatividade). MP não cria crime -- STF. Analogia in bonam partem: admitida. Lei penal em branco: constitucional.'
+  },
+  {
+    grupo: 'principios', cat: 'Princípios', catClass: 'cat-navy',
+    title: 'Princípio da insignificância',
+    question: 'O que é o princípio da insignificância? Quais os vetores do STF? Aplica-se a crimes militares?',
+    pills: ['STF -- HC 84.412', 'Atipicidade material', 'Quatro vetores'],
+    fundamento: 'Construção doutrinária e jurisprudencial -- não positivado expressamente. STF, HC 84.412/SP (Min. Celso de Mello).',
+    conceito: 'O princípio da insignificância exclui a tipicidade material da conduta quando a lesão ao bem jurídico é tão ínfima que não justifica a intervenção do Direito Penal. Quatro vetores exigidos pelo STF cumulativamente: (1) mínima ofensividade da conduta; (2) ausência de periculosidade social da ação; (3) reduzido grau de reprovabilidade do comportamento; (4) inexpressividade da lesão jurídica. Resultado: atipicidade material -- o fato é formalmente típico, mas materialmente atípico.',
+    atencao: 'O STF NÃO aplica a insignificância em: crimes contra a Administração Pública (peculato, concussão -- Súmula 599 STJ); tráfico de drogas; crimes praticados com violência ou grave ameaça; reincidência habitual; moeda falsa. O STM (Superior Tribunal Militar) tem posição mais restritiva: em regra não aplica o princípio aos crimes militares, entendendo que a tutela da hierarquia e disciplina militares afasta a insignificância.',
+    oral: 'O princípio da insignificância é construção doutrinária e jurisprudencial que exclui a tipicidade material da conduta quando a lesão ao bem jurídico é ínfima. O STF, no HC 84.412, consolidou quatro vetores que devem estar presentes cumulativamente: mínima ofensividade da conduta, ausência de periculosidade social, reduzido grau de reprovabilidade e inexpressividade da lesão. O resultado é a atipicidade material -- o fato é formalmente típico, mas o Direito Penal não deve intervir. Há restrições importantes: o STF afasta o princípio nos crimes contra a Administração Pública, no tráfico de drogas e nos crimes com violência. No âmbito militar, o STM é ainda mais restritivo, entendendo que a hierarquia e a disciplina militares exigem resposta penal mesmo em condutas de pequena lesão patrimonial.',
+    dica: 'Quatro vetores: mínima ofensividade + sem periculosidade social + baixa reprovabilidade + lesão inexpressiva -- todos cumulativos. Não se aplica: Administração Pública (S. 599 STJ), tráfico, violência, reincidência habitual. STM: regra é não aplicar em crimes militares.'
+  },
+  {
+    grupo: 'principios', cat: 'Princípios', catClass: 'cat-navy',
+    title: 'Lei penal no tempo -- retroatividade benéfica',
+    question: 'Como funciona a retroatividade da lei penal? O que é abolitio criminis e novatio legis in mellius?',
+    pills: ['Art. 5º XL CF', 'Art. 2º CP', 'Lex mitior'],
+    fundamento: 'Art. 5º, XL, da CF/88 e arts. 2º e 3º do CP.',
+    conceito: 'Regra: a lei penal não retroage, salvo para beneficiar o réu (lex mitior). ABOLITIO CRIMINIS: lei nova deixa de considerar o fato como crime -- extingue a punibilidade, cessa os efeitos penais da condenação (mas subsistem os efeitos civis). NOVATIO LEGIS IN MELLIUS: lei nova mais benéfica para o réu sem abolir o crime -- retroage obrigatoriamente, ainda que a sentença já tenha transitado em julgado (súmula 611 STF). NOVATIO LEGIS IN PEJUS: lei mais grave -- irretroativa. LEI INTERMEDIÁRIA: se o fato ocorreu sob a lei A, houve lei B mais benéfica e agora vigora a lei C mais grave, aplica-se a lei B -- ultra-atividade da lei mais benéfica. Leis temporárias e excepcionais (art. 3º CP): ultra-ativas mesmo após o término da vigência.',
+    atencao: 'A retroatividade benéfica se aplica mesmo após o trânsito em julgado da sentença condenatória -- quem aplica é o juízo da execução penal (Súmula 611 STF). Em caso de conflito de leis, veda-se a combinação de partes de leis diferentes para criar uma terceira lei mais benéfica (lex tertia) -- STF e STJ não admitem. Abolitio criminis: extingue os efeitos penais, mas não os civis (dever de indenizar permanece).',
+    oral: 'O art. 5º, XL da Constituição estabelece que a lei penal não retroagirá, salvo para beneficiar o réu. Há duas situações relevantes: a abolitio criminis, quando a lei nova deixa de tipificar o fato como crime, extinguindo a punibilidade e cessando os efeitos penais da condenação, embora os efeitos civis permaneçam; e a novatio legis in mellius, quando a lei nova é mais benéfica sem abolir o crime, hipótese em que retroage obrigatoriamente, ainda após o trânsito em julgado, cabendo ao juízo da execução aplicá-la. Importante: é vedada a combinação de partes de leis diferentes para criar uma norma mais benéfica -- o que o STF chama de lex tertia.',
+    dica: 'Abolitio: extingue punibilidade + efeitos penais, mas não civis. Novatio in mellius: retroage mesmo após o trânsito -- juízo da execução aplica (S. 611 STF). Lex tertia: proibida. Lei intermediária mais benéfica: aplica-se (ultra-atividade).'
+  },
+
+  // ── TEORIA DO CRIME ─────────────────────────────────────────────
+  {
+    grupo: 'crime', cat: 'Teoria do Crime', catClass: 'cat-purple',
+    title: 'Conceito analítico de crime',
+    question: 'Qual o conceito analítico de crime adotado pelo CP e pelo STF? Há divergência doutrinária?',
+    pills: ['Tripartite x bipartite', 'Tipicidade + ilicitude + culpabilidade', 'Finalismo'],
+    fundamento: 'CP não define expressamente. Posição majoritária da doutrina e jurisprudência brasileira.',
+    conceito: 'CONCEITO TRIPARTITE (majoritário -- STF e STJ): crime é fato típico + ilícito (antijurídico) + culpável. Adotado pela maioria da doutrina (Rogério Greco, Cézar Roberto Bitencourt). CONCEITO BIPARTITE (minoritário -- Damásio, Mirabete): crime é fato típico + ilícito; culpabilidade é pressuposto da pena, não elemento do crime. TEORIA ADOTADA: finalismo de Hans Welzel -- o dolo e a culpa integram o fato típico (conduta), e não a culpabilidade como no causalismo. O CP adotou estrutura finalista: dolo e culpa estão na conduta (art. 18 CP), e a culpabilidade reúne imputabilidade, potencial consciência da ilicitude e exigibilidade de conduta diversa.',
+    atencao: 'A distinção tripartite x bipartite tem efeito prático: se a culpabilidade é elemento do crime (tripartite), sua ausência torna o fato não criminoso; se é só pressuposto da pena (bipartite), o fato continua sendo crime, mas o agente não é punível. Para concursos, adote a posição tripartite como regra -- é a majoritária e a adotada pelo STF.',
+    oral: 'O conceito analítico de crime mais adotado pela doutrina e pela jurisprudência brasileira é o tripartite: crime é fato típico, ilícito e culpável. Essa estrutura decorre do finalismo de Hans Welzel, teoria adotada pelo Código Penal: o dolo e a culpa integram a conduta como elemento do fato típico, e a culpabilidade reúne imputabilidade, potencial consciência da ilicitude e exigibilidade de conduta diversa. Existe posição doutrinária minoritária, sustentada por autores como Damásio e Mirabete, que defende o conceito bipartite -- crime seria apenas fato típico e ilícito, sendo a culpabilidade mero pressuposto da pena. O STF e o STJ adotam o conceito tripartite.',
+    dica: 'Tripartite (majoritário, STF): típico + ilícito + culpável. Bipartite (minoritário, Damásio): típico + ilícito; culpabilidade = pressuposto da pena. Finalismo: dolo e culpa na conduta (fato típico), não na culpabilidade. Para prova: tripartite.'
+  },
+  {
+    grupo: 'crime', cat: 'Teoria do Crime', catClass: 'cat-purple',
+    title: 'Iter criminis -- fases e punibilidade',
+    question: 'Quais as fases do iter criminis? Quando o crime é punível? O que é crime impossível?',
+    pills: ['Art. 14 CP', 'Art. 17 CP', 'Tentativa x consumação'],
+    fundamento: 'Arts. 14, 15 e 17 do CP.',
+    conceito: 'ITER CRIMINIS: (1) cogitação -- não punível; (2) preparação -- em regra não punível, salvo quando a lei tipifica o ato preparatório autonomamente (ex: petrechos para falsificação -- art. 291 CP); (3) execução -- punível (tentativa se não consumar); (4) consumação -- punível. TENTATIVA (art. 14, II): iniciada a execução, o crime não se consuma por circunstâncias alheias à vontade do agente. Pena: redução de 1 a 2/3. DESISTÊNCIA VOLUNTÁRIA e ARREPENDIMENTO EFICAZ (art. 15): o agente responde apenas pelos atos já praticados -- "ponte de ouro". CRIME IMPOSSÍVEL (art. 17): absoluta impropriedade do objeto ou absoluta ineficácia do meio -- fato atípico, não punível.',
+    atencao: 'Distinção: crime impossível (art. 17) x tentativa inidônea. Na tentativa inidônea, o meio ou objeto eram relativamente ineficazes/impróprios -- ainda é tentativa punível. No crime impossível, a ineficácia ou impropriedade é ABSOLUTA -- exclui a tipicidade. Flagrante preparado (provocado): o STF (Súmula 145) entende que é crime impossível -- a polícia cria a situação e não há risco real ao bem jurídico.',
+    oral: 'O iter criminis percorre quatro fases: cogitação, preparação, execução e consumação. A cogitação e, em regra, a preparação são impuníveis. Com o início da execução surge a possibilidade de punição pela tentativa, caso o crime não se consume por circunstâncias alheias à vontade do agente, com redução de pena de um a dois terços. A desistência voluntária e o arrependimento eficaz do art. 15, chamados de ponte de ouro, limitam a responsabilidade do agente aos atos já praticados. O crime impossível do art. 17, por sua vez, ocorre quando há absoluta ineficácia do meio ou absoluta impropriedade do objeto -- o fato é atípico. O STF, pela Súmula 145, enquadra o flagrante preparado como crime impossível.',
+    dica: 'Cogitação e preparação: impuníveis (regra). Execução: tentativa. Consumação: crime completo. Desistência voluntária: responde pelos atos (ponte de ouro). Crime impossível: absoluta ineficácia/impropriedade -- atípico. Flagrante preparado: crime impossível (S. 145 STF).'
+  },
+
+  // ── TIPICIDADE ──────────────────────────────────────────────────
+  {
+    grupo: 'tipicidade', cat: 'Tipicidade', catClass: 'cat-amber',
+    title: 'Dolo e culpa -- espécies e distinções',
+    question: 'Quais as espécies de dolo e culpa no CP? Como diferenciar dolo eventual de culpa consciente?',
+    pills: ['Art. 18 CP', 'Teoria do consentimento', 'Dolo eventual'],
+    fundamento: 'Art. 18 do CP. Teoria da vontade (dolo direto) e teoria do consentimento (dolo eventual) -- adotadas pelo CP.',
+    conceito: 'DOLO DIRETO (art. 18, I -- 1ª parte): o agente quer o resultado. DOLO EVENTUAL (art. 18, I -- 2ª parte): o agente assume o risco de produzir o resultado -- não quer diretamente, mas consente. CULPA CONSCIENTE: o agente prevê o resultado mas acredita sinceramente que não ocorrerá. CULPA INCONSCIENTE: o agente não prevê o resultado, mas devia e podia. Elementos da culpa: conduta voluntária + inobservância do dever de cuidado + resultado + nexo causal + previsibilidade objetiva. Modalidades de culpa (art. 18, II): imprudência (ação positiva descuidada), negligência (omissão de cuidado), imperícia (falta de habilidade técnica).',
+    atencao: 'A distinção entre dolo eventual e culpa consciente é o ponto mais cobrado em provas orais. Critério da teoria do consentimento (adotada pelo CP): no dolo eventual o agente diz internamente "se acontecer, tudo bem" -- consente com o resultado. Na culpa consciente, diz "não vai acontecer" -- confia na não ocorrência. O STF aplica dolo eventual em homicídios praticados em corridas ilegais e embriaguez extrema ao volante.',
+    oral: 'O art. 18 do CP distingue dolo e culpa. O dolo pode ser direto -- quando o agente quer o resultado -- ou eventual -- quando o agente, prevendo o resultado como possível, assume o risco de produzi-lo. A culpa, por sua vez, divide-se em consciente -- o agente prevê o resultado mas confia que não ocorrerá -- e inconsciente -- o agente não prevê, mas devia e podia fazê-lo. A distinção entre dolo eventual e culpa consciente é fundamental: em ambos há previsão do resultado, mas no dolo eventual o agente consente com ele, enquanto na culpa consciente ele sinceramente acredita que não ocorrerá. As modalidades de culpa são imprudência, negligência e imperícia.',
+    dica: 'Dolo eventual: previu + assumiu o risco ("se acontecer, tudo bem"). Culpa consciente: previu + confiou que não ocorreria. Ambos têm previsão -- o diferencial é a postura interna. STF: embriaguez extrema ao volante + morte = dolo eventual (regra).'
+  },
+  {
+    grupo: 'tipicidade', cat: 'Tipicidade', catClass: 'cat-amber',
+    title: 'Erro de tipo e erro de proibição',
+    question: 'Qual a diferença entre erro de tipo e erro de proibição? Quais os efeitos de cada um?',
+    pills: ['Art. 20 CP', 'Art. 21 CP', 'Escusável x inescusável'],
+    fundamento: 'Art. 20 (erro de tipo) e art. 21 (erro de proibição) do CP.',
+    conceito: 'ERRO DE TIPO (art. 20): recai sobre os elementos constitutivos do tipo penal -- o agente não sabe o que está fazendo. Ex: caçador que atira no companheiro pensando ser animal. Efeitos: escusável (invencível) -- exclui dolo E culpa; inescusável (vencível) -- exclui o dolo, mas o agente pode ser punido por culpa se houver tipo culposo. ERRO DE PROIBIÇÃO (art. 21): o agente sabe o que faz, mas desconhece que é proibido -- erro sobre a ilicitude do fato. Exclui a CULPABILIDADE (potencial consciência da ilicitude). Efeitos: escusável -- exclui culpabilidade integralmente; inescusável -- reduz a pena de 1/6 a 1/3.',
+    atencao: 'A distinção é estrutural: erro de tipo = não sabe o QUE FAZ (elemento do fato típico -- dolo/culpa). Erro de proibição = sabe o que faz, mas não sabe que É PROIBIDO (elemento da culpabilidade -- consciência da ilicitude). Erro de tipo escusável: absolvição. Erro de proibição escusável: absolvição. Erro de tipo inescusável: responde por culpa (se houver). Erro de proibição inescusável: responde com pena reduzida.',
+    oral: 'O erro de tipo do art. 20 recai sobre os elementos constitutivos do tipo penal -- o agente não sabe o que está fazendo. Se escusável, exclui dolo e culpa; se inescusável, exclui o dolo mas admite punição por culpa, se houver tipo culposo. O erro de proibição do art. 21, por sua vez, ocorre quando o agente sabe exatamente o que faz, mas desconhece que a conduta é ilícita -- é erro sobre a ilicitude do fato, que afeta a culpabilidade. Se escusável, exclui a culpabilidade integralmente; se inescusável, a pena é reduzida de um sexto a um terço. A distinção prática: no erro de tipo o agente não sabe o que faz; no erro de proibição, sabe o que faz mas ignora que é proibido.',
+    dica: 'Erro de tipo: não sabe o QUE FAZ → afeta tipicidade (dolo/culpa). Erro de proibição: não sabe que É PROIBIDO → afeta culpabilidade. Escusável: absolve em ambos. Inescusável: tipo = culpa (se houver); proibição = reduz pena 1/6 a 1/3.'
+  },
+
+  // ── ILICITUDE ───────────────────────────────────────────────────
+  {
+    grupo: 'ilicitude', cat: 'Ilicitude', catClass: 'cat-coral',
+    title: 'Excludentes de ilicitude',
+    question: 'Quais as excludentes de ilicitude do CP? Quais os requisitos da legítima defesa e do estado de necessidade?',
+    pills: ['Art. 23 CP', 'Legítima defesa', 'Estado de necessidade'],
+    fundamento: 'Arts. 23 a 25 do CP.',
+    conceito: 'Excludentes (art. 23): estado de necessidade, legítima defesa, estrito cumprimento do dever legal e exercício regular de direito. ESTADO DE NECESSIDADE (art. 24): perigo atual + não provocado voluntariamente + inevitabilidade + inexigibilidade de sacrifício + proporcionalidade. LEGÍTIMA DEFESA (art. 25): agressão injusta + atual ou iminente + a direito próprio ou alheio + meios necessários + uso moderado. Excesso: punível a qualquer título (doloso ou culposo) -- art. 23, parágrafo único. Legítima defesa recíproca: inadmissível (não pode haver agressão injusta de ambos os lados simultaneamente).',
+    atencao: 'Legítima defesa putativa: o agente supõe erroneamente existir a agressão -- erro de tipo permissivo ou erro de proibição indireto. Se escusável, exclui a responsabilidade; se inescusável, pune-se a culpa. Distinção: estado de necessidade x legítima defesa: na LD, há agressão injusta humana; no EN, o perigo pode ser de qualquer origem (humana, animal, natural). Legítima defesa de terceiro: admitida expressamente pelo art. 25.',
+    oral: 'O art. 23 do CP prevê quatro excludentes de ilicitude: estado de necessidade, legítima defesa, estrito cumprimento do dever legal e exercício regular de direito. O estado de necessidade exige perigo atual, não provocado voluntariamente pelo agente, inevitável por outro meio e desproporcional ao sacrifício exigido. A legítima defesa exige agressão injusta, atual ou iminente, a direito próprio ou alheio, repelida com os meios necessários usados moderadamente. O excesso nas excludentes é sempre punível, a título doloso ou culposo. A legítima defesa recíproca é inadmissível, pois pressupõe agressão injusta de ambos os lados ao mesmo tempo, o que é logicamente impossível.',
+    dica: 'LD: agressão injusta humana + atual ou iminente + meios necessários + moderação. EN: perigo atual + não provocado + inevitável + proporcional. Legítima defesa recíproca: impossível. Excesso: sempre punível. LD putativa: erro de tipo permissivo.'
+  },
+
+  // ── CULPABILIDADE ───────────────────────────────────────────────
+  {
+    grupo: 'culpabilidade', cat: 'Culpabilidade', catClass: 'cat-teal',
+    title: 'Elementos da culpabilidade',
+    question: 'Quais os elementos da culpabilidade no finalismo? O que é imputabilidade e quando é excluída?',
+    pills: ['Imputabilidade', 'Potencial consciência', 'Exigibilidade'],
+    fundamento: 'Arts. 26 a 28 do CP. Estrutura finalista de Hans Welzel.',
+    conceito: 'Elementos da culpabilidade: (1) IMPUTABILIDADE: capacidade de entender o caráter ilícito do fato e de determinar-se conforme esse entendimento. Causas de exclusão: doença mental ou desenvolvimento mental incompleto/retardado -- inimputabilidade plena (art. 26, caput) → absolvição imprópria + medida de segurança; semi-imputabilidade (art. 26, parágrafo único) → redução de pena ou medida de segurança; menoridade (menor de 18 anos -- art. 27 CP + art. 228 CF); embriaguez completa fortuita ou força maior (art. 28, §1º). (2) POTENCIAL CONSCIÊNCIA DA ILICITUDE: possibilidade de conhecer a proibição -- afastada pelo erro de proibição escusável. (3) EXIGIBILIDADE DE CONDUTA DIVERSA: era exigível do agente agir de outro modo -- excluída pela coação moral irresistível e obediência hierárquica à ordem não manifestamente ilegal.',
+    atencao: 'Embriaguez voluntária ou culposa NÃO exclui a imputabilidade (art. 28, II) -- teoria da actio libera in causa: o agente é responsável pela situação de inimputabilidade que ele próprio gerou. Embriaguez fortuita ou por força maior: se completa, exclui a imputabilidade; se incompleta, reduz a pena. Menor de 18 anos: inimputável por presunção constitucional absoluta -- não admite prova em contrário.',
+    oral: 'A culpabilidade, no finalismo adotado pelo Código Penal, reúne três elementos: imputabilidade, potencial consciência da ilicitude e exigibilidade de conduta diversa. A imputabilidade é a capacidade de entender o caráter ilícito do fato e de se autodeterminar; é excluída pela doença mental grave, pelo desenvolvimento mental incompleto e pela menoridade -- presunção constitucional absoluta para menores de dezoito anos. A potencial consciência da ilicitude pode ser afastada pelo erro de proibição escusável. A exigibilidade de conduta diversa é excluída pela coação moral irresistível e pela obediência hierárquica a ordem não manifestamente ilegal. Vale destacar que a embriaguez voluntária não exclui a imputabilidade, pela teoria da actio libera in causa.',
+    dica: 'Culpabilidade: imputabilidade + potencial consciência + exigibilidade. Inimputáveis: doente mental (art. 26) + menor de 18 (art. 27 + art. 228 CF). Embriaguez voluntária: não exclui (actio libera in causa). Fortuita completa: exclui. Coação irresistível: exclui exigibilidade.'
+  },
+
+  // ── PENA ────────────────────────────────────────────────────────
+  {
+    grupo: 'pena', cat: 'Pena', catClass: 'cat-purple',
+    title: 'Dosimetria da pena -- sistema trifásico',
+    question: 'Como funciona o sistema trifásico de aplicação da pena? Quais as circunstâncias de cada fase?',
+    pills: ['Art. 68 CP', 'Nelson Hungria', 'Súmula 231 STJ'],
+    fundamento: 'Art. 68 do CP. Método trifásico de Nelson Hungria -- adotado pelo CP.',
+    conceito: '1ª FASE: pena-base -- juiz fixa entre o mínimo e o máximo legal considerando as 8 circunstâncias judiciais do art. 59 CP (culpabilidade, antecedentes, conduta social, personalidade, motivos, circunstâncias, consequências, comportamento da vítima). 2ª FASE: pena provisória -- aplica as circunstâncias legais agravantes (arts. 61-62) e atenuantes (arts. 65-66). Súmula 231 STJ: atenuante não reduz abaixo do mínimo; agravante não eleva acima do máximo. 3ª FASE: pena definitiva -- aplica causas de aumento e diminuição (podem ultrapassar o mínimo e o máximo). Ordem: pena-base → agravantes/atenuantes → causas de aumento/diminuição.',
+    atencao: 'Súmula 231 STJ: atenuantes e agravantes (2ª fase) não podem levar a pena abaixo do mínimo ou acima do máximo cominados. Causas de aumento e diminuição (3ª fase): podem sim ultrapassar os limites do tipo. Concurso de causas de aumento na 3ª fase: o juiz pode limitar-se a um só aumento quando há várias causas, ou aplicar as previstas na parte especial (art. 68, parágrafo único). A menoridade relativa (menor de 21 anos à época do fato) é atenuante obrigatória -- prevalece sobre qualquer agravante (Súmula 74 STJ).',
+    oral: 'O sistema trifásico do art. 68 do CP, idealizado por Nelson Hungria, divide a dosimetria em três etapas. Na primeira fase, o juiz fixa a pena-base dentro dos limites legais, analisando as oito circunstâncias judiciais do art. 59: culpabilidade, antecedentes, conduta social, personalidade do agente, motivos, circunstâncias e consequências do crime e comportamento da vítima. Na segunda fase, incidem as agravantes e atenuantes, com a limitação da Súmula 231 do STJ: não se pode ir abaixo do mínimo nem acima do máximo. Na terceira fase, aplicam-se as causas de aumento e diminuição, que podem sim ultrapassar os limites cominados no tipo.',
+    dica: 'Fases: (1) pena-base + art. 59. (2) agravantes/atenuantes -- não cruza os limites (S. 231 STJ). (3) causas de aumento/diminuição -- pode cruzar os limites. Menoridade relativa (< 21 na época): atenuante que prevalece sobre agravante (S. 74 STJ).'
+  },
+  {
+    grupo: 'pena', cat: 'Pena', catClass: 'cat-purple',
+    title: 'Concurso de crimes',
+    question: 'Quais as espécies de concurso de crimes? Como se aplica a pena em cada modalidade?',
+    pills: ['Arts. 69-71 CP', 'Concurso material', 'Crime continuado'],
+    fundamento: 'Arts. 69, 70 e 71 do CP.',
+    conceito: 'CONCURSO MATERIAL (art. 69): duas ou mais condutas + dois ou mais crimes -- penas somadas (cúmulo material). CONCURSO FORMAL (art. 70): uma conduta + dois ou mais crimes. Próprio (unidade de desígnios): pena mais grave + aumento de 1/6 a 1/2. Impróprio (desígnios autônomos): cúmulo material. Limitação: se o cúmulo material for mais favorável, aplica-se o cúmulo (parágrafo único do art. 70). CRIME CONTINUADO (art. 71): duas ou mais condutas + crimes da mesma espécie + mesmas condições de tempo, lugar, modo de execução -- presunção de continuação → pena do crime mais grave + aumento de 1/6 a 2/3. Crime continuado qualificado (parágrafo único): vítimas diferentes + violência ou grave ameaça → aumento até o triplo.',
+    atencao: 'Súmula 723 STF e Súmula 243 STJ: não se aplica a continuidade delitiva a crimes hediondos praticados contra vítimas diferentes. Crime continuado x habitualidade criminosa: o crime continuado pressupõe unidade de desígnio e condições similares -- a mera reiteração sem nexo de continuidade é habitualidade (mais gravosa, não beneficiada pelo art. 71). No concurso formal próprio, o aumento varia conforme o número de crimes: dois crimes = 1/6; mais crimes = até 1/2.',
+    oral: 'O Código Penal prevê três modalidades de concurso de crimes. No concurso material do art. 69, o agente pratica duas ou mais condutas e dois ou mais crimes, somando-se as penas. No concurso formal do art. 70, uma única conduta produz dois ou mais crimes: se há unidade de desígnios, aplica-se a pena mais grave acrescida de um sexto a um meio; se há desígnios autônomos, o concurso é impróprio e as penas se somam. No crime continuado do art. 71, duas ou mais condutas da mesma espécie, praticadas nas mesmas condições de tempo, lugar e modo de execução, são tratadas como crime único, aplicando-se a pena mais grave acrescida de um sexto a dois terços.',
+    dica: 'Material: n condutas + n crimes = soma. Formal próprio: 1 conduta + n crimes (mesmo desígnio) = maior pena + 1/6 a 1/2. Formal impróprio: 1 conduta + n crimes (desígnios autônomos) = soma. Continuado: n condutas + mesma espécie + mesmas condições = maior + 1/6 a 2/3.'
+  },
+
+  // ── PUNIBILIDADE ────────────────────────────────────────────────
+  {
+    grupo: 'punicao', cat: 'Punibilidade', catClass: 'cat-teal',
+    title: 'Prescrição -- espécies e marcos interruptivos',
+    question: 'Quais as espécies de prescrição penal? O que interrompe a prescrição da pretensão punitiva?',
+    pills: ['Arts. 109-118 CP', 'PPP x PPE', 'Art. 117 CP'],
+    fundamento: 'Arts. 109 a 118 do CP.',
+    conceito: 'PRESCRIÇÃO DA PRETENSÃO PUNITIVA (PPP): ocorre antes do trânsito em julgado -- extingue o crime e todos os efeitos. Prazo: calculado pela pena máxima em abstrato (art. 109). PRESCRIÇÃO DA PRETENSÃO EXECUTÓRIA (PPE): ocorre após o trânsito em julgado -- extingue apenas a execução da pena; persistem os efeitos secundários (reincidência, nome no rol dos culpados). Prazo: calculado pela pena concretamente aplicada. PRESCRIÇÃO RETROATIVA: calculada pela pena concreta, retroagindo da sentença para marcos anteriores -- limitada pela Lei 12.234/2010: não pode mais retroagir ao período anterior à denúncia. MARCOS INTERRUPTIVOS (art. 117): recebimento da denúncia ou queixa, pronúncia, decisão confirmatória da pronúncia, publicação da sentença condenatória recorrível, acórdão condenatório, início ou continuação do cumprimento da pena, reincidência.',
+    atencao: 'Lei 12.234/2010: eliminou a prescrição retroativa anterior ao recebimento da denúncia. A prescrição pode ser interrompida múltiplas vezes, recomeçando do zero a cada interrupção. Redução dos prazos: menor de 21 anos na data do fato ou maior de 70 anos na data da sentença -- prazo reduzido à metade (art. 115 CP). O STF (Súmula 220) firmou que a reincidência não influi na contagem do prazo prescricional da PPP.',
+    oral: 'A prescrição penal divide-se em prescrição da pretensão punitiva, que ocorre antes do trânsito em julgado e extingue o crime com todos os seus efeitos, e prescrição da pretensão executória, que ocorre após o trânsito em julgado e extingue apenas a execução da pena, subsistindo os efeitos secundários da condenação. A PPP tem prazo calculado pela pena máxima em abstrato, enquanto a PPE usa a pena concretamente aplicada. Os marcos interruptivos estão no art. 117 e incluem o recebimento da denúncia, a pronúncia, a sentença condenatória recorrível e o início do cumprimento da pena. A Lei 12.234/2010 extinguiu a possibilidade de prescrição retroativa anterior ao recebimento da denúncia.',
+    dica: 'PPP: antes do trânsito, pena máxima em abstrato, extingue tudo. PPE: após o trânsito, pena concreta, extingue só execução. Retroativa: possível entre marcos após a denúncia (vedada antes -- Lei 12.234/10). Menores 21 / maiores 70: prazo à metade.'
+  },
+  {
+    grupo: 'punicao', cat: 'Punibilidade', catClass: 'cat-teal',
+    title: 'Causas extintivas da punibilidade',
+    question: 'Quais são as causas extintivas da punibilidade previstas no art. 107 do CP? O que é anistia, graça e indulto?',
+    pills: ['Art. 107 CP', 'Anistia x Graça x Indulto', 'Crimes hediondos'],
+    fundamento: 'Art. 107 do CP e art. 5º, XLIII, da CF/88.',
+    conceito: 'Causas extintivas (art. 107): morte do agente; anistia, graça ou indulto; retroatividade de lei que não considera o fato criminoso (abolitio); prescrição, decadência ou perempção; renúncia ao direito de queixa ou perdão aceito (crimes de ação privada); retratação do agente (nos casos previstos em lei); perdão judicial. ANISTIA: lei do Congresso que extingue o crime -- apaga os efeitos penais, inclusive os secundários; pode ser antes ou após a condenação. GRAÇA: favor presidencial individual -- extingue ou reduz a pena; não apaga a condenação. INDULTO: favor presidencial coletivo -- extingue ou reduz a pena de grupo de condenados; não apaga a condenação. CF/88 (art. 5º, XLIII): anistia, graça e indulto são vedados para crimes hediondos, tortura, tráfico e terrorismo.',
+    atencao: 'O STF (ADI 2.795) declarou inconstitucional o indulto a crime hediondo. O indulto natalino é decreto presidencial anual -- o STF admite a extensão a crimes equiparados a hediondos desde que não vedado expressamente. Morte do agente: extingue a punibilidade, mas a reparação civil permanece. Decadência (crimes de ação privada e pública condicionada): prazo de 6 meses para oferecer queixa ou representação.',
+    oral: 'O art. 107 do Código Penal elenca as causas extintivas da punibilidade, entre as quais se destacam a morte do agente, a anistia, a graça, o indulto, a abolitio criminis, a prescrição e o perdão judicial. A anistia é concedida por lei do Congresso Nacional e apaga o próprio crime, inclusive seus efeitos secundários. A graça é favor presidencial individual que extingue ou reduz a pena sem apagar a condenação. O indulto é a graça em caráter coletivo. A Constituição Federal, no art. 5º, XLIII, veda expressamente a concessão de anistia, graça e indulto para crimes hediondos, tortura, tráfico ilícito de entorpecentes e terrorismo.',
+    dica: 'Anistia: Congresso + apaga o crime + efeitos secundários. Graça: Presidente + individual + só a pena. Indulto: Presidente + coletivo + só a pena. Hediondos: vedados os três (art. 5º, XLIII CF). Morte: extingue punibilidade, mas subsiste obrigação civil.'
+  }
+];
+
+let filtered = [...allCards];
+let cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido -- ideal para simular a banca'
+    : 'Resposta em blocos estruturados -- ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? [...allCards] : allCards.filter(c => c.grupo === f);
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  const c = filtered[cur];
+
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(p => `<span class="pill">${p}</span>`).join('');
+
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+
+  document.getElementById('b-blocks').innerHTML = mode === 'oral' ? `
+    <div class="oral-answer">${c.oral}</div>
+    <div class="oral-tip"><div class="blbl">Dica para a banca</div><p>${c.dica}</p></div>
+  ` : `
+    <div class="b-block"><div class="blbl">Fundamento legal</div><p>${c.fundamento}</p></div>
+    <div class="b-block"><div class="blbl">Conceito e distinções</div><p>${c.conceito}</p></div>
+    <div class="b-alert"><div class="blbl">Atenção -- ponto de prova</div><p>${c.atencao}</p></div>
+    <div class="b-tip"><div class="blbl">Dica de memorização</div><p>${c.dica}</p></div>
+  `;
+
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = `${cur + 1} / ${filtered.length} fichas`;
+
+  const sh = t => t.length > 28 ? t.substring(0, 28) + '…' : t;
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map((x, i) => `<button class="topic-btn ${i === cur ? 'active' : ''}" onclick="go(${i})">${i + 1}. ${sh(x.title)}</button>`).join('') +
+    `<span class="counter-pill">${cur + 1} / ${filtered.length}</span>`;
+}
+
+function flip() { document.getElementById('card').classList.toggle('flipped'); }
+function go(i) { cur = i; render(); }
+function prev() { cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next() { cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>

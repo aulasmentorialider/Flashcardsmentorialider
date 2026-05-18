@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas — Processo Penal | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  header{background:var(--navy);padding:1.5rem 2rem 1.25rem;}
+  .hbadge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px;}
+  header h1{font-size:20px;font-weight:600;color:#fff;}
+  header p{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;}
+  .hrow{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+  .hcount{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-left:auto;}
+
+  .mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mode-label{font-size:12px;color:var(--muted);font-weight:500;}
+  .toggle-wrap{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;gap:2px;}
+  .toggle-opt{font-size:11.5px;padding:4px 14px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-weight:500;transition:all .15s;}
+  .toggle-opt.active{background:var(--navy);color:#fff;}
+  .mode-hint{font-size:11px;color:var(--faint);}
+
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+  main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .progress-wrap{height:3px;background:var(--border);border-radius:999px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-bar{height:100%;background:var(--navy-mid);border-radius:999px;transition:width .3s ease;}
+
+  .topic-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem;align-items:center;}
+  .topic-btn{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500;font-family:'Sora',sans-serif;}
+  .topic-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .topic-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .counter-pill{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);white-space:nowrap;}
+
+  .card-scene{perspective:1200px;margin-bottom:1.5rem;}
+  .card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);min-height:290px;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;display:flex;flex-direction:column;}
+  .face.back{transform:rotateY(180deg);position:absolute;top:0;left:0;right:0;}
+
+  .f-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:1.1rem;width:fit-content;}
+  .cat-navy{background:var(--navy-light);color:var(--navy);}
+  .cat-teal{background:var(--teal-light);color:var(--teal);}
+  .cat-coral{background:var(--coral-light);color:var(--coral);}
+  .cat-amber{background:var(--amber-light);color:var(--amber);}
+  .cat-purple{background:var(--purple-light);color:var(--purple);}
+
+  .f-title{font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+  .f-question{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;flex:1;}
+  .f-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+  .hint-line{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;}
+
+  .oral-answer{font-size:14px;color:var(--text);line-height:1.8;border-left:3px solid var(--navy-mid);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:9px;}
+  .blbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .oral-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;}
+  .oral-tip .blbl{color:var(--teal);}
+  .oral-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+
+  .b-block{background:var(--bg);border-radius:10px;padding:11px 15px;margin-bottom:9px;}
+  .b-block .blbl{color:var(--faint);}
+  .b-block p{font-size:13px;color:var(--text);line-height:1.65;}
+  .b-alert{border-left:3px solid var(--coral);background:var(--coral-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-alert .blbl{color:var(--coral);}
+  .b-alert p{font-size:13px;color:#5a2010;line-height:1.65;}
+  .b-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-tip .blbl{color:var(--teal);}
+  .b-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+
+  .btn-row{display:flex;gap:8px;margin-top:1.4rem;}
+  .btn{flex:1;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:var(--bg);color:var(--text);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:#17316b;}
+
+  footer{text-align:center;padding:2rem 1rem;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+
+  @media(max-width:540px){
+    main{padding:1.25rem 1rem 3rem;}
+    header,.filter-bar,.mode-bar{padding:.75rem 1rem;}
+    .f-title{font-size:18px;}
+    .face{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG · Processo Penal</div>
+      <h1>Processo Penal — Ação Penal, Prisão, Prova e Competência</h1>
+      <p>Fichas para prova oral e estudo ativo — itens 6.4 a 6.11 do edital</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">🎤 Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">📚 Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido — ideal para simular a banca</span>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('acao',this)">Ação Penal</button>
+  <button class="filter-btn" onclick="setFilter('anpp',this)">ANPP</button>
+  <button class="filter-btn" onclick="setFilter('competencia',this)">Competência</button>
+  <button class="filter-btn" onclick="setFilter('prova',this)">Prova</button>
+  <button class="filter-btn" onclick="setFilter('busca',this)">Busca e Apreensão</button>
+  <button class="filter-btn" onclick="setFilter('prisao',this)">Prisão e Cautelares</button>
+</div>
+
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar — simule a banca
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta ↓</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">← anterior</button>
+          <button class="btn btn-primary" onclick="flip()">↑ ocultar</button>
+          <button class="btn" onclick="next()">próxima →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>Mentoria Líder · CFO PMMG · Material de uso exclusivo dos alunos</footer>
+
+<script>
+let mode = 'oral';
+
+const allCards = [
+
+  // ── AÇÃO PENAL ──────────────────────────────────────────────────
+  {
+    grupo:'acao', cat:'Ação Penal', catClass:'cat-navy',
+    title:'Ação penal -- espécies e titularidade',
+    question:'Quais as espécies de ação penal? Quem é o titular em cada uma? O que é ação penal privada subsidiária da pública?',
+    pills:['Art. 100 CP','Art. 129 I CF','Art. 29 CPP'],
+    fundamento:'Arts. 100 a 106 do CP e arts. 24 a 62 do CPP. Art. 129, I, da CF/88.',
+    conceito:'AÇÃO PENAL PÚBLICA INCONDICIONADA: promovida pelo MP independentemente de manifestação da vítima. Regra geral nos crimes de maior gravidade. AÇÃO PENAL PÚBLICA CONDICIONADA À REPRESENTAÇÃO: depende de manifestação de vontade do ofendido autorizando o MP a agir. Prazo decadencial: 6 meses. AÇÃO PENAL PRIVADA: promovida pelo ofendido mediante queixa-crime, por advogado. Crimes contra a honra (regra), contra a propriedade imaterial. Institutos exclusivos: decadência, perempção, perdão, renúncia. AÇÃO PENAL PRIVADA SUBSIDIÁRIA DA PÚBLICA (art. 29 CPP): quando o MP não age no prazo legal sem justificativa -- ofendido pode oferecer queixa subsidiária. MP atua como custos legis e pode retomar a ação.',
+    atencao:'O STF (RE 468.161) e a doutrina majoritária reconhecem que o MP, como titular exclusivo da ação penal pública (art. 129, I CF), não pode ser substituído por particular -- salvo na ação privada subsidiária, que é direito constitucional (art. 5º, LIX CF). A Lei 13.964/2019 (Pacote Anticrime) tornou o estelionato ação condicionada, mas a Lei 15.397/2026 reverteu essa alteração, voltando à ação incondicionada.',
+    oral:'A ação penal classifica-se em pública e privada. A ação penal pública incondicionada é promovida pelo Ministério Público independentemente de qualquer manifestação da vítima -- é a regra geral. A ação pública condicionada à representação exige manifestação de vontade do ofendido no prazo decadencial de seis meses. A ação penal privada é promovida pelo próprio ofendido mediante queixa-crime, por intermédio de advogado, e está sujeita a institutos extintivos próprios: decadência, perempção, perdão aceito e renúncia. A Constituição Federal assegura ainda a ação privada subsidiária da pública no art. 5º, LIX: quando o MP não oferece denúncia no prazo legal, o ofendido pode oferecer queixa subsidiária, passando o MP a atuar como fiscal da lei.',
+    dica:'Pública incondicionada: MP age de ofício. Condicionada: depende de representação (6 meses). Privada: queixa + advogado + decadência/perempção/perdão/renúncia. Subsidiária: MP inerte → ofendido oferece queixa, MP vira custos legis (art. 5º, LIX CF + art. 29 CPP).'
+  },
+  {
+    grupo:'acao', cat:'Ação Penal', catClass:'cat-navy',
+    title:'Condições da ação penal',
+    question:'Quais as condições da ação penal? O que é justa causa? Quando a denúncia deve ser rejeitada?',
+    pills:['Art. 395 CPP','Justa causa','Condições genéricas'],
+    fundamento:'Art. 395 do CPP. Doutrina: Aury Lopes Jr., Renato Brasileiro de Lima.',
+    conceito:'CONDIÇÕES GENÉRICAS DA AÇÃO PENAL: (1) legitimidade de parte -- MP para ação pública; ofendido para ação privada; (2) interesse de agir -- necessidade + adequação + utilidade do processo; (3) possibilidade jurídica do pedido -- fato típico e punível. CONDIÇÃO ESPECÍFICA: representação (ação condicionada) e requisição do Ministro da Justiça (crimes contra estrangeiro). JUSTA CAUSA (art. 395, III): lastro probatório mínimo -- indícios de autoria e prova da materialidade. REJEIÇÃO DA DENÚNCIA (art. 395): quando for manifestamente inepta; quando faltar pressuposto processual ou condição da ação; quando faltar justa causa.',
+    atencao:'A justa causa é condição específica da ação penal -- não se confunde com as condições genéricas. O STF e o STJ admitem o trancamento da ação penal por HC quando há atipicidade manifesta, extinção da punibilidade evidente ou ausência absoluta de justa causa. O recebimento da denúncia não exige motivação aprofundada -- basta verificação sumária da justa causa (STJ, Súmula 564: após recebimento, o juiz pode absolver sumariamente se evidenciar causa de absolvição).',
+    oral:'As condições da ação penal dividem-se em genéricas e específicas. As condições genéricas são a legitimidade de parte, o interesse de agir e a possibilidade jurídica do pedido. As condições específicas são a representação do ofendido nas ações condicionadas e a requisição do Ministro da Justiça nos crimes praticados contra estrangeiros. A justa causa, prevista no art. 395, III do CPP, exige um lastro probatório mínimo para o oferecimento da denúncia: indícios suficientes de autoria e prova da materialidade delitiva. A denúncia deve ser rejeitada quando for manifestamente inepta, quando faltar pressuposto processual ou condição da ação, ou quando não houver justa causa.',
+    dica:'Condições genéricas: legitimidade + interesse + possibilidade jurídica. Específica: representação ou requisição. Justa causa: indícios de autoria + prova da materialidade. Rejeição (art. 395): inépcia + ausência de pressuposto/condição + falta de justa causa. HC para trancar: só em casos teratológicos.'
+  },
+
+  // ── ANPP ────────────────────────────────────────────────────────
+  {
+    grupo:'anpp', cat:'ANPP', catClass:'cat-teal',
+    title:'Acordo de não persecução penal -- requisitos e efeitos',
+    question:'O que é o ANPP? Quais os requisitos? Quais os efeitos do cumprimento? Quando é vedado?',
+    pills:['Art. 28-A CPP','Lei 13.964/2019','Pena mínima < 4 anos'],
+    fundamento:'Art. 28-A do CPP, incluído pela Lei nº 13.964/2019 (Pacote Anticrime).',
+    conceito:'O Acordo de Não Persecução Penal é negócio jurídico pré-processual celebrado entre o MP e o investigado (assistido por defensor), pelo qual o MP se abstém de oferecer denúncia mediante cumprimento de condições pelo investigado. REQUISITOS: (1) infração penal sem violência ou grave ameaça; (2) pena mínima inferior a 4 anos; (3) não ser caso de arquivamento; (4) investigado confessa formal e circunstanciadamente a prática do crime; (5) não ter sido beneficiado anteriormente nos últimos 5 anos por ANPP, transação penal ou suspensão condicional do processo. CONDIÇÕES (cumulativas ou alternativas): reparação do dano; renúncia a bens e direitos; prestação de serviços à comunidade; prestação pecuniária; cumprimento de outra condição indicada pelo MP. EFEITOS DO CUMPRIMENTO: extinção da punibilidade -- não gera reincidência nem maus antecedentes.',
+    atencao:'VEDAÇÕES (art. 28-A, §2º): crime praticado com violência ou grave ameaça; réu reincidente ou que tenha sido beneficiado no prazo de 5 anos; crimes praticados no âmbito de violência doméstica; crimes hediondos e equiparados; quando a proposta não atender requisitos legais. O ANPP é HOMOLOGADO PELO JUIZ (não pelo MP) -- o juiz verifica a voluntariedade e a legalidade. Se o investigado descumprir o acordo, o MP pode oferecer denúncia. O STF (ADI 6.304) reconheceu a constitucionalidade do ANPP.',
+    oral:'O acordo de não persecução penal, inserido no art. 28-A do CPP pelo Pacote Anticrime, é negócio jurídico pré-processual pelo qual o Ministério Público propõe ao investigado a abstensão da denúncia em troca do cumprimento de condições. Os requisitos são: infração penal sem violência ou grave ameaça, pena mínima inferior a quatro anos, confissão formal e circunstanciada do investigado, assistência de defensor e ausência de benefício similar nos últimos cinco anos. As condições podem ser cumuladas ou alternadas, incluindo reparação do dano, prestação de serviços à comunidade e prestação pecuniária. O acordo é homologado pelo juiz, que verifica a voluntariedade e a legalidade. Cumpridas as condições, declara-se extinta a punibilidade sem geração de reincidência ou maus antecedentes.',
+    dica:'ANPP: pré-processual + pena mín. < 4 anos + sem violência + confissão + defensor. Homologa: juiz (não o MP). Cumprimento: extingue punibilidade, sem reincidência. Descumprimento: MP oferece denúncia. Vedado: violência doméstica, hediondos, reincidente, beneficiado nos últimos 5 anos.'
+  },
+
+  // ── COMPETÊNCIA ─────────────────────────────────────────────────
+  {
+    grupo:'competencia', cat:'Competência', catClass:'cat-purple',
+    title:'Jurisdição e competência -- conceitos e critérios',
+    question:'O que é jurisdição? Como se define a competência no processo penal? Quais os critérios de fixação?',
+    pills:['Arts. 69-91 CPP','Ratione materiae','Ratione loci'],
+    fundamento:'Arts. 69 a 91 do CPP. CF/88: arts. 102, 105, 108, 109.',
+    conceito:'JURISDIÇÃO: poder-dever do Estado de aplicar o direito ao caso concreto -- una, indelegável e inerte. COMPETÊNCIA: medida da jurisdição -- parcela da jurisdição atribuída a cada órgão. CRITÉRIOS DE FIXAÇÃO (art. 69 CPP): (1) lugar da infração -- locus delicti (regra: local da consumação -- art. 70 CPP); (2) domicílio ou residência do réu -- subsidiário (quando desconhecido o local do crime); (3) natureza da infração -- ratione materiae (crime federal, eleitoral, militar, comum); (4) distribuição -- quando há mais de um juiz competente no mesmo foro; (5) conexão ou continência -- unificação de processos; (6) prevenção -- primeiro juiz que pratica ato no processo; (7) prerrogativa de função -- foro por prerrogativa.',
+    atencao:'Foro por prerrogativa de função (foro privilegiado): é constitucional, mas o STF (AP 937 QO) fixou que se aplica apenas aos crimes praticados durante o exercício do cargo e relacionados às funções. Encerrado o mandato, a competência retorna ao juízo de primeiro grau. Competência da Justiça Federal (art. 109 CF): crimes em detrimento de bens, serviços ou interesses da União; tráfico internacional de drogas; crimes políticos; crimes contra o sistema financeiro nacional. Súmula 122 STJ: compete à Justiça Federal processar e julgar unificadamente os crimes conexos de competências federal e estadual.',
+    oral:'A jurisdição é o poder-dever estatal de aplicar o direito ao caso concreto, caracterizada pela unidade, indelegabilidade e inércia. A competência é a medida da jurisdição -- a parcela atribuída a cada órgão jurisdicional. O art. 69 do CPP elenca os critérios de fixação da competência: lugar da infração, como regra principal, fixada no local da consumação; domicílio ou residência do réu, de forma subsidiária; natureza da infração, que distingue a justiça comum da especializada; distribuição, conexão ou continência, prevenção e prerrogativa de função. O STF limitou o foro por prerrogativa ao período do mandato e aos crimes relacionados ao exercício do cargo, afastando-o após o encerramento do mandato.',
+    dica:'Critérios (art. 69): lugar + domicílio + natureza + distribuição + conexão/continência + prevenção + prerrogativa. Regra: local da consumação (art. 70). Foro privilegiado: só durante o mandato + crimes relacionados ao cargo (AP 937 QO STF). JF: crimes contra União, tráfico internacional, crimes políticos.'
+  },
+  {
+    grupo:'competencia', cat:'Competência', catClass:'cat-purple',
+    title:'Conexão, continência e prevenção',
+    question:'O que é conexão e continência? Qual o efeito processual? O que é prevenção?',
+    pills:['Arts. 76-83 CPP','Unificação de processos','Prorrogação de competência'],
+    fundamento:'Arts. 76 a 83 do CPP.',
+    conceito:'CONEXÃO (art. 76): ocorre quando há vínculo entre dois ou mais crimes que justifica o julgamento conjunto. Espécies: intersubjetiva (mesma ocasião, mesmas finalidades, reciprocidade); objetiva ou teleológica (um crime praticado para facilitar ou ocultar outro); probatória ou instrumental (a prova de um crime influencia a do outro). CONTINÊNCIA (art. 77): dois ou mais acusados pelo mesmo crime (concurso de pessoas) ou um acusado por vários crimes em concurso formal ou aberratio ictus. EFEITO: prorrogação da competência -- o juiz competente para o crime mais grave atrai os demais. PREVENÇÃO (art. 83): entre juízes igualmente competentes, prevalece aquele que primeiro praticou qualquer ato no processo, ainda que anterior à denúncia (ex: decretação de prisão preventiva).',
+    atencao:'A conexão e a continência NÃO se aplicam quando um dos crimes é da competência do Júri e o outro da justiça comum -- o Júri prevalece sobre a justiça comum (art. 78, I CPP). Quando um crime é federal e outro estadual, prevalece a Justiça Federal (Súmula 122 STJ). A prevenção é critério subsidiário -- só se aplica quando os demais critérios não resolverem o conflito de competência.',
+    oral:'A conexão ocorre quando há vínculo entre dois ou mais crimes que recomenda o julgamento conjunto, por razões de economia processual e para evitar decisões contraditórias. O art. 76 do CPP prevê três espécies: a conexão intersubjetiva, a objetiva ou teleológica e a probatória. A continência do art. 77 abrange o concurso de pessoas num mesmo crime e o concurso formal ou aberratio ictus. O efeito de ambas é a prorrogação de competência -- o juízo do crime mais grave atrai os demais. A prevenção, por sua vez, é critério subsidiário: entre juízes igualmente competentes, prevalece aquele que primeiro praticou qualquer ato no processo.',
+    dica:'Conexão: vínculo entre crimes → julgamento conjunto. Continência: mesmos réus ou concurso formal. Efeito: prorrogação -- crime mais grave atrai. Prevenção: critério subsidiário -- primeiro ato no processo. Júri: prevalece sobre justiça comum (art. 78, I). Federal + estadual: JF prevalece (S.122 STJ).'
+  },
+
+  // ── PROVA ───────────────────────────────────────────────────────
+  {
+    grupo:'prova', cat:'Prova', catClass:'cat-amber',
+    title:'Prova -- conceito, sistemas e ônus',
+    question:'O que é prova no processo penal? Quais os sistemas de avaliação? Qual o ônus da prova?',
+    pills:['Art. 155 CPP','In dubio pro reo','Livre convencimento motivado'],
+    fundamento:'Arts. 155 a 157 do CPP. Art. 5º, LV e LVII, da CF/88.',
+    conceito:'PROVA: meio pelo qual se demonstra a verdade dos fatos relevantes para o processo. SISTEMAS DE AVALIAÇÃO: (1) íntima convicção -- juiz decide sem motivar (adotado no Júri quanto ao mérito); (2) prova tarifada (legal) -- a lei define o valor de cada prova -- superado; (3) livre convencimento motivado (persuasão racional) -- adotado pelo CPP (art. 155): juiz aprecia livremente as provas, mas deve fundamentar. ÔNUS DA PROVA: a acusação prova a autoria e a materialidade; a defesa prova as excludentes que alegar. IN DUBIO PRO REO: na dúvida, absolve-se. PROVA ILÍCITA (art. 157): obtida com violação de norma constitucional ou legal -- inadmissível no processo. Teoria dos frutos da árvore envenenada: provas derivadas da ilícita também são ilícitas, salvo: fonte independente, descoberta inevitável e nexo causal atenuado.',
+    atencao:'Art. 155 CPP: o juiz não pode condenar com base exclusivamente em elementos informativos do inquérito -- exige prova produzida em contraditório judicial. Exceção: provas cautelares, não repetíveis e antecipadas (produzidas com contraditório diferido). Prova ilícita pro reo: o STF admite o uso de prova ilícita em favor do réu quando for a única forma de demonstrar a inocência -- princípio da proporcionalidade.',
+    oral:'A prova no processo penal é o meio pelo qual se demonstra a veracidade dos fatos relevantes para o julgamento. O CPP adota o sistema do livre convencimento motivado: o juiz aprecia livremente as provas, mas deve fundamentar sua decisão. No Tribunal do Júri, os jurados decidem por íntima convicção, sem motivação. O ônus da prova cabe à acusação quanto à autoria e materialidade, e à defesa quanto às excludentes que alegar. A dúvida resolve-se em favor do réu -- in dubio pro reo. O art. 157 do CPP veda as provas ilícitas e as provas delas derivadas, pela teoria dos frutos da árvore envenenada, com as exceções da fonte independente, descoberta inevitável e nexo causal atenuado.',
+    dica:'Livre convencimento motivado: juiz aprecia livremente, mas fundamenta. Júri: íntima convicção (sem motivação). Ônus: MP prova autoria + materialidade; defesa prova excludentes. In dubio pro reo: dúvida = absolvição. Prova ilícita: inadmissível (art. 157). Frutos da árvore: também ilícitos -- exceto fonte independente, descoberta inevitável, nexo atenuado.'
+  },
+  {
+    grupo:'prova', cat:'Prova', catClass:'cat-amber',
+    title:'Provas em espécie -- confissão, testemunho e perícia',
+    question:'Qual o valor da confissão no CPP? Quem não pode ser testemunha? Quando a perícia é obrigatória?',
+    pills:['Arts. 197-250 CPP','Confissão divisível','Prova pericial'],
+    fundamento:'Arts. 197 a 250 do CPP.',
+    conceito:'CONFISSÃO (art. 197): meio de prova, mas não tem valor absoluto -- deve ser confrontada com as demais provas. É divisível (o juiz pode aceitar parte e rejeitar outra) e retratável (pode ser revogada a qualquer momento, inclusive no plenário do júri). TESTEMUNHO: regra -- qualquer pessoa pode ser testemunha. Não prestam compromisso (não são testemunhas propriamente ditas): doente mental, menor de 14 anos, cônjuge, ascendentes, descendentes e afins em linha reta do réu -- mas podem ser ouvidos como informantes. Proibidos de depor: quem tem dever de sigilo profissional (advogado, médico, padre) -- salvo se liberado pelo confitente. PROVA PERICIAL: obrigatória nos crimes que deixam vestígios (art. 158 CPP) -- corpo de delito direto ou indireto. A confissão do réu não supre a ausência do exame de corpo de delito.',
+    atencao:'Súmula 361 STF: no processo penal, é nulo o exame realizado por um só perito, considerando-se impedido o que tiver funcionado anteriormente na qualidade de testemunha ou de juiz no processo. A Lei 13.964/2019 introduziu o juiz das garantias -- mas o STF (ADI 6.298) suspendeu sua implementação. Testemunho por videoconferência: admitido pelo STF e STJ em hipóteses excepcionais devidamente fundamentadas.',
+    oral:'A confissão é meio de prova sem valor absoluto no processo penal -- deve ser confrontada com as demais provas do processo. É divisível, podendo o juiz acolher parte e rejeitar outra, e retratável, podendo ser revogada a qualquer tempo. Quanto ao testemunho, a regra é que qualquer pessoa pode depor, mas determinadas pessoas são ouvidas sem compromisso -- como o cônjuge e os parentes em linha reta do réu -- e outras são proibidas de depor em razão de sigilo profissional. A prova pericial é obrigatória nos crimes que deixam vestígios materiais, sendo que a confissão do réu não supre a ausência do exame de corpo de delito, conforme o art. 158 do CPP.',
+    dica:'Confissão: divisível + retratável + não tem valor absoluto. Crimes que deixam vestígios: exame de corpo de delito obrigatório -- confissão não supre (art. 158). Testemunhas sem compromisso: cônjuge, parentes em linha reta, menor de 14, doente mental. Sigilo profissional: proibição de depor (advogado, médico, padre).'
+  },
+
+  // ── BUSCA E APREENSÃO ───────────────────────────────────────────
+  {
+    grupo:'busca', cat:'Busca e Apreensão', catClass:'cat-coral',
+    title:'Busca domiciliar e pessoal -- requisitos e limites',
+    question:'Quais os requisitos para a busca domiciliar? E para a busca pessoal? Quando dispensa mandado?',
+    pills:['Arts. 240-250 CPP','Art. 5º XI CF','Inviolabilidade do domicílio'],
+    fundamento:'Arts. 240 a 250 do CPP. Art. 5º, XI, da CF/88.',
+    conceito:'BUSCA DOMICILIAR (art. 240, §1º): exige MANDADO JUDICIAL, salvo: flagrante delito, desastre ou para prestar socorro. O mandado deve: ser expedido por juiz competente; indicar a casa a ser pesquisada; o nome do morador; a finalidade; e ser cumprido durante o dia (salvo consentimento do morador para cumprimento noturno). DIA: o STF definiu como o período das 6h às 21h (HC 217.338 -- 2023). BUSCA PESSOAL (art. 240, §2º): independe de mandado quando houver fundada suspeita de que o indivíduo oculta arma proibida, objetos do crime ou elementos relacionados à infração. Pode ser determinada pela autoridade policial ou pelo juiz.',
+    atencao:'STF (HC 217.338/SC -- 2023): reafirmou que a busca domiciliar noturna sem consentimento do morador é inconstitucional, mesmo com mandado judicial. Definiu "dia" como o período das 6h às 21h. Provas obtidas em busca domiciliar ilegal são ilícitas por derivação. O STJ (HC 598.051) firmou que a mera denúncia anônima não é fundada suspeita suficiente para busca pessoal -- exige elementos concretos e objetivos que indiquem a prática de infração penal.',
+    oral:'A busca domiciliar é medida de grande impacto sobre a inviolabilidade do domicílio, garantia prevista no art. 5º, XI da Constituição. Exige mandado judicial expedido por juiz competente, salvo nas hipóteses excepcionais de flagrante delito, desastre ou prestação de socorro. O cumprimento deve ocorrer durante o dia, que o STF definiu, no julgamento do HC 217.338 de 2023, como o período das seis às vinte e uma horas. A busca noturna sem consentimento do morador é inconstitucional, ainda que amparada por mandado. A busca pessoal, por sua vez, independe de mandado, mas exige fundada suspeita baseada em elementos concretos -- o STJ firmou que a mera denúncia anônima não é suficiente para justificá-la.',
+    dica:'Busca domiciliar: mandado judicial + dia (6h-21h, STF HC 217.338/2023). Dispensado o mandado: flagrante + desastre + socorro. Busca noturna sem consentimento: inconstitucional. Busca pessoal: fundada suspeita concreta -- denúncia anônima sozinha não basta (STJ HC 598.051). Prova obtida em busca ilegal: ilícita por derivação.'
+  },
+
+  // ── PRISÃO E CAUTELARES ─────────────────────────────────────────
+  {
+    grupo:'prisao', cat:'Prisão e Cautelares', catClass:'cat-coral',
+    title:'Prisão preventiva -- requisitos e vedações',
+    question:'Quais os requisitos da prisão preventiva? Quando é vedada? Qual o prazo máximo?',
+    pills:['Art. 312 CPP','Lei 13.964/2019','Prazo: 60/90 dias'],
+    fundamento:'Arts. 311 a 316 do CPP, com redação da Lei nº 13.964/2019.',
+    conceito:'PRESSUPOSTOS: prova da existência do crime (materialidade) + indício suficiente de autoria. FUNDAMENTOS (art. 312 CPP -- alternativos): (1) garantia da ordem pública; (2) garantia da ordem econômica; (3) conveniência da instrução criminal; (4) assegurar a aplicação da lei penal (evitar a fuga). CABIMENTO (art. 313): pena máxima superior a 4 anos OU réu que tiver sido condenado por outro crime doloso OU crimes de violência doméstica e familiar. REVISÃO OBRIGATÓRIA (art. 316, parágrafo único): o juiz deve rever a necessidade da prisão a cada 90 dias, de ofício ou mediante requerimento. VEDAÇÃO: não se decreta prisão preventiva como antecipação de pena; também é vedada quando for cabível substituição por medida cautelar diversa (art. 310, §2º).',
+    atencao:'A Lei 13.964/2019 retirou a possibilidade de decretação de prisão preventiva DE OFÍCIO pelo juiz -- exige requerimento do MP, do querelante, do assistente ou da autoridade policial. Na fase de instrução, o juiz pode decretar de ofício apenas em casos de descumprimento de medida cautelar. STF (HC 142.173): a garantia da ordem pública deve ser fundamentada em fatos concretos e atuais -- não cabe decretação com base em gravidade abstrata do crime ou clamor público.',
+    oral:'A prisão preventiva é medida cautelar de natureza pessoal, cabível quando presentes seus pressupostos e fundamentos. Os pressupostos são a prova da materialidade e o indício suficiente de autoria. Os fundamentos alternativos do art. 312 são: garantia da ordem pública, garantia da ordem econômica, conveniência da instrução criminal e necessidade de assegurar a aplicação da lei penal. O Pacote Anticrime suprimiu a possibilidade de decretação de ofício pelo juiz na fase investigatória -- exige requerimento do Ministério Público, do querelante ou da autoridade policial. A revisão da necessidade da prisão deve ser feita de ofício pelo juiz a cada noventa dias. A prisão preventiva é vedada quando for cabível medida cautelar alternativa menos gravosa.',
+    dica:'Pressupostos: materialidade + indícios de autoria. Fundamentos (alternativos): ordem pública + ordem econômica + instrução + aplicação da lei penal. De ofício: vedado na fase investigatória (Pacote Anticrime). Revisão: 90 dias. Vedada: quando cabível medida cautelar diversa. Gravidade abstrata: não fundamenta (STF HC 142.173).'
+  },
+  {
+    grupo:'prisao', cat:'Prisão e Cautelares', catClass:'cat-coral',
+    title:'Prisão temporária -- Lei 7.960/89',
+    question:'O que é a prisão temporária? Quais os requisitos? Qual o prazo? Quando é cabível?',
+    pills:['Lei 7.960/1989','Art. 1º','Prazo: 5/30 dias'],
+    fundamento:'Lei nº 7.960, de 21 de dezembro de 1989.',
+    conceito:'A prisão temporária é medida cautelar pré-processual, cabível durante o inquérito policial para viabilizar as investigações. REQUISITOS (art. 1º Lei 7.960/89 -- presença dos incisos I ou II + III): (I) imprescindível para as investigações do IP; (II) o indiciado não tiver residência fixa ou não fornecer elementos para esclarecer identidade; (III) quando houver fundadas razões da autoria ou participação em crimes taxativamente enumerados (homicídio doloso, sequestro, roubo, extorsão, tráfico, crimes contra sistema financeiro, crimes hediondos, entre outros). PRAZO: 5 dias, prorrogáveis por igual período em caso de extrema e comprovada necessidade. Para crimes hediondos e equiparados: 30 dias, prorrogáveis por mais 30. DECRETAÇÃO: apenas pelo juiz, mediante representação da autoridade policial ou requerimento do MP.',
+    atencao:'A prisão temporária NÃO pode ser decretada de ofício pelo juiz -- exige requerimento ou representação (art. 2º Lei 7.960/89). Diferença com a preventiva: a temporária é cabível APENAS na fase de inquérito e em crimes taxativos; a preventiva pode ser decretada em qualquer fase do processo e em crimes com pena máxima superior a 4 anos. Findo o prazo da temporária, o preso deve ser imediatamente solto -- salvo se decretada a preventiva. O STF (HC 93.503) firmou que o descumprimento do prazo gera constrangimento ilegal impugnável por HC.',
+    oral:'A prisão temporária é medida cautelar prevista na Lei 7.960 de 1989, aplicável exclusivamente durante o inquérito policial. Seus requisitos cumulativos envolvem a necessidade para as investigações ou incerteza sobre a identidade do indiciado, mais a existência de fundadas razões de autoria ou participação em crimes do rol taxativo da lei. O prazo é de cinco dias, prorrogável por igual período em casos de extrema necessidade; para crimes hediondos e equiparados, o prazo é de trinta dias, prorrogável por mais trinta. A decretação depende de requerimento do Ministério Público ou representação da autoridade policial -- o juiz não pode agir de ofício. Findo o prazo sem prorrogação ou sem decretação de preventiva, o preso deve ser imediatamente solto.',
+    dica:'Temporária: só no IP + crimes taxativos + requerimento do MP ou representação do Delegado. Prazo: 5+5 dias (crimes comuns); 30+30 dias (hediondos). Diferença da preventiva: temporária = IP + rol taxativo + pré-processual. Preventiva = qualquer fase + pena > 4 anos. Findo o prazo: soltura imediata.'
+  },
+  {
+    grupo:'prisao', cat:'Prisão e Cautelares', catClass:'cat-coral',
+    title:'Medidas cautelares diversas da prisão',
+    question:'Quais as medidas cautelares diversas da prisão previstas no CPP? Quando se aplicam? O que é liberdade provisória?',
+    pills:['Art. 319 CPP','Proporcionalidade','Lei 13.964/2019'],
+    fundamento:'Arts. 319 a 350 do CPP, com redação dada pela Lei nº 12.403/2011 e pela Lei nº 13.964/2019.',
+    conceito:'MEDIDAS CAUTELARES DIVERSAS DA PRISÃO (art. 319): comparecimento periódico em juízo; proibição de acesso ou frequência a determinados lugares; proibição de manter contato com pessoa determinada; proibição de ausentar-se da comarca ou do país; recolhimento domiciliar noturno e em dias de folga; suspensão do exercício de função pública ou de atividade econômica; internação provisória (inimputáveis ou semi-imputáveis); fiança; monitoração eletrônica. LIBERDADE PROVISÓRIA: concedida quando presentes os requisitos para concessão de fiança (art. 322 CPP) ou quando ausentes os fundamentos da preventiva. Pode ser com ou sem fiança. FIANÇA: prestação em dinheiro ou outros valores como garantia do comparecimento do réu. O Delegado pode conceder fiança nos crimes com pena máxima até 4 anos (art. 322 CPP) -- nos demais, somente o juiz.',
+    atencao:'A Lei 12.403/2011 criou o sistema de medidas cautelares no CPP, substituindo a lógica binária prisão/liberdade por um espectro gradual de restrições. O juiz deve aplicar a medida menos gravosa que atenda à necessidade cautelar -- proporcionalidade. Crimes inafiançáveis (CF, art. 5º, XLII e XLIII): racismo, tortura, tráfico de drogas, crimes hediondos, terrorismo e crimes armados -- vedada a fiança. A monitoração eletrônica pode ser combinada com outras medidas.',
+    oral:'A Lei 12.403 de 2011 introduziu no CPP um sistema gradual de medidas cautelares diversas da prisão, listadas no art. 319. O juiz deve preferir a medida menos gravosa que seja suficiente para assegurar a finalidade cautelar, observando a proporcionalidade. Entre as medidas estão o comparecimento periódico em juízo, a proibição de contatos, o recolhimento domiciliar noturno, a suspensão de atividades e a monitoração eletrônica. A liberdade provisória é concedida quando ausentes os fundamentos da prisão preventiva, podendo ser com ou sem fiança. O Delegado pode conceder fiança nos crimes com pena máxima de até quatro anos; nos demais, a competência é do juiz.',
+    dica:'Art. 319: 9 medidas cautelares diversas. Princípio: menor gravosidade suficiente -- proporcionalidade. Fiança pelo Delegado: pena máx. até 4 anos. Fiança pelo juiz: demais casos. Inafiançáveis (CF): racismo, tortura, tráfico, hediondos, terrorismo, crimes armados. Liberdade provisória: com ou sem fiança, quando ausente a preventiva.'
+  },
+  {
+    grupo:'prisao', cat:'Prisão e Cautelares', catClass:'cat-coral',
+    title:'Liberdade provisória e relaxamento de prisão',
+    question:'Qual a diferença entre relaxamento de prisão, revogação da preventiva e liberdade provisória? Quando cabe cada um?',
+    pills:['Art. 5º LXV CF','Art. 310 CPP','HC como remédio'],
+    fundamento:'Art. 5º, LXV e LXVI, da CF/88. Art. 310 do CPP.',
+    conceito:'RELAXAMENTO DE PRISÃO (art. 5º, LXV CF): toda prisão ilegal deve ser imediatamente relaxada pela autoridade judiciária. Cabível quando a prisão for ilegal na sua origem (sem flagrante válido, sem mandado, com vício formal grave). REVOGAÇÃO DA PREVENTIVA (art. 316 CPP): quando não mais subsistirem os motivos que a determinaram. A preventiva pode ser revogada e posteriormente decretada novamente se surgirem novos fundamentos. LIBERDADE PROVISÓRIA (art. 310, III CPP): concedida pelo juiz na audiência de custódia quando ausentes os requisitos da preventiva e não sendo caso de medida cautelar diversa. Pode ser com fiança (crimes afiançáveis) ou sem fiança (crimes inafiançáveis em que não se justifica a preventiva). HABEAS CORPUS: remédio constitucional para impugnar qualquer dessas situações de ilegalidade.',
+    atencao:'Distinção essencial para a prova: relaxamento = prisão ilegal desde a origem; revogação = prisão legal que perdeu o fundamento; liberdade provisória = prisão válida mas desnecessária no momento. A audiência de custódia é o momento processual em que o juiz decide entre essas três opções (art. 310 CPP). O STF (ADI 5.240) declarou a audiência de custódia direito fundamental -- obrigatória em todo o território nacional no prazo de 24 horas.',
+    oral:'O sistema de controle da liberdade no processo penal distingue três institutos. O relaxamento de prisão, previsto no art. 5º, LXV da Constituição, é cabível quando a prisão é ilegal em sua origem -- vício no auto de prisão em flagrante, ausência de mandado, incompetência da autoridade. A revogação da preventiva do art. 316 ocorre quando os fundamentos que a motivaram cessam, podendo ser novamente decretada se surgirem novos fatos. A liberdade provisória é concedida quando a prisão é formalmente válida, mas desnecessária -- o juiz, na audiência de custódia, verificando ausência dos requisitos da preventiva, concede a liberdade com ou sem fiança. O habeas corpus é o instrumento constitucional para impugnar qualquer ilegalidade nessas situações.',
+    dica:'Relaxamento: prisão ilegal na origem. Revogação: preventiva legal que perdeu fundamento. Liberdade provisória: prisão válida mas desnecessária -- audiência de custódia. Audiência de custódia: 24h, obrigatória (ADI 5.240 STF). HC: impugna qualquer ilegalidade na prisão.'
+  }
+];
+
+let filtered = [...allCards];
+let cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido -- ideal para simular a banca'
+    : 'Resposta em blocos estruturados -- ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? [...allCards] : allCards.filter(c => c.grupo === f);
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  const c = filtered[cur];
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(p => `<span class="pill">${p}</span>`).join('');
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+  document.getElementById('b-blocks').innerHTML = mode === 'oral' ? `
+    <div class="oral-answer">${c.oral}</div>
+    <div class="oral-tip"><div class="blbl">Dica para a banca</div><p>${c.dica}</p></div>
+  ` : `
+    <div class="b-block"><div class="blbl">Fundamento legal</div><p>${c.fundamento}</p></div>
+    <div class="b-block"><div class="blbl">Conceito e distinções</div><p>${c.conceito}</p></div>
+    <div class="b-alert"><div class="blbl">Atenção -- ponto de prova</div><p>${c.atencao}</p></div>
+    <div class="b-tip"><div class="blbl">Dica de memorização</div><p>${c.dica}</p></div>
+  `;
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = `${cur + 1} / ${filtered.length} fichas`;
+  const sh = t => t.length > 28 ? t.substring(0, 28) + '…' : t;
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map((x, i) => `<button class="topic-btn ${i===cur?'active':''}" onclick="go(${i})">${i+1}. ${sh(x.title)}</button>`).join('') +
+    `<span class="counter-pill">${cur+1} / ${filtered.length}</span>`;
+}
+
+function flip() { document.getElementById('card').classList.toggle('flipped'); }
+function go(i) { cur = i; render(); }
+function prev() { cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next() { cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>
