@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas -- Direito Constitucional: Teoria, Direitos e Poderes | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  header{background:var(--navy);padding:1.5rem 2rem 1.25rem;}
+  .hbadge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px;}
+  header h1{font-size:20px;font-weight:600;color:#fff;}
+  header p{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;}
+  .hrow{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+  .hcount{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-left:auto;}
+  .mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mode-label{font-size:12px;color:var(--muted);font-weight:500;}
+  .toggle-wrap{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;gap:2px;}
+  .toggle-opt{font-size:11.5px;padding:4px 14px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-weight:500;transition:all .15s;}
+  .toggle-opt.active{background:var(--navy);color:#fff;}
+  .mode-hint{font-size:11px;color:var(--faint);}
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .progress-wrap{height:3px;background:var(--border);border-radius:999px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-bar{height:100%;background:var(--navy-mid);border-radius:999px;transition:width .3s ease;}
+  .topic-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem;align-items:center;}
+  .topic-btn{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500;font-family:'Sora',sans-serif;}
+  .topic-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .topic-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .counter-pill{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);white-space:nowrap;}
+  .card-scene{perspective:1200px;margin-bottom:1.5rem;}
+  .card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);min-height:290px;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;display:flex;flex-direction:column;}
+  .face.back{transform:rotateY(180deg);position:absolute;top:0;left:0;right:0;}
+  .f-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:1.1rem;width:fit-content;}
+  .cat-navy{background:var(--navy-light);color:var(--navy);}
+  .cat-teal{background:var(--teal-light);color:var(--teal);}
+  .cat-coral{background:var(--coral-light);color:var(--coral);}
+  .cat-amber{background:var(--amber-light);color:var(--amber);}
+  .cat-purple{background:var(--purple-light);color:var(--purple);}
+  .f-title{font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+  .f-question{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;flex:1;}
+  .f-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+  .hint-line{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;}
+  .oral-answer{font-size:14px;color:var(--text);line-height:1.8;border-left:3px solid var(--navy-mid);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:9px;}
+  .blbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .oral-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;}
+  .oral-tip .blbl{color:var(--teal);}
+  .oral-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .b-block{background:var(--bg);border-radius:10px;padding:11px 15px;margin-bottom:9px;}
+  .b-block .blbl{color:var(--faint);}
+  .b-block p{font-size:13px;color:var(--text);line-height:1.65;}
+  .b-alert{border-left:3px solid var(--coral);background:var(--coral-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-alert .blbl{color:var(--coral);}
+  .b-alert p{font-size:13px;color:#5a2010;line-height:1.65;}
+  .b-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-tip .blbl{color:var(--teal);}
+  .b-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .btn-row{display:flex;gap:8px;margin-top:1.4rem;}
+  .btn{flex:1;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:var(--bg);color:var(--text);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:#17316b;}
+  footer{text-align:center;padding:2rem 1rem;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+  @media(max-width:540px){
+    main{padding:1.25rem 1rem 3rem;}
+    header,.filter-bar,.mode-bar{padding:.75rem 1rem;}
+    .f-title{font-size:18px;}
+    .face{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG -- Direito Constitucional</div>
+      <h1>Teoria da Constituicao, Direitos Fundamentais e Poderes</h1>
+      <p>Fichas para prova oral e estudo ativo -- itens 4.1 a 4.9 do edital</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido -- ideal para simular a banca</span>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('teoria',this)">Teoria da Constituicao</button>
+  <button class="filter-btn" onclick="setFilter('poder',this)">Poder Constituinte</button>
+  <button class="filter-btn" onclick="setFilter('direitos',this)">Direitos Fundamentais</button>
+  <button class="filter-btn" onclick="setFilter('legislativo',this)">Poder Legislativo</button>
+  <button class="filter-btn" onclick="setFilter('executivo',this)">Poder Executivo</button>
+  <button class="filter-btn" onclick="setFilter('judiciario',this)">Poder Judiciario</button>
+</div>
+
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ocultar</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>Mentoria Lider -- CFO PMMG -- Material de uso exclusivo dos alunos</footer>
+
+<script>
+let mode = 'oral';
+
+const allCards = [
+
+  // TEORIA DA CONSTITUICAO
+  {
+    grupo:'teoria', cat:'Teoria da Constituicao', catClass:'cat-navy',
+    title:'Conceito e classificacoes das Constituicoes',
+    question:'O que e Constituicao? Como se classifica quanto ao conteudo, forma, origem, estabilidade e extensao?',
+    pills:['Constituicao formal x material','Rigida x flexivel','Analitica x sintetica'],
+    fundamento:'Teoria Geral do Direito Constitucional. Doutrina: Jose Afonso da Silva, Gilmar Mendes, Alexandre de Moraes.',
+    conceito:'CONCEITO: Constituicao e a lei fundamental e suprema do Estado, que organiza seus elementos essenciais, institui os poderes, define direitos e garantias fundamentais e estabelece os limites da atuacao estatal. CLASSIFICACOES: Quanto ao conteudo: material (normas constitucionais pelo conteudo, independente de estarem na CF) x formal (todas as normas inseridas no texto constitucional, pelo processo legislativo proprio). Quanto a forma: escrita x costumeira (nao escrita). Quanto a origem: promulgada (democratica, assembleia constituinte) x outorgada (imposta pelo governante). Quanto a estabilidade: rigida (processo mais dificil de emenda) x flexivel (mesmo processo da lei ordinaria) x semi-rigida. Quanto a extensao: analitica (prolixia, detalhada -- CF/88) x sintetica (concisa -- EUA). Quanto a finalidade: garantia (limitar o poder) x dirigente (define programa e metas ao Estado).',
+    atencao:'A CF/88 e: escrita, formal, promulgada, rigida, analitica e dirigente. Conhecer essas classificacoes e basico para a prova oral -- a banca frequentemente pede a classificacao da CF/88. Normas constitucionais nao sao hierarquicamente superiores entre si -- todas tem o mesmo status formal (STF). A classificacao entre normas de eficacia plena, contida e limitada (Jose Afonso da Silva) e cobrada separadamente.',
+    oral:'A Constituicao e a lei fundamental do Estado, responsavel por organizar os poderes, definir direitos e garantias e estabelecer os limites da atuacao estatal. A CF/88 classifica-se como: escrita, pois consolidada em documento solene; formal, porque qualquer norma inserida pelo processo constituinte adquire status constitucional; promulgada, resultado de assembleia constituinte democraticamente eleita; rigida, pois exige processo legislativo mais dificil para sua alteracao; analitica, pela extensao e detalhamento de seu texto; e dirigente, porque estabelece metas e programas ao Estado. A banca frequentemente pede essa classificacao -- e importante recitar as seis caracteristicas com seguranca.',
+    dica:'CF/88 = escrita + formal + promulgada + rigida + analitica + dirigente. Seis adjetivos. Promulgada: assembleia democratica (1987-1988). Outorgada: imposta (ex: CF/1937). Rigida: processo de emenda mais dificil -- protege clausulas petreas.'
+  },
+  {
+    grupo:'teoria', cat:'Teoria da Constituicao', catClass:'cat-navy',
+    title:'Normas constitucionais -- eficacia e aplicabilidade',
+    question:'Como se classificam as normas constitucionais quanto a eficacia? O que e norma de eficacia plena, contida e limitada?',
+    pills:['Jose Afonso da Silva','Eficacia plena','Norma programatica'],
+    fundamento:'Teoria da eficacia das normas constitucionais -- Jose Afonso da Silva. Doutrina amplamente adotada pelo STF.',
+    conceito:'NORMAS DE EFICACIA PLENA: producao imediata de todos os seus efeitos, sem necessidade de regulamentacao. Ex: art. 5o, LXVIII (habeas corpus), art. 2o (separacao dos poderes). NORMAS DE EFICACIA CONTIDA (redutivel ou restringivel): producao imediata de efeitos, mas a lei pode restringir seu alcance. Ex: art. 5o, XIII (liberdade profissional -- "na forma da lei"). NORMAS DE EFICACIA LIMITADA: nao produzem todos os efeitos sem lei regulamentadora. Subdividem-se em: institutivas (criam orgaos ou institutos, aguardam lei) e programaticas (estabelecem programas e metas ao Estado -- ex: art. 3o, metas da Republica). Normas programaticas nao sao destituidas de eficacia -- geram direito subjetivo negativo (impedir retrocesso).',
+    atencao:'O STF reconhece o principio da proibicao do retrocesso social (efeito cliquet): normas programaticas que ja foram regulamentadas nao podem ser suprimidas pelo legislador ordinario. Norma de eficacia limitada nao e norma sem eficacia -- ela vincula negativamente o legislador e pode ser objeto de mandado de injuncao e ADO quando ha omissao.',
+    oral:'As normas constitucionais classificam-se, segundo Jose Afonso da Silva, em normas de eficacia plena, contida e limitada. As de eficacia plena produzem todos os seus efeitos imediatamente, sem necessidade de lei regulamentadora. As de eficacia contida tambem produzem efeitos de imediato, mas admitem que a lei ordinaria restrinja seu alcance -- como a liberdade profissional do art. 5o, XIII. As de eficacia limitada dependem de regulamentacao legislativa para produzir seus efeitos essenciais, dividindo-se em institutivas e programaticas. Vale destacar que as normas programaticas nao sao desprovidas de eficacia -- elas vedam o retrocesso e permitem o controle de omissao inconstitucional por mandado de injuncao ou ADO.',
+    dica:'Plena: efeito imediato, sem restricao. Contida: efeito imediato, mas lei pode restringir. Limitada: depende de lei -- institutiva (cria orgao) ou programatica (meta ao Estado). Programatica nao e ineficaz -- proibe retrocesso + ADO + MI. Banca gosta de pedir exemplos de cada.'
+  },
+
+  // PODER CONSTITUINTE
+  {
+    grupo:'poder', cat:'Poder Constituinte', catClass:'cat-purple',
+    title:'Poder constituinte originario e derivado',
+    question:'O que e poder constituinte? Quais as diferencas entre originario e derivado? Quais os limites do poder de reforma?',
+    pills:['Art. 60 CF/88','Clausulas petreas','EC nao retroage'],
+    fundamento:'Art. 60 da CF/88. Teoria do poder constituinte -- Sieyes. Doutrina: Jose Afonso da Silva, Gilmar Mendes.',
+    conceito:'PODER CONSTITUINTE ORIGINARIO: poder de criar uma nova Constituicao. Caracteristicas: inicial (nao deriva de nenhum outro poder), ilimitado juridicamente (nao se submete a ordem anterior), incondicionado (nao esta sujeito a formas preestabelecidas) e permanente (nao se esgota -- permanece latente). PODER CONSTITUINTE DERIVADO: criado e limitado pelo originario. Especies: (a) Reformador: altera a CF por emenda (art. 60); (b) Decorrente: poder dos Estados de elaborar suas proprias Constituicoes; (c) Revisor: revisao constitucional do art. 3o do ADCT (ja exercido em 1994). LIMITES DO PODER REFORMADOR: formais (quorum de 3/5, dois turnos, cada Casa); circunstanciais (nao durante estado de defesa, sitio ou intervencao federal); materiais -- clausulas petreas (art. 60, paragrafo 4o): forma federativa, voto direto/secreto/universal/periodico, separacao dos poderes e direitos e garantias individuais.',
+    atencao:'Clausulas petreas nao podem ser abolidas nem sequer ser objeto de proposta tendente a abolicao (art. 60, paragrafo 4o). O STF admite emenda que RESTRINJA direito fundamental, mas nao a que o abolir. Os direitos sociais do art. 6o nao sao expressamente clausulas petreas -- mas o STF tem entendido que os direitos fundamentais do art. 5o que sao tambem direitos sociais estao protegidos. Emenda constitucional nao pode retroagir para atingir situacoes ja consolidadas -- principio da protecao ao direito adquirido.',
+    oral:'O poder constituinte originario e o poder de criar uma nova Constituicao. E inicial, ilimitado juridicamente e incondicionado -- nao se submete a nenhuma ordem anterior. O poder constituinte derivado, por sua vez, e criado e limitado pelo originario. Manifesta-se nas formas reformadora, pela edicao de emendas constitucionais, decorrente, pelo qual os Estados elaboram suas Constituicoes, e revisora, ja exercida em 1994. O poder reformador encontra limites formais -- quorum de tres quintos em dois turnos em cada Casa -- circunstanciais, proibindo reformas durante estados de excecao, e materiais, as clausulas petreas do art. 60, paragrafo 4o: forma federativa, voto direto, separacao dos poderes e direitos e garantias individuais.',
+    dica:'Originario: inicial + ilimitado + incondicionado + permanente. Derivado: limitado pelo originario. Clausulas petreas (art. 60 paragrafo 4o): forma federativa + voto direto/secreto/universal/periodico + separacao dos poderes + direitos e garantias individuais. Proposta tendente a abolicao: ja e inconstitucional, nem precisa ser aprovada.'
+  },
+  {
+    grupo:'poder', cat:'Poder Constituinte', catClass:'cat-purple',
+    title:'Emendas constitucionais -- processo e limites',
+    question:'Qual o processo de aprovacao de emenda constitucional? Quais as restricoes? Emenda pode ser objeto de ADI?',
+    pills:['Art. 60 CF/88','3/5 em dois turnos','PEC rejeitada'],
+    fundamento:'Art. 60 da CF/88.',
+    conceito:'INICIATIVA (art. 60, I a III): 1/3 dos membros da Camara ou do Senado; Presidente da Republica; mais da metade das Assembleias Legislativas, manifestando-se cada uma pela maioria relativa. APROVACAO: maioria de 3/5 dos membros de cada Casa, em dois turnos de votacao. NAO ha sanção ou veto presidencial -- a EC e promulgada pelas Mesas da Camara e do Senado. RESTRICOES CIRCUNSTANCIAIS: nao pode ser tramitada durante estado de defesa, estado de sitio ou intervencao federal (art. 60, paragrafo 1o). PEC REJEITADA: nao pode ser reapresentada na mesma sessao legislativa (art. 60, paragrafo 5o). MATERIA VEDADA: clausulas petreas -- nao pode ser objeto de PEC tendente a abolicao.',
+    atencao:'Emenda constitucional pode ser objeto de ADI perante o STF -- o poder constituinte derivado e limitado e pode violar a CF. O Presidente da Republica NAO pode vetar emenda constitucional -- a promulgacao e feita pelas Mesas do CN. Sessao legislativa: periodo de 02/02 a 17/07 e de 01/08 a 22/12 de cada ano. PEC rejeitada nao pode ser reapresentada na MESMA sessao -- na sessao seguinte, pode. Diferente da lei ordinaria rejeitada, que pode ser reapresentada na mesma sessao se houver aprovacao da maioria absoluta (art. 67 CF).',
+    oral:'A proposta de emenda constitucional pode ser apresentada por um terco dos membros da Camara ou do Senado, pelo Presidente da Republica ou por mais da metade das Assembleias Legislativas estaduais. A aprovacao exige maioria de tres quintos dos membros de cada Casa, em dois turnos de votacao. Nao ha sancao ou veto presidencial -- a emenda e promulgada pelas proprias Mesas da Camara e do Senado. A tramitacao e vedada durante estado de defesa, estado de sitio e intervencao federal. Uma PEC rejeitada nao pode ser reapresentada na mesma sessao legislativa. Importante: emendas constitucionais podem ser objeto de ADI perante o STF, pois o poder constituinte derivado e juridicamente limitado.',
+    dica:'Iniciativa: 1/3 da Camara ou Senado + Presidente + maioria absoluta de mais da metade das ALs. Aprovacao: 3/5, dois turnos, cada Casa. Promulgacao: Mesas do CN (sem veto). Vedado: durante estado de defesa/sitio/intervencao. PEC rejeitada: mesma sessao legislativa vedada. EC pode ser objeto de ADI (poder derivado e limitado).'
+  },
+
+  // DIREITOS FUNDAMENTAIS
+  {
+    grupo:'direitos', cat:'Direitos Fundamentais', catClass:'cat-teal',
+    title:'Direitos fundamentais -- caracteristicas e dimensoes',
+    question:'Quais as caracteristicas dos direitos fundamentais? O que sao as dimensoes (geracoes) de direitos? Direitos fundamentais podem ser restringidos?',
+    pills:['Art. 5o CF/88','Dimensoes historicas','Nucleo essencial'],
+    fundamento:'Art. 5o e seguintes da CF/88. Doutrina: Ingo Wolfgang Sarlet, Paulo Bonavides.',
+    conceito:'CARACTERISTICAS: universalidade (titularidade ampla); historicidade (evoluem no tempo); inalienabilidade (nao podem ser transferidos); imprescritibilidade (nao se perdem pelo nao uso); irrenunciabilidade (nao podem ser renunciados em abstrato); relatividade (nao sao absolutos -- podem colidir e ser ponderados); vinculacao dos poderes publicos (eficacia vertical). DIMENSOES: 1a dimensao (seculo XVIII/XIX): direitos civis e politicos -- liberdades negativas, prestacao negativa do Estado; 2a dimensao (seculo XX): direitos sociais, economicos e culturais -- prestacoes positivas; 3a dimensao: direitos difusos e coletivos (meio ambiente, paz, desenvolvimento); 4a dimensao (Paulo Bonavides): democracia, informacao, pluralismo. RESTRICAO: direitos fundamentais admitem restricao por lei (reserva legal) ou por ponderacao -- desde que preservado o nucleo essencial.',
+    atencao:'A teoria dos quatro status de Jellinek: status passivo (submissao ao Estado); status negativo (liberdade frente ao Estado); status positivo (prestacao do Estado); status ativo (participacao na formacao da vontade estatal). A eficacia horizontal dos direitos fundamentais -- aplicacao nas relacoes entre particulares -- e reconhecida pelo STF (RE 201.819). Direitos fundamentais nao sao absolutos -- admitem restricao por ponderacao, desde que preservado o conteudo essencial (nucleo duro).',
+    oral:'Os direitos fundamentais sao caracterizados pela universalidade, historicidade, inalienabilidade, imprescritibilidade, irrenunciabilidade, relatividade e vinculacao dos poderes publicos. Quanto as dimensoes historicas, a primeira compreende os direitos civis e politicos -- liberdades negativas conquistadas no constitucionalismo liberal. A segunda dimensao engloba os direitos sociais, economicos e culturais, que exigem prestacoes positivas do Estado. A terceira dimensao abarca direitos difusos e coletivos como o meio ambiente e a paz. Os direitos fundamentais nao sao absolutos -- admitem restricao por lei ou por ponderacao, desde que preservado o nucleo essencial do direito. O STF reconhece tambem a eficacia horizontal, aplicando direitos fundamentais nas relacoes entre particulares.',
+    dica:'1a dimensao: liberdades (prestacao negativa). 2a: sociais (prestacao positiva). 3a: difusos/coletivos. Caracteristicas: universais + historicos + inalienáveis + imprescritiveis + irrenunciaveis + relativos. Eficacia vertical: vincula Estado. Eficacia horizontal: vincula particulares (RE 201.819 STF). Nao sao absolutos: ponderacao + nucleo essencial.'
+  },
+  {
+    grupo:'direitos', cat:'Direitos Fundamentais', catClass:'cat-teal',
+    title:'Direitos e deveres individuais e coletivos -- art. 5o CF',
+    question:'Quais os principais direitos do art. 5o da CF? Como se organizam? Quais as garantias instrumentais?',
+    pills:['Art. 5o CF/88','Clausula de abertura','Tratados de DH'],
+    fundamento:'Art. 5o da CF/88. EC no 45/2004 (paragrafo 3o -- tratados de DH com status de EC).',
+    conceito:'O art. 5o tem mais de 78 incisos e organiza-se em: DIREITOS DE IGUALDADE: igualdade formal (inciso I -- homens e mulheres sao iguais em direitos e obrigacoes) e material. DIREITOS DE LIBERDADE: de locomocao (XV), de consciencia e crenca (VI-VIII), de expressao (IX-X), profissional (XIII), de reuniao (XVI-XVII), de associacao (XVII-XXI). DIREITOS A SEGURANCA JURIDICA: legalidade (II), irretroatividade (XXXVI), juiz natural (XXXVII-LIII), devido processo legal (LIV-LV). DIREITOS A PROPRIEDADE: XXII-XXX. GARANTIAS INSTRUMENTAIS: HC, MS, MI, HD, AP, mandado de seguranca coletivo. CLAUSULA DE ABERTURA (paragrafo 2o): os direitos e garantias do art. 5o nao excluem outros decorrentes do regime, dos principios e dos tratados internacionais. TRATADOS DE DH (paragrafo 3o -- EC 45/2004): aprovados com quorum de EC tem status de emenda constitucional.',
+    atencao:'O STF (RE 466.343) fixou que os tratados de DH nao aprovados pelo rito do paragrafo 3o tem status supralegal -- acima das leis ordinarias, mas abaixo da CF. O Pacto de San Jose da Costa Rica tem status supralegal -- veda a prisao civil por divida, salvo devedor de alimentos. A igualdade do inciso I nao e absoluta -- admite diferenciacoes razoaveis (acoes afirmativas, por exemplo). O direito a vida (inciso XLVII, a) veda a pena de morte, salvo em caso de guerra declarada.',
+    oral:'O art. 5o da Constituicao consagra os direitos e deveres individuais e coletivos, organizados em torno dos valores da igualdade, liberdade, seguranca e propriedade. A clausula de abertura do paragrafo 2o reconhece que esse rol nao e exaustivo -- outros direitos decorrem do regime, dos principios e dos tratados internacionais. Com a EC 45/2004, os tratados de direitos humanos aprovados com quorum de emenda constitucional passam a ter esse mesmo status. Para os demais tratados de DH, o STF fixou no RE 466.343 o status supralegal -- acima das leis, mas abaixo da Constituicao. As garantias instrumentais do art. 5o incluem o habeas corpus, o mandado de seguranca, o mandado de injuncao, o habeas data e a acao popular.',
+    dica:'Art. 5o: igualdade + liberdade + seguranca + propriedade. Clausula de abertura (paragrafo 2o): rol nao e taxativo. Tratados DH com quorum de EC (paragrafo 3o -- EC 45/04): status de EC. Tratados DH sem quorum: status supralegal (RE 466.343 STF). Pacto de San Jose: supralegal -- veda prisao civil por divida (exceto alimentar).'
+  },
+  {
+    grupo:'direitos', cat:'Direitos Fundamentais', catClass:'cat-teal',
+    title:'Direitos sociais, nacionalidade e direitos politicos',
+    question:'O que sao direitos sociais? Quem e brasileiro nato e naturalizado? O que sao direitos politicos e quando podem ser suspensos?',
+    pills:['Art. 6o CF/88','Art. 12 CF/88','Art. 15 CF/88'],
+    fundamento:'Arts. 6o, 12, 13, 14, 15 e 17 da CF/88.',
+    conceito:'DIREITOS SOCIAIS (art. 6o): educacao, saude, alimentacao, trabalho, moradia, transporte, lazer, seguranca, previdencia social, protecao a maternidade e infancia, assistencia aos desamparados. Sao direitos de 2a dimensao -- exigem prestacao positiva do Estado. NACIONALIDADE (art. 12): BRASILEIRO NATO: nascido no Brasil (jus soli), filho de pai ou mae brasileiro nascido no exterior (jus sanguinis) com registro consular ou residencia no Brasil; nascido no exterior de pai ou mae a servico do Brasil. BRASILEIRO NATURALIZADO: estrangeiro residente por 15 anos ininterruptos + sem condenacao penal (regra geral); ou originario de paises de lingua portuguesa com 1 ano de residencia ininterrupta + idoneidade moral. DIREITOS POLITICOS (art. 14): sufragio universal, voto direto, secreto, universal e periodico. Obrigatorio: 18-70 anos. Facultativo: 16-17, maiores de 70, analfabetos. SUSPENSAO DOS DIREITOS POLITICOS (art. 15): condenacao criminal transitada em julgado; incapacidade civil absoluta; recusa de obrigacao a todos imposta; improbidade administrativa.',
+    atencao:'Brasileiro nato NAO pode ser extraditado (art. 5o, LI). Brasileiro naturalizado pode ser extraditado por crime praticado antes da naturalizacao ou por trafico de drogas (art. 5o, LI e LII). Cargos privativos de brasileiro nato (art. 12, paragrafo 3o): Presidente e Vice da Republica, Presidente da Camara, Presidente do Senado, Ministro do STF, carreira diplomatica, oficial das FA e Ministro da Defesa. Perda dos direitos politicos: cancelamento da naturalizacao por sentenca judicial + aquisicao de outra nacionalidade voluntariamente (excecoes: reconhecimento de nacionalidade originaria e imposicao de naturalizacao como condicao de residencia ou exercicio de direitos civis).',
+    oral:'Os direitos sociais do art. 6o da Constituicao -- educacao, saude, moradia, trabalho, entre outros -- sao direitos de segunda dimensao que exigem prestacoes positivas do Estado. Quanto a nacionalidade, o brasileiro nato adquire-a pelo jus soli, pelo nascimento no exterior de pai ou mae brasileiro, ou pelo nascimento no exterior a servico do Brasil. O naturalizado deve cumprir os requisitos do art. 12, II, que variam conforme a origem. Os direitos politicos do art. 14 incluem o sufragio universal e o voto direto, secreto e periodico, obrigatorio para os cidadaos entre 18 e 70 anos. A suspensao dos direitos politicos ocorre nas hipoteses taxativas do art. 15, entre elas a condenacao criminal transitada em julgado e a improbidade administrativa.',
+    dica:'Direitos sociais (art. 6o): 11 direitos -- educacao, saude, alimentacao, trabalho, moradia, transporte, lazer, seguranca, previdencia, maternidade/infancia, assistencia. Brasileiro nato: nao pode ser extraditado. Naturalizado: pode (crime anterior + trafico). Cargos de nato: Presidente, VP, Pres. Camara, Pres. Senado, Min. STF, diplomatico, oficial FA, Min. Defesa. Suspensao (art. 15): condenacao transitada + incapacidade civil + improbidade.'
+  },
+
+  // PODER LEGISLATIVO
+  {
+    grupo:'legislativo', cat:'Poder Legislativo', catClass:'cat-amber',
+    title:'Poder Legislativo -- estrutura, atribuicoes e garantias',
+    question:'Como se organiza o Poder Legislativo federal? Quais as atribuicoes exclusivas do CN, da Camara e do Senado? Quais as garantias dos parlamentares?',
+    pills:['Arts. 44-75 CF/88','Bicameralismo','Imunidades parlamentares'],
+    fundamento:'Arts. 44 a 75 da CF/88.',
+    conceito:'ESTRUTURA: bicameralismo federativo -- Camara dos Deputados (representacao do povo, mandato de 4 anos, minimo 8 e maximo 70 deputados por Estado) + Senado Federal (representacao dos Estados e DF, 3 senadores por Estado, mandato de 8 anos, renovacao alternada de 1/3 e 2/3). ATRIBUICOES EXCLUSIVAS DO CN (art. 49): autorizar o Presidente a declarar guerra e celebrar paz; autorizar estado de defesa, sitio e intervencao federal; sustar atos normativos do Executivo que exorbitem o poder regulamentar; julgar as contas do Presidente; fiscalizar e controlar atos do Executivo. ATRIBUICOES PRIVATIVAS DA CAMARA (art. 51): autorizar instauracao de processo contra Presidente e VP; tomar contas do Presidente quando nao apresentadas no prazo. ATRIBUICOES PRIVATIVAS DO SENADO (art. 52): processar e julgar Presidente, VP e Ministros do STF nos crimes de responsabilidade; aprovar indicacoes do Presidente para cargos (STF, PGR, TCU, etc.); autorizar emprestimos externos.',
+    atencao:'IMUNIDADES PARLAMENTARES: material (inviolabilidade) -- imunidade por opinioes, palavras e votos no exercicio do mandato (art. 53 -- abrange o plenario, comissoes e qualquer manifestacao no exercicio da funcao); formal -- imputabilidade processual (STF e competente para processar parlamentar federal); sustacao do processo penal pela Casa (maioria absoluta, por voto secreto -- art. 53, paragrafo 3o). A imunidade material e absoluta quanto ao exercicio do mandato; fora desse contexto, o STF analisa o nexo com a funcao. Senadores e Deputados nao podem ser presos por crime afiancavel -- apenas por flagrante de crime inafiacavel (art. 53, paragrafo 2o).',
+    oral:'O Poder Legislativo federal e estruturado de forma bicameral, composto pela Camara dos Deputados, que representa o povo, e pelo Senado Federal, que representa os Estados e o Distrito Federal. O Congresso Nacional reune as duas Casas e possui atribuicoes exclusivas previstas no art. 49, como autorizar o estado de sitio e a intervencao federal. A Camara tem competencia privativa para autorizar o processo contra o Presidente da Republica, enquanto ao Senado cabe processar e julgar o Presidente nos crimes de responsabilidade. Os parlamentares gozam de imunidade material -- inviolabilidade por suas opinioes, palavras e votos no exercicio do mandato -- e de imunidade formal, que sujeita o processo penal a tramitacao no STF com possibilidade de sustacao pela Casa respectiva.',
+    dica:'Camara: representa o povo, 4 anos, min. 8 e max. 70 dep. por Estado. Senado: representa Estados, 3 senadores, 8 anos, renovacao 1/3 e 2/3. CN exclusivo (art. 49): guerra, estado de defesa/sitio, intervencao, contas do Presidente. Camara privativa (art. 51): autoriza processo contra Presidente. Senado privativo (art. 52): julga Presidente em crime de responsabilidade + aprovacao de indicacoes. Imunidade material: absoluta no exercicio do mandato.'
+  },
+  {
+    grupo:'legislativo', cat:'Poder Legislativo', catClass:'cat-amber',
+    title:'Processo legislativo -- especies e procedimento',
+    question:'Quais as especies de atos do processo legislativo? Qual o procedimento ordinario de aprovacao de lei? O que e sancao tacita e veto?',
+    pills:['Arts. 59-69 CF/88','Veto presidencial','Lei delegada'],
+    fundamento:'Arts. 59 a 69 da CF/88.',
+    conceito:'ESPECIES (art. 59): emendas constitucionais; leis complementares; leis ordinarias; leis delegadas; medidas provisorias; decretos legislativos; resolucoes. PROCEDIMENTO ORDINARIO (lei ordinaria): iniciativa >> deliberacao na Casa iniciadora >> deliberacao na Casa revisora >> sancao ou veto presidencial >> promulgacao >> publicacao. SANCAO: expressa (15 dias uteis, apos a aprovacao); tacita (silencio no prazo = sancao). VETO (art. 66, paragrafos 1-4): por inconstitucionalidade (veto juridico) ou por contrariedade ao interesse publico (veto politico). Prazo: 15 dias uteis. Veto e sempre PARCIAL (vedado veto de palavra isolada) ou TOTAL. O CN pode REJEITAR o veto por maioria absoluta de cada Casa, em sessao conjunta, votacao secreta -- e entao o texto e promulgado. LEI COMPLEMENTAR: quorum de maioria absoluta (membros). LEI ORDINARIA: quorum de maioria simples (presentes). MEDIDA PROVISORIA (art. 62): tem forca de lei, editada pelo Presidente em caso de relevancia e urgencia, prazo de 60 dias prorrogavel uma vez por igual periodo.',
+    atencao:'A Casa revisora pode: aprovar sem emenda (vai a sancao); emendar (retorna a Casa iniciadora, que aprecia apenas as emendas); rejeitar (arquiva o projeto). As emendas da Casa revisora nao tornam o projeto "novo" -- a Casa iniciadora aprecia apenas as modificacoes. MP nao pode dispor sobre direitos politicos, penal, processual penal, processual civil, organizacao do Judiciario e MP, cidadania, nacionalidade, planos plurianuais (art. 62, paragrafo 1o CF). MP nao apreciada no prazo tranca a pauta da Casa em que estiver (art. 62, paragrafo 6o).',
+    oral:'O processo legislativo federal abrange as especies elencadas no art. 59 da Constituicao: emendas constitucionais, leis complementares, leis ordinarias, leis delegadas, medidas provisorias, decretos legislativos e resolucoes. O procedimento ordinario de aprovacao de lei passa pela Casa iniciadora, pela Casa revisora e, ao final, pela sancao ou veto presidencial no prazo de quinze dias uteis. O silencio presidencial importa sancao tacita. O veto pode ser juridico, por inconstitucionalidade, ou politico, por contrariedade ao interesse publico, e pode ser rejeitado pelo Congresso por maioria absoluta de cada Casa em sessao conjunta. As leis complementares exigem maioria absoluta dos membros de cada Casa, enquanto as leis ordinarias se contentam com maioria simples dos presentes.',
+    dica:'Especies (art. 59): EC, LC, LO, lei delegada, MP, decreto legislativo, resolucao. LC: maioria absoluta (membros). LO: maioria simples (presentes). Sancao: 15 dias uteis -- silencio = sancao tacita. Veto: 15 dias uteis -- CN pode rejeitar por maioria absoluta (sessao conjunta, voto secreto). MP: 60+60 dias -- tranca pauta se nao apreciada.'
+  },
+
+  // PODER EXECUTIVO
+  {
+    grupo:'executivo', cat:'Poder Executivo', catClass:'cat-coral',
+    title:'Poder Executivo -- atribuicoes e responsabilidades do Presidente',
+    question:'Quais as atribuicoes privativas do Presidente da Republica? O que sao crimes de responsabilidade? Como funciona o impeachment?',
+    pills:['Art. 84 CF/88','Art. 85-86 CF/88','Lei 1.079/50'],
+    fundamento:'Arts. 76, 84, 85 e 86 da CF/88. Lei no 1.079/1950.',
+    conceito:'ATRIBUICOES PRIVATIVAS (art. 84 -- principais): nomear e exonerar Ministros; exercer a direcao superior da Administracao Federal; vetar projetos de lei; editar MPs; sancionar, promulgar e fazer publicar as leis; decretar estado de defesa e estado de sitio; celebrar tratados internacionais (ad referendum do CN); nomear membros do STF e de tribunais superiores; conceder indulto e comutar penas; conferir condecoracoes. DELEGAVEIS AOS MINISTROS (art. 84, paragrafo unico): apenas os incisos VI (decreto autonomo), XII (conceder indulto) e XXV (prover cargos federais). CRIMES DE RESPONSABILIDADE (art. 85): atos que atentem contra a CF, a existencia da Uniao, o livre exercicio dos poderes, a seguranca interna, a probidade administrativa, a lei orcamentaria, o exercicio dos direitos politicos, individuais e sociais. IMPEACHMENT (art. 86): admitido pela Camara (2/3 dos membros) >> julgado pelo Senado (presidido pelo Presidente do STF) >> condenado por 2/3 dos Senadores >> pena: perda do cargo + inabilitacao por 8 anos para funcao publica.',
+    atencao:'O Presidente fica SUSPENSO de suas funcoes: apos o recebimento da denuncia pelo Senado (crimes de responsabilidade) ou pelo STF (crimes comuns). Prazo de suspensao: 180 dias -- se nao julgado, retorna ao exercicio. O Presidente nao pode ser processado criminalmente por atos estranhos ao exercicio do mandato durante o mandato -- so por crimes comuns praticados durante e em razao do mandato (imunidade processual relativa). Crimes comuns: STF e competente.',
+    oral:'O Presidente da Republica exerce a chefia do Estado e do Governo, com atribuicoes privativas listadas no art. 84 da Constituicao. As principais incluem nomear ministros, editar medidas provisorias, vetar projetos de lei, decretar estado de defesa e celebrar tratados internacionais. Apenas tres dessas atribuicoes podem ser delegadas aos Ministros de Estado. Os crimes de responsabilidade, definidos no art. 85 e na Lei 1.079/50, sujeitam o Presidente ao processo de impeachment: admissao pela Camara com dois tercos dos membros, julgamento pelo Senado presidido pelo Presidente do STF e condenacao por dois tercos dos senadores, com pena de perda do cargo e inabilitacao por oito anos.',
+    dica:'Delegaveis (art. 84 paragrafo unico): so incisos VI (decreto autonomo), XII (indulto) e XXV (provimento de cargos). Impeachment: Camara admite (2/3) >> Senado julga (presidido pelo STF) >> condena com 2/3 >> perda do cargo + 8 anos de inabilitacao. Suspenso por 180 dias apos recebimento da denuncia. Crime comum durante mandato: STF julga.'
+  },
+
+  // PODER JUDICIARIO
+  {
+    grupo:'judiciario', cat:'Poder Judiciario', catClass:'cat-purple',
+    title:'Poder Judiciario -- organizacao e garantias',
+    question:'Como se organiza o Poder Judiciario brasileiro? Quais as garantias da magistratura? O que e o CNJ?',
+    pills:['Arts. 92-126 CF/88','EC 45/2004','Garantias da magistratura'],
+    fundamento:'Arts. 92 a 126 da CF/88. EC no 45/2004 (reforma do Judiciario).',
+    conceito:'ORGAOS (art. 92): STF; CNJ; STJ; TST; TSE; STM; TRFs e juizes federais; TRTs e juizes do trabalho; TREs e juizes eleitorais; TJMs e juizes militares estaduais; TJs e juizes estaduais. GARANTIAS DA MAGISTRATURA (art. 95): vitaliciedade (no 1o grau, apos 2 anos -- perda do cargo so por sentenca judicial transitada em julgado); inamovibilidade (so removido por interesse publico, com voto de 2/3 do tribunal ou do CNJ); irredutibilidade de subsidio. VEDACOES (art. 95, paragrafo unico): exercer outro cargo ou funcao (exceto magististerio); receber, a qualquer titulo, custas ou participacao em processo; dedicar-se a atividade politico-partidaria; exercer a advocacia no juizo ou tribunal que atuou (quarentena de 3 anos). CNJ (art. 103-B, EC 45/2004): orgao de controle administrativo, financeiro e disciplinar do Judiciario -- 15 membros, presidido pelo Presidente do STF.',
+    atencao:'O STF e composto por 11 Ministros (brasileiros natos, maiores de 35 e menores de 65 anos, notavel saber juridico e reputacao ilibada), nomeados pelo Presidente com aprovacao do Senado. O quorum de deliberacao do STF e maioria absoluta (6 ministros). O CNJ NAO tem funcao jurisdicional -- nao julga processos. O STJ tem competencia para julgar em recurso especial violacao de lei federal -- uniformiza a interpretacao da lei federal em todo o territorio nacional.',
+    oral:'O Poder Judiciario brasileiro organiza-se em uma estrutura pluralista, com orgaos de jurisdicao ordinaria e especializada. No topo da hierarquia esta o STF, guardiao da Constituicao, composto por onze ministros com mandato vitalicio. A EC 45 de 2004 criou o Conselho Nacional de Justica, orgao de controle administrativo, financeiro e disciplinar do Judiciario, sem funcao jurisdicional. As garantias da magistratura -- vitaliciedade, inamovibilidade e irredutibilidade de subsidio -- asseguram a independencia dos juizes frente aos demais poderes. A vitaliciedade no primeiro grau e adquirida apos dois anos de exercicio, e a perda do cargo so ocorre por sentenca judicial transitada em julgado.',
+    dica:'STF: 11 ministros, brasileiro nato, 35-65 anos, nomeados pelo Presidente + aprovacao do Senado, vitalicio. CNJ: controle administrativo/disciplinar, nao e jurisdicional, 15 membros, presidido pelo Presidente do STF (EC 45/2004). Garantias: vitaliciedade (2 anos no 1o grau, perda so por sentenca) + inamovibilidade + irredutibilidade. Quarentena: 3 anos para advocacia no mesmo tribunal.'
+  },
+  {
+    grupo:'judiciario', cat:'Poder Judiciario', catClass:'cat-purple',
+    title:'Funcoes essenciais a justica -- MP, Defensoria e Advocacia',
+    question:'Quais sao as funcoes essenciais a justica? Quais as atribuicoes constitucionais do MP? O que e a Defensoria Publica?',
+    pills:['Arts. 127-135 CF/88','Art. 129 CF/88','Autonomia do MP'],
+    fundamento:'Arts. 127 a 135 da CF/88.',
+    conceito:'FUNCOES ESSENCIAIS: Ministerio Publico; Advocacia Publica; Advocacia (OAB); Defensoria Publica. MINISTERIO PUBLICO (art. 127): instituicao permanente, essencial a funcao jurisdicional do Estado, incumbida da defesa da ordem juridica, do regime democratico e dos interesses sociais e individuais indisponiveis. ATRIBUICOES (art. 129): acao penal publica privativa; controle externo da atividade policial; promocao do inquerito civil e da ACP; defesa dos direitos constitucionais; expidicao de notificacoes. GARANTIAS: vitaliciedade, inamovibilidade, irredutibilidade de subsidio. VEDACOES: exercer advocacia; participar de sociedade comercial; exercer cargo fora do previsto na CF; receber honorarios. DEFENSORIA PUBLICA (art. 134): instituicao permanente de orientacao juridica, defesa dos direitos e interesses dos necessitados -- expressao do acesso a justica. Autonomia funcional, administrativa e financeira (EC 45/2004 e EC 74/2013).',
+    atencao:'O MP NAO esta subordinado ao Executivo -- tem autonomia funcional e administrativa. O Procurador-Geral da Republica e o chefe do MPU, nomeado pelo Presidente com aprovacao do Senado, mandato de 2 anos, recondutivel. A Sumula Vinculante 14 assegura ao advogado acesso aos autos do inquerito policial, mesmo que classificado como sigiloso, quanto as diligencias ja documentadas. A Defensoria Publica estadual tem autonomia para propor sua lei orcamentaria (EC 80/2014).',
+    oral:'As funcoes essenciais a justica compreendem o Ministerio Publico, a Advocacia Publica, a Advocacia privada e a Defensoria Publica. O Ministerio Publico, nos termos do art. 127, e instituicao permanente incumbida da defesa da ordem juridica, do regime democratico e dos interesses sociais e individuais indisponiveis. Suas atribuicoes constitucionais incluem a titularidade privativa da acao penal publica e o controle externo da atividade policial. O MP goza de autonomia funcional e administrativa, e seus membros possuem as mesmas garantias da magistratura. A Defensoria Publica e a instituicao responsavel pela orientacao juridica e defesa dos necessitados, expressao constitucional do direito de acesso a justica, dotada de autonomia funcional, administrativa e financeira.',
+    dica:'MP: defesa da ordem juridica + regime democratico + interesses sociais e individuais indisponiveis. Atribuicoes (art. 129): acao penal publica privativa + controle externo da policia + inquerito civil + ACP. Nao subordinado ao Executivo. PGR: nomeado pelo Presidente + Senado, 2 anos recondutivel. Defensoria: necessitados + acesso a justica + autonomia (EC 45/2004 e EC 74/2013).'
+  }
+];
+
+let filtered = [...allCards];
+let cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido -- ideal para simular a banca'
+    : 'Resposta em blocos estruturados -- ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? [...allCards] : allCards.filter(c => c.grupo === f);
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  const c = filtered[cur];
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(p => '<span class="pill">' + p + '</span>').join('');
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+  document.getElementById('b-blocks').innerHTML = mode === 'oral' ? (
+    '<div class="oral-answer">' + c.oral + '</div>' +
+    '<div class="oral-tip"><div class="blbl">Dica para a banca</div><p>' + c.dica + '</p></div>'
+  ) : (
+    '<div class="b-block"><div class="blbl">Fundamento legal</div><p>' + c.fundamento + '</p></div>' +
+    '<div class="b-block"><div class="blbl">Conceito e distincoes</div><p>' + c.conceito + '</p></div>' +
+    '<div class="b-alert"><div class="blbl">Atencao -- ponto de prova</div><p>' + c.atencao + '</p></div>' +
+    '<div class="b-tip"><div class="blbl">Dica de memorizacao</div><p>' + c.dica + '</p></div>'
+  );
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = (cur + 1) + ' / ' + filtered.length + ' fichas';
+  var sh = function(t){ return t.length > 28 ? t.substring(0,28) + '...' : t; };
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map(function(x,i){ return '<button class="topic-btn ' + (i===cur?'active':'') + '" onclick="go(' + i + ')">' + (i+1) + '. ' + sh(x.title) + '</button>'; }).join('') +
+    '<span class="counter-pill">' + (cur+1) + ' / ' + filtered.length + '</span>';
+}
+
+function flip() { document.getElementById('card').classList.toggle('flipped'); }
+function go(i) { cur = i; render(); }
+function prev() { cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next() { cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>
