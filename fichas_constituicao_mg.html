@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas -- Constituicao de Minas Gerais | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  header{background:var(--navy);padding:1.5rem 2rem 1.25rem;}
+  .hbadge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px;}
+  header h1{font-size:20px;font-weight:600;color:#fff;}
+  header p{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;}
+  .hrow{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+  .hcount{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-left:auto;}
+  .mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mode-label{font-size:12px;color:var(--muted);font-weight:500;}
+  .toggle-wrap{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;gap:2px;}
+  .toggle-opt{font-size:11.5px;padding:4px 14px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-weight:500;transition:all .15s;}
+  .toggle-opt.active{background:var(--navy);color:#fff;}
+  .mode-hint{font-size:11px;color:var(--faint);}
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .progress-wrap{height:3px;background:var(--border);border-radius:999px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-bar{height:100%;background:var(--navy-mid);border-radius:999px;transition:width .3s ease;}
+  .topic-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem;align-items:center;}
+  .topic-btn{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500;font-family:'Sora',sans-serif;}
+  .topic-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .topic-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .counter-pill{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);white-space:nowrap;}
+  .card-scene{perspective:1200px;margin-bottom:1.5rem;}
+  .card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);min-height:290px;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;display:flex;flex-direction:column;}
+  .face.back{transform:rotateY(180deg);position:absolute;top:0;left:0;right:0;}
+  .f-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:1.1rem;width:fit-content;}
+  .cat-navy{background:var(--navy-light);color:var(--navy);}
+  .cat-teal{background:var(--teal-light);color:var(--teal);}
+  .cat-coral{background:var(--coral-light);color:var(--coral);}
+  .cat-amber{background:var(--amber-light);color:var(--amber);}
+  .cat-purple{background:var(--purple-light);color:var(--purple);}
+  .f-title{font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+  .f-question{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;flex:1;}
+  .f-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+  .hint-line{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;}
+  .oral-answer{font-size:14px;color:var(--text);line-height:1.8;border-left:3px solid var(--navy-mid);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:9px;}
+  .blbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .oral-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;}
+  .oral-tip .blbl{color:var(--teal);}
+  .oral-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .b-block{background:var(--bg);border-radius:10px;padding:11px 15px;margin-bottom:9px;}
+  .b-block .blbl{color:var(--faint);}
+  .b-block p{font-size:13px;color:var(--text);line-height:1.65;}
+  .b-alert{border-left:3px solid var(--coral);background:var(--coral-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-alert .blbl{color:var(--coral);}
+  .b-alert p{font-size:13px;color:#5a2010;line-height:1.65;}
+  .b-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-tip .blbl{color:var(--teal);}
+  .b-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .btn-row{display:flex;gap:8px;margin-top:1.4rem;}
+  .btn{flex:1;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:var(--bg);color:var(--text);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:#17316b;}
+  footer{text-align:center;padding:2rem 1rem;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+  @media(max-width:540px){
+    main{padding:1.25rem 1rem 3rem;}
+    header,.filter-bar,.mode-bar{padding:.75rem 1rem;}
+    .f-title{font-size:18px;}
+    .face{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG -- Constituicao Estadual</div>
+      <h1>Constituicao do Estado de Minas Gerais (1989)</h1>
+      <p>Principios, organizacao do Estado, PMMG, seguranca publica, simetria com a CF/88 e pontos especificos de MG</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido -- ideal para simular a banca</span>
+</div>
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('fundamentos',this)">Fundamentos</button>
+  <button class="filter-btn" onclick="setFilter('poderes',this)">Poderes do Estado</button>
+  <button class="filter-btn" onclick="setFilter('seguranca',this)">Seguranca Publica</button>
+  <button class="filter-btn" onclick="setFilter('pmmg',this)">PMMG</button>
+  <button class="filter-btn" onclick="setFilter('simetria',this)">Simetria com CF/88</button>
+</div>
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ocultar</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Mentoria Lider -- CFO PMMG -- Material de uso exclusivo dos alunos</footer>
+
+<script>
+var mode = 'oral';
+var allCards = [
+
+  // FUNDAMENTOS
+  {
+    grupo:'fundamentos', cat:'Fundamentos da CEMG', catClass:'cat-navy',
+    title:'Constituicao de MG -- caracteristicas e principios',
+    question:'Quando foi promulgada a Constituicao de MG? Quais seus principios fundamentais? Como se relaciona com a CF/88?',
+    pills:['CEMG -- 21/09/1989','Principio da simetria','Poder constituinte decorrente'],
+    fundamento:'Constituicao do Estado de Minas Gerais, promulgada em 21 de setembro de 1989.',
+    conceito:'A CEMG foi promulgada em 21 de setembro de 1989, apos a CF/88 de outubro de 1988 -- exercicio do poder constituinte DECORRENTE dos Estados (art. 25 CF). PRINCIPIO DA SIMETRIA: as Constituicoes estaduais devem observar os principios estabelecidos na CF/88 -- especialmente os de observancia obrigatoria (principios sensíveis, extensíveis e estabelecidos). PRINCIPIOS FUNDAMENTAIS DE MG: soberania popular; cidadania; dignidade da pessoa humana; valores sociais do trabalho e da livre iniciativa; pluralismo politico; garantia de desenvolvimento economico e social com reducao das desigualdades regionais. A CEMG reconhece MG como parte integrante indissolúvel da Republica Federativa do Brasil. O Estado e regido pelos principios da legalidade, impessoalidade, moralidade, publicidade e eficiencia (espelho do art. 37 CF -- LIMPE).',
+    atencao:'O poder constituinte decorrente e LIMITADO pelo poder constituinte originario federal -- os Estados nao podem contrariar a CF/88. O STF controla a constitucionalidade das normas estaduais em face da CF. O TJ/MG exerce o controle concentrado das normas estaduais e municipais em face da CEMG. Normas de reproducao obrigatoria: os Estados sao obrigados a reproduzir na Constituicao estadual as normas da CF que sao de repeticao compulsoria -- ex: LIMPE, principios do processo legislativo, garantias da magistratura.',
+    oral:'A Constituicao do Estado de Minas Gerais foi promulgada em 21 de setembro de 1989, no exercicio do poder constituinte decorrente previsto no art. 25 da Constituicao Federal. Por forca do principio da simetria, a CEMG deve observar os principios e normas estabelecidos na Constituicao Federal, especialmente os de observancia obrigatoria. Os principios fundamentais de Minas Gerais espelham os da Republica: soberania popular, cidadania, dignidade da pessoa humana e pluralismo politico. A Administracao Publica estadual rege-se pelos principios da LIMPE, em simetria com o art. 37 da CF/88. O controle concentrado de constitucionalidade das normas estaduais e municipais em face da CEMG e de competencia do Tribunal de Justica de Minas Gerais.',
+    dica:'CEMG: promulgada 21/09/1989. Poder constituinte decorrente (art. 25 CF) -- limitado pela CF/88. Principio da simetria: CE deve observar CF/88. Normas de reproducao obrigatoria: LIMPE, processo legislativo, garantias da magistratura. Controle concentrado estadual: TJMG (em face da CEMG). Principios sensíveis (art. 34, VII CF): violacao = intervencao federal.'
+  },
+  {
+    grupo:'fundamentos', cat:'Fundamentos da CEMG', catClass:'cat-navy',
+    title:'Organizacao do Estado de MG -- estrutura e municipios',
+    question:'Como se organiza o Estado de MG? Quantos municipios tem? Qual a capital? Como e a divisao administrativa?',
+    pills:['Art. 1 CEMG','853 municipios','Belo Horizonte'],
+    fundamento:'Arts. 1 a 5 da Constituicao do Estado de Minas Gerais.',
+    conceito:'Minas Gerais e um Estado federado, parte integrante indissolúvel da Republica Federativa do Brasil. CAPITAL: Belo Horizonte. MUNICIPIOS: Minas Gerais possui 853 municipios -- o maior numero entre todos os Estados brasileiros. REGIOES ADMINISTRATIVAS: o Estado e dividido em regioes para fins de planejamento e administracao -- ex: Zona da Mata, Sul de Minas, Triangulo Mineiro, Norte de Minas, Mucuri, Jequitinhonha, Central, Noroeste, Oeste, Alto Parana (Rio Doce), Metropolitana de BH. SIMBOLOS: bandeira (verde e branca, com a inscricao "Libertas Quae Sera Tamen" -- a liberdade, ainda que tardia); brasao; hino; flor (sempre-viva); pajaro (sabia-laranjeira, compartilhado com outros Estados); peixe (dourado). AUTONOMIA MUNICIPAL: os municipios mineiros tem autonomia politica, administrativa e financeira, nos termos da CF e da CEMG.',
+    atencao:'"Libertas Quae Sera Tamen" e o lema de MG -- frase do poeta romano Virgílio, que significa "a liberdade, ainda que tardia" -- referencia a Inconfidencia Mineira e a figura de Tiradentes. A CEMG contem normas de organizacao dos municipios, inclusive vedacao de criacao de municipio sem populacao minima e receita propria suficiente para sua manutencao (art. 18, paragrafo 4 CF + normas da CEMG). Regiao Metropolitana de Belo Horizonte: criada por lei complementar estadual, inclui BH e municipios adjacentes -- gestao compartilhada de servicos de interesse comum.',
+    oral:'Minas Gerais e o Estado com o maior numero de municipios do Brasil, totalizando oitocentos e cinquenta e tres. Sua capital e Belo Horizonte. O lema estadual, Libertas Quae Sera Tamen -- a liberdade, ainda que tardia --, e uma referencia a Inconfidencia Mineira e ao ideal de Tiradentes. O Estado organiza-se em regioes administrativas para fins de planejamento, como a Zona da Mata, o Triangulo Mineiro, o Norte de Minas e a Regiao Metropolitana de BH. Os municipios mineiros gozam de autonomia politica, administrativa e financeira nos termos da Constituicao Federal e da Constituicao Estadual.',
+    dica:'Capital: Belo Horizonte. Municipios: 853 (maior numero do Brasil). Lema: "Libertas Quae Sera Tamen" (a liberdade, ainda que tardia -- Virgílio, referencia a Inconfidencia Mineira). Flor: sempre-viva. Regiao Metropolitana: criada por lei complementar estadual. RMGBH: gestao compartilhada de servicos de interesse comum.'
+  },
+
+  // PODERES DO ESTADO
+  {
+    grupo:'poderes', cat:'Poderes do Estado de MG', catClass:'cat-purple',
+    title:'Poder Legislativo de MG -- Assembleia Legislativa',
+    question:'Como se organiza o Poder Legislativo de MG? Quantos deputados tem a ALMG? Quais as competencias privativas?',
+    pills:['Arts. 60-113 CEMG','77 deputados','Processo legislativo estadual'],
+    fundamento:'Arts. 60 a 113 da CEMG.',
+    conceito:'ASSEMBLEIA LEGISLATIVA DE MINAS GERAIS (ALMG): orgao do Poder Legislativo estadual, composta por 77 DEPUTADOS ESTADUAIS, eleitos pelo sistema proporcional, para mandato de 4 anos. COMPETENCIAS PRIVATIVAS DA ALMG: legislar sobre materias de competencia do Estado; fiscalizar e controlar os atos do Executivo; julgar as contas do Governador; autorizar o Governador a ausentar-se do Estado por mais de 15 dias; decretar estado de calamidade publica; apreciar o decreto do Governador em caso de estado de emergencia. PROCESSO LEGISLATIVO ESTADUAL: segue a simetria com o federal -- leis ordinarias (maioria simples), leis complementares (maioria absoluta), emendas a CEMG (maioria de 3/5, dois turnos). VETO: o Governador tem 15 dias uteis para sancionar ou vetar -- silencio = sancao tacita. Veto: ALMG pode rejeitar por maioria absoluta.',
+    atencao:'O numero de deputados estaduais e proporcional ao numero de deputados federais -- MG tem 53 deputados federais, logo a formula para deputados estaduais e: minimo de 3 vezes o numero de deputados federais (ate 12), mais 1 por cada grupo adicional de representacao federal acima de 12, ate o limite de 36. O STF ja decidiu que a formula aplicavel e a do art. 27 CF. Numero atual de deputados estaduais de MG: 77. Imunidades dos deputados estaduais: as mesmas dos deputados federais (art. 27, paragrafo 1 CF -- norma de reproducao obrigatoria).',
+    oral:'O Poder Legislativo de Minas Gerais e exercido pela Assembleia Legislativa, composta por setenta e sete deputados estaduais eleitos para mandato de quatro anos. Entre as competencias privativas da ALMG estao a fiscalizacao e o controle dos atos do Executivo, o julgamento das contas do Governador, a autorizacao para ausencia do Governador por mais de quinze dias e a apreciacao dos atos do Executivo em situacoes de emergencia. O processo legislativo estadual segue a simetria com o federal, com leis ordinarias aprovadas por maioria simples, complementares por maioria absoluta e emendas a CEMG por tres quintos em dois turnos. Os deputados estaduais gozam das mesmas imunidades parlamentares dos deputados federais.',
+    dica:'ALMG: 77 deputados estaduais, mandato de 4 anos, eleicao proporcional. Competencias privativas: legislar + fiscalizar + julgar contas do Governador + autorizar ausencia > 15 dias. Processo legislativo: simetria com CF. Emenda a CEMG: 3/5, dois turnos. Imunidades: mesmas dos deputados federais (art. 27, paragrafo 1 CF -- reproducao obrigatoria).'
+  },
+  {
+    grupo:'poderes', cat:'Poderes do Estado de MG', catClass:'cat-purple',
+    title:'Poder Executivo de MG -- Governador e Vice-Governador',
+    question:'Quais as atribuicoes do Governador de MG? Quais os crimes de responsabilidade? Como funciona o processo de impeachment estadual?',
+    pills:['Arts. 114-150 CEMG','Mandato: 4 anos','Crimes de responsabilidade'],
+    fundamento:'Arts. 114 a 150 da CEMG. Lei estadual de crimes de responsabilidade (simetria com a Lei Federal 1.079/50).',
+    conceito:'GOVERNADOR: chefe do Poder Executivo estadual, eleito em conjunto com o Vice-Governador pelo voto direto e secreto, para mandato de 4 anos, admitida uma reeleicao. ATRIBUICOES PRIVATIVAS: representar o Estado; exercer a direcao superior da Administracao estadual; sancionar, promulgar e publicar as leis; vetar projetos; editar decretos e regulamentos; dispor sobre a organizacao da Administracao estadual; nomear e exonerar secretarios de Estado; decretar intervencao nos municipios. CRIMES DE RESPONSABILIDADE: atos que atentem contra a CF/88, a CEMG, o livre exercicio dos Poderes, a seguranca interna, a probidade administrativa, a lei orcamentaria e os direitos politicos, individuais e sociais. IMPEACHMENT ESTADUAL: admissao pela ALMG (2/3 dos membros) -- julgamento pelo proprio ALMG (nos crimes de responsabilidade), presidido pelo Presidente do TJMG -- condenacao por 2/3.',
+    atencao:'Diferenca do impeachment federal: no Estado, quem JULGA o Governador por crime de responsabilidade e a propria ALMG (nao o Senado) -- presidida pelo Presidente do TJMG. No federal, o Senado julga presidido pelo Presidente do STF. O Governador fica suspenso de suas funcoes 180 dias apos admissao do processo. Para crimes comuns do Governador: o STJ e competente (art. 105, I, a CF). Intervencao nos municipios (art. 35 CF + CEMG): o Governador decreta intervencao nos municipios mineiros nas hipoteses do art. 35 -- aprovada pela ALMG.',
+    oral:'O Governador de Minas Gerais e eleito em conjunto com o Vice-Governador por voto direto e secreto para mandato de quatro anos, admitida uma reeleicao. Suas atribuicoes incluem representar o Estado, dirigir a Administracao estadual, sancionar e vetar projetos de lei, nomear e exonerar Secretarios de Estado e decretar intervencao nos municipios. Os crimes de responsabilidade do Governador sujeitam-no ao processo de impeachment perante a Assembleia Legislativa: admissao por dois tercos dos membros e julgamento pela propria ALMG, presidida pelo Presidente do TJMG, com condenacao por dois tercos. Para crimes comuns praticados durante o mandato, a competencia e do Superior Tribunal de Justica.',
+    dica:'Governador: eleito com o Vice, 4 anos, uma reeleicao. Impeachment estadual: ALMG admite (2/3) + ALMG julga (presidida pelo Presidente do TJMG) + condena (2/3). Diferenca do federal: no Estado, ALMG julga (nao o Senado). Crime comum do Governador: STJ (art. 105, I, a CF). Intervencao nos municipios: Governador decreta, ALMG aprecia.'
+  },
+
+  // SEGURANCA PUBLICA
+  {
+    grupo:'seguranca', cat:'Seguranca Publica na CEMG', catClass:'cat-coral',
+    title:'Seguranca publica em MG -- organizacao e orgaos',
+    question:'Como a CEMG organiza a seguranca publica? Quais os orgaos? Qual o papel do Governador?',
+    pills:['Arts. 142-144 CEMG','Art. 144 CF/88','Simetria'],
+    fundamento:'Arts. 142 a 144 da CEMG. Art. 144 da CF/88 (normas de reproducao obrigatoria).',
+    conceito:'A CEMG organiza a seguranca publica em simetria com o art. 144 da CF/88. ORGAOS DE SEGURANCA PUBLICA DE MG: Policia Militar de Minas Gerais (PMMG); Policia Civil de Minas Gerais (PCMG); Corpo de Bombeiros Militar de Minas Gerais (CBMMG); Policia Penal de Minas Gerais (PPMG -- criada pela EC 104/2019 e espelhada na CEMG). SUBORDINACAO: todos os orgaos de seguranca publica de MG subordinam-se ao Governador do Estado, que exerce o comando supremo da PMMG e do CBMMG. SECRETARIA DE ESTADO DE JUSTICA E SEGURANCA PUBLICA (SEJUSP): orgao de coordenacao da seguranca publica em MG -- supervisiona as atividades da PMMG, PCMG, CBMMG e PPMG. RESPONSABILIDADE: a seguranca publica e dever do Estado e responsabilidade de todos os cidadaos.',
+    atencao:'A PMMG, o CBMMG e forcas auxiliares e reserva do Exercito Brasileiro, nos termos do art. 144, paragrafo 6 CF (norma de reproducao obrigatoria). O Governador e o comandante supremo da PMMG -- o Comandante-Geral da PMMG e cargo de confianca do Governador, nomeado por decreto. A PCMG e dirigida pelo Delegado-Geral, que tambem e de confianca do Governador. Policia Penal: administra os estabelecimentos penais estaduais, criada pela EC 104/2019 -- antes denominada "agentes penitenciarios".',
+    oral:'A Constituicao de Minas Gerais organiza a seguranca publica em simetria com o art. 144 da Constituicao Federal. Os orgaos estaduais de seguranca publica sao a Policia Militar, a Policia Civil, o Corpo de Bombeiros Militar e a Policia Penal, todos subordinados ao Governador do Estado. A coordenacao das atividades de seguranca publica e exercida pela Secretaria de Estado de Justica e Seguranca Publica. A Policia Militar e o Corpo de Bombeiros Militar sao forcas auxiliares e reserva do Exercito Brasileiro. O Governador e o comandante supremo da PMMG, com poder de nomear e exonerar o Comandante-Geral.',
+    dica:'Orgaos de seguranca publica em MG: PMMG + PCMG + CBMMG + PPMG (Policia Penal). Subordinados ao Governador. PMMG e CBMMG: forcas auxiliares e reserva do Exercito. Comandante-Geral da PMMG: cargo de confianca do Governador. SEJUSP: coordena a seguranca publica estadual. Policia Penal: criada pela EC 104/2019 (antes: agentes penitenciarios).'
+  },
+
+  // PMMG
+  {
+    grupo:'pmmg', cat:'PMMG na CEMG', catClass:'cat-navy',
+    title:'Policia Militar de Minas Gerais -- natureza, missao e estrutura',
+    question:'Qual a natureza juridica e a missao constitucional da PMMG? Qual sua estrutura basica? Quem e o Comandante-Geral?',
+    pills:['Arts. 142-144 CEMG','Art. 144 par. 5 CF','Forca auxiliar'],
+    fundamento:'Art. 144, paragrafo 5, da CF/88. Arts. 142 a 144 da CEMG. Lei de Organizacao da PMMG.',
+    conceito:'NATUREZA JURIDICA: forca publica estadual, de natureza militar, com organizacao baseada na hierarquia e disciplina. MISSAO CONSTITUCIONAL (art. 144, paragrafo 5 CF + CEMG): policiamento ostensivo e preservacao da ordem publica. CARACTERISTICAS: forca auxiliar e reserva do Exercito Brasileiro; subordinada ao Governador do Estado; estrutura militar com postos (oficiais) e graduacoes (pracas). ESTRUTURA BASICA: Comando-Geral (Coronel PM -- Comandante-Geral); Estado-Maior; Regioes da Policia Militar (RPMs); Batalhoes (BPMs); Companhias; Pelotoes; Secoes; Grupos. ATIVIDADE-FIM: policiamento ostensivo (preventivo e repressivo imediato) -- presenca uniformizada e visivel nas vias e logradouros publicos. O militar da PMMG pode ser mobilizado para reforco das Forcas Armadas em caso de guerra.',
+    atencao:'A PMMG e instituicao permanente -- nao pode ser extinta sem emenda constitucional. Seus militares sao servidores militares estaduais -- regidos pela legislacao militar estadual (Estatuto dos Militares do Estado de MG), nao pela Lei 8.112/90 (servidores civis federais). Acoes contra membros da PMMG por atos em servico: a competencia e da Justica Militar Estadual (crimes militares) ou da Justica Comum (crimes comuns). O CFO (Curso de Formacao de Oficiais) e o processo seletivo para o ingresso na carreira de oficial da PMMG -- o candidato que o conclui e declarado Aspirante a Oficial PM.',
+    oral:'A Policia Militar de Minas Gerais e forca publica estadual de natureza militar, cuja missao constitucional e o policiamento ostensivo e a preservacao da ordem publica, nos termos do art. 144, paragrafo 5 da Constituicao Federal. E forca auxiliar e reserva do Exercito Brasileiro, subordinada ao Governador do Estado. Sua estrutura e baseada na hierarquia e disciplina, com postos para oficiais e graduacoes para pracas. O Comandante-Geral, cargo de confianca do Governador, e exercido por Coronel PM. Os membros da PMMG sao servidores militares estaduais, regidos pela legislacao militar propria do Estado. O Curso de Formacao de Oficiais e o processo seletivo para ingresso na carreira de oficial, cujo egresso e declarado Aspirante a Oficial.',
+    dica:'PMMG: forca publica estadual + natureza militar + hierarquia e disciplina. Missao: policiamento ostensivo + preservacao da ordem publica. Forca auxiliar do Exercito: pode ser mobilizada em caso de guerra. Comandante-Geral: Coronel PM, cargo de confianca do Governador. CFO: selecao para oficial PM -- egresso = Aspirante a Oficial. Crimes dos membros: militares = JME; comuns = Justica Comum.'
+  },
+  {
+    grupo:'pmmg', cat:'PMMG na CEMG', catClass:'cat-navy',
+    title:'Regime juridico dos militares estaduais de MG',
+    question:'Qual o regime juridico dos militares da PMMG? Quais os direitos e restricoes? O militar pode fazer greve? Pode ser filiado a partido politico?',
+    pills:['Art. 42 CF/88','Estatuto Militar MG','Hierarquia e disciplina'],
+    fundamento:'Art. 42 da CF/88. Legislacao estadual: Estatuto dos Militares do Estado de Minas Gerais.',
+    conceito:'REGIME JURIDICO: os militares estaduais (PMMG e CBMMG) regem-se pelo art. 42 da CF/88, que manda aplicar-lhes as normas dos militares das Forcas Armadas (art. 142, paragrafo 3 CF) no que couber. RESTRICOES CONSTITUCIONAIS: vedacao de sindicalizacao e greve (art. 142, paragrafo 3, IV CF); enquanto em servico ativo, nao podem estar filiados a partido politico (art. 142, paragrafo 3, V CF). DIREITOS: remuneracao; ferias; licencas; assistencia a saude; pensao por morte; estabilidade apos o estagio probatorio. HIERARQUIA E DISCIPLINA: fundamentos da instituicao militar -- o militar que desrespeitar a hierarquia ou a disciplina pode ser submetido a processo administrativo disciplinar (PAD) e a processo judicial (Conselho de Justificacao, Conselho de Disciplina). DEMISSAO/EXCLUSAO: o militar estavel so perde o posto ou graduacao mediante sentenca judicial transitada em julgado ou PAD com ampla defesa, alem de outras hipoteses legais (condenacao criminal com pena superior a 2 anos).',
+    atencao:'O STF firmou que a vedacao de greve aos militares e absoluta -- nao ha direito a greve, ainda que parcial, para militares estaduais e federais. A filiacao partidaria e vedada enquanto em servico ativo -- ao ser transferido para a reserva, o militar pode se filiar a partido e candidatar-se. Candidatura de militar: o militar com menos de 10 anos de servico deve se desvincular das forcas; o com mais de 10 anos fica em licenca durante a campanha e, se eleito, passa automaticamente para a reserva. O militar nao tem direito ao FGTS -- o regime e estatutario, nao celetista.',
+    oral:'Os militares estaduais de Minas Gerais, integrantes da PMMG e do CBMMG, regem-se pelo art. 42 da Constituicao Federal, com aplicacao subsidiaria das normas dos militares das Forcas Armadas. Sao-lhes vedadas a sindicalizacao e a greve, proibicao absoluta reconhecida pelo STF, bem como a filiacao a partido politico enquanto em servico ativo. O regime e fundado na hierarquia e na disciplina, que sao valores constitucionalmente consagrados para as instituicoes militares. A perda do posto ou graduacao do militar estavel exige sentenca judicial transitada em julgado ou processo administrativo disciplinar com observancia da ampla defesa.',
+    dica:'Militares estaduais: art. 42 CF + aplicacao subsidia do art. 142 paragrafo 3 CF. Vedacoes: sindicalizacao + greve (absoluta, STF) + filiacao a partido (em servico ativo). Candidatura: menos de 10 anos = desvincula. Mais de 10 anos = licenca durante campanha, se eleito vai para reserva. Perda do posto: sentenca transitada em julgado OU PAD com ampla defesa. Sem FGTS: regime estatutario.'
+  },
+
+  // SIMETRIA
+  {
+    grupo:'simetria', cat:'Simetria com a CF/88', catClass:'cat-teal',
+    title:'Principio da simetria -- normas de reproducao obrigatoria',
+    question:'O que e o principio da simetria? Quais as normas que os Estados sao obrigados a reproduzir? O que sao principios sensiveis?',
+    pills:['Art. 25 CF/88','Principios extensiveis','Principios sensiveis'],
+    fundamento:'Art. 25 da CF/88. STF -- jurisprudencia sobre o principio da simetria.',
+    conceito:'PRINCIPIO DA SIMETRIA: as Constituicoes estaduais devem observar o modelo federal obrigatoriamente em determinadas materias. NORMAS DE REPRODUCAO OBRIGATORIA: normas da CF/88 que os Estados devem reproduzir em suas Constituicoes -- ex: LIMPE (art. 37 CF), garantias da magistratura (art. 95 CF), processo legislativo (arts. 59-69 CF adaptados), prerrogativas parlamentares, criacao de cargos e vencimentos por lei. PRINCIPIOS SENSIVEIS (art. 34, VII CF): cuja violacao autoriza intervencao federal -- forma republicana, sistema representativo e regime democratico; direitos da pessoa humana; autonomia municipal; prestacao de contas da Administracao Publica; aplicacao do minimo em saude e educacao. PRINCIPIOS EXTENSIVEIS: normas organizatorias federais que se aplicam aos Estados por extensao -- ex: organizacao dos Tribunais de Contas, prerrogativas do Legislativo. PRINCIPIOS ESTABELECIDOS: normas da CF que limitam a autonomia estadual -- ex: vedacao de Estado criar municipio sem populacao minima.',
+    atencao:'O STF tem jurisprudencia firme no sentido de que os Estados NAO podem inovar em relacao a modelo federal quando a CF exige simetria -- ex: o Estado nao pode estabelecer processo diferente para aprovacao de lei complementar estadual ou criar imunidades parlamentares diferentes das previstas na CF. A Constituicao estadual pode ser mais protetora dos direitos fundamentais -- mas nao pode contrariar nem restringir os direitos previstos na CF. Intervencao federal por principio sensível: proposta pelo PGR ao STF -- representacao interventiva (unica hipotese de ADI proposta pelo PGR ao STF).',
+    oral:'O principio da simetria determina que as Constituicoes estaduais devem observar o modelo da Constituicao Federal em determinadas materias. As normas de reproducao obrigatoria incluem os principios da LIMPE, as garantias da magistratura, o processo legislativo e as prerrogativas parlamentares. Os principios sensiveis do art. 34, VII da CF sao aqueles cuja violacao pelo Estado autoriza a intervencao federal -- forma republicana, sistema representativo, direitos da pessoa humana, autonomia municipal, prestacao de contas e aplicacao do minimo em saude e educacao. O STF tem competencia para declarar a inconstitucionalidade de norma estadual que viole a CF, enquanto o TJMG exerce o controle em face da propria Constituicao estadual.',
+    dica:'Simetria: CE deve seguir CF nas normas obrigatorias. Reproducao obrigatoria: LIMPE + garantias da magistratura + processo legislativo + prerrogativas parlamentares. Principios sensiveis (art. 34, VII): forma republicana + democracia + direitos humanos + autonomia municipal + prestacao de contas + saude/educacao -- violacao = intervencao federal. TJMG: controle concentrado em face da CEMG. STF: controle em face da CF/88.'
+  },
+  {
+    grupo:'simetria', cat:'Simetria com a CF/88', catClass:'cat-teal',
+    title:'Controle de constitucionalidade estadual -- TJMG',
+    question:'Como funciona o controle concentrado de constitucionalidade no ambito estadual em MG? Quem sao os legitimados? Qual o instrumento?',
+    pills:['Art. 125 par. 2 CF','CEMG','Representacao de inconstitucionalidade'],
+    fundamento:'Art. 125, paragrafo 2, da CF/88. CEMG -- disposicoes sobre o controle de constitucionalidade estadual.',
+    conceito:'CONTROLE CONCENTRADO ESTADUAL (art. 125, paragrafo 2 CF): os TJs exercem controle concentrado de constitucionalidade de leis e atos normativos estaduais e municipais em face da Constituicao Estadual. INSTRUMENTO: representacao de inconstitucionalidade (equivalente estadual da ADI federal). LEGITIMADOS (definidos pela CEMG): Governador do Estado; Mesa da Assembleia Legislativa; Procurador-Geral de Justica (PGJ -- chefe do MPEMG); Defensor Publico-Geral; partidos politicos com representacao na ALMG; entidades de classe e organizacoes sindicais. EFEITOS: erga omnes e vinculante para a Administracao Publica e os demais orgaos do Judiciario estadual. RECURSO: da decisao do TJMG que julgar representacao de inconstitucionalidade cabe recurso extraordinario ao STF se houver questao constitucional federal envolvida.',
+    atencao:'O TJMG NAO pode usar a CF/88 como parametro direto do controle concentrado estadual -- seu parametro e a CEMG. Excecao: normas de reproducao obrigatoria -- o TJMG pode usar a CE (que reproduz a CF) como parametro, e o STF pode ser provocado por RE se a decisao do TJMG divergir da interpretacao federal. Lei municipal inconstitucional em face da CF/88 diretamente: o instrumento e a ADPF no STF (nao ha ADI federal para lei municipal). Lei municipal inconstitucional em face da CEMG: representacao de inconstitucionalidade no TJMG.',
+    oral:'O art. 125, paragrafo 2 da Constituicao Federal autoriza os Tribunais de Justica a exercerem controle concentrado de constitucionalidade de normas estaduais e municipais em face da Constituicao Estadual. Em Minas Gerais, o instrumento e a representacao de inconstitucionalidade perante o TJMG. Os legitimados para propor a representacao sao definidos pela CEMG e incluem o Governador, a Mesa da ALMG, o Procurador-Geral de Justica e outras entidades. As decisoes do TJMG nessa materia tem eficacia erga omnes e efeito vinculante. O STF pode ser provocado por recurso extraordinario quando houver questao constitucional federal, especialmente nos casos de normas de reproducao obrigatoria.',
+    dica:'TJMG: controle concentrado estadual -- parametro = CEMG (nao a CF/88 diretamente). Instrumento: representacao de inconstitucionalidade. Legitimados: Governador + Mesa ALMG + PGJ + Defensor Publico-Geral + partidos + entidades de classe. Efeito: erga omnes + vinculante. Lei municipal x CF diretamente: ADPF no STF. Lei municipal x CEMG: representacao no TJMG. RE ao STF: se houver questao constitucional federal.'
+  }
+];
+
+var filtered = allCards.slice();
+var cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido -- ideal para simular a banca'
+    : 'Resposta em blocos estruturados -- ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? allCards.slice() : allCards.filter(function(c){ return c.grupo === f; });
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  var c = filtered[cur];
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(function(p){ return '<span class="pill">' + p + '</span>'; }).join('');
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+  document.getElementById('b-blocks').innerHTML = mode === 'oral'
+    ? '<div class="oral-answer">' + c.oral + '</div><div class="oral-tip"><div class="blbl">Dica para a banca</div><p>' + c.dica + '</p></div>'
+    : '<div class="b-block"><div class="blbl">Fundamento legal</div><p>' + c.fundamento + '</p></div>' +
+      '<div class="b-block"><div class="blbl">Conceito e distincoes</div><p>' + c.conceito + '</p></div>' +
+      '<div class="b-alert"><div class="blbl">Atencao -- ponto de prova</div><p>' + c.atencao + '</p></div>' +
+      '<div class="b-tip"><div class="blbl">Dica de memorizacao</div><p>' + c.dica + '</p></div>';
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = (cur + 1) + ' / ' + filtered.length + ' fichas';
+  var sh = function(t){ return t.length > 28 ? t.substring(0,28) + '...' : t; };
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map(function(x,i){ return '<button class="topic-btn ' + (i===cur?'active':'') + '" onclick="go(' + i + ')">' + (i+1) + '. ' + sh(x.title) + '</button>'; }).join('') +
+    '<span class="counter-pill">' + (cur+1) + ' / ' + filtered.length + '</span>';
+}
+
+function flip(){ document.getElementById('card').classList.toggle('flipped'); }
+function go(i){ cur = i; render(); }
+function prev(){ cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next(){ cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>

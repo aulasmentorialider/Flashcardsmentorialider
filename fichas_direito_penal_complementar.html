@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas -- Direito Penal: Temas Complementares | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  header{background:var(--navy);padding:1.5rem 2rem 1.25rem;}
+  .hbadge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px;}
+  header h1{font-size:20px;font-weight:600;color:#fff;}
+  header p{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;}
+  .hrow{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+  .hcount{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-left:auto;}
+  .mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mode-label{font-size:12px;color:var(--muted);font-weight:500;}
+  .toggle-wrap{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;gap:2px;}
+  .toggle-opt{font-size:11.5px;padding:4px 14px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-weight:500;transition:all .15s;}
+  .toggle-opt.active{background:var(--navy);color:#fff;}
+  .mode-hint{font-size:11px;color:var(--faint);}
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .progress-wrap{height:3px;background:var(--border);border-radius:999px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-bar{height:100%;background:var(--navy-mid);border-radius:999px;transition:width .3s ease;}
+  .topic-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem;align-items:center;}
+  .topic-btn{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500;font-family:'Sora',sans-serif;}
+  .topic-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .topic-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .counter-pill{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);white-space:nowrap;}
+  .card-scene{perspective:1200px;margin-bottom:1.5rem;}
+  .card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);min-height:290px;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;display:flex;flex-direction:column;}
+  .face.back{transform:rotateY(180deg);position:absolute;top:0;left:0;right:0;}
+  .f-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:1.1rem;width:fit-content;}
+  .cat-navy{background:var(--navy-light);color:var(--navy);}
+  .cat-teal{background:var(--teal-light);color:var(--teal);}
+  .cat-coral{background:var(--coral-light);color:var(--coral);}
+  .cat-amber{background:var(--amber-light);color:var(--amber);}
+  .cat-purple{background:var(--purple-light);color:var(--purple);}
+  .f-title{font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+  .f-question{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;flex:1;}
+  .f-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+  .hint-line{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;}
+  .oral-answer{font-size:14px;color:var(--text);line-height:1.8;border-left:3px solid var(--navy-mid);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:9px;}
+  .blbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .oral-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;}
+  .oral-tip .blbl{color:var(--teal);}
+  .oral-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .b-block{background:var(--bg);border-radius:10px;padding:11px 15px;margin-bottom:9px;}
+  .b-block .blbl{color:var(--faint);}
+  .b-block p{font-size:13px;color:var(--text);line-height:1.65;}
+  .b-alert{border-left:3px solid var(--coral);background:var(--coral-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-alert .blbl{color:var(--coral);}
+  .b-alert p{font-size:13px;color:#5a2010;line-height:1.65;}
+  .b-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-tip .blbl{color:var(--teal);}
+  .b-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .btn-row{display:flex;gap:8px;margin-top:1.4rem;}
+  .btn{flex:1;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:var(--bg);color:var(--text);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:#17316b;}
+  footer{text-align:center;padding:2rem 1rem;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+  @media(max-width:540px){
+    main{padding:1.25rem 1rem 3rem;}
+    header,.filter-bar,.mode-bar{padding:.75rem 1rem;}
+    .f-title{font-size:18px;}
+    .face{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG -- Direito Penal</div>
+      <h1>Direito Penal -- Temas Complementares</h1>
+      <p>Lei penal no espaco, concurso de pessoas, crimes contra a dignidade sexual, liberdade individual e incolumidade publica</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido -- ideal para simular a banca</span>
+</div>
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('espaco',this)">Lei Penal no Espaco</button>
+  <button class="filter-btn" onclick="setFilter('concurso',this)">Concurso de Pessoas</button>
+  <button class="filter-btn" onclick="setFilter('sexual',this)">Dignidade Sexual</button>
+  <button class="filter-btn" onclick="setFilter('liberdade',this)">Liberdade Individual</button>
+  <button class="filter-btn" onclick="setFilter('incolumidade',this)">Incolumidade Publica</button>
+</div>
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ocultar</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Mentoria Lider -- CFO PMMG -- Material de uso exclusivo dos alunos</footer>
+
+<script>
+var mode = 'oral';
+var allCards = [
+
+  // LEI PENAL NO ESPACO
+  {
+    grupo:'espaco', cat:'Lei Penal no Espaco', catClass:'cat-navy',
+    title:'Territorialidade e extraterritorialidade da lei penal',
+    question:'Qual o principio adotado pelo CP para aplicacao da lei penal no espaco? Quando a lei brasileira se aplica a crimes cometidos no exterior?',
+    pills:['Arts. 5-9 CP','Territorialidade temperada','Extraterritorialidade'],
+    fundamento:'Arts. 5 a 9 do Codigo Penal.',
+    conceito:'PRINCIPIO DA TERRITORIALIDADE (art. 5 CP): aplica-se a lei brasileira ao crime cometido no territorio nacional -- inclusive embarcacoes e aeronaves brasileiras, publicas ou privadas, quando em alto-mar ou espaco aereo correspondente. TERRITORIO NACIONAL POR EXTENSAO (art. 5, paragrafo 1): embarcacoes e aeronaves brasileiras de natureza publica, onde quer que se encontrem; embarcacoes e aeronaves brasileiras privadas em alto-mar ou no espaco aereo correspondente. PRINCIPIO DA TERRITORIALIDADE TEMPERADA: admite excecoes em tratados e convencoes internacionais (imunidade diplomatica). EXTRATERRITORIALIDADE INCONDICIONADA (art. 7, I): crimes contra a vida do Presidente da Republica; genocidio; contra o patrimonio ou a fe publica; contra a Administracao Publica; praticados por brasileiros. EXTRATERRITORIALIDADE CONDICIONADA (art. 7, II): crime que o Brasil se obrigou a reprimir por tratado; praticado por brasileiros; praticado em aeronaves ou embarcacoes brasileiras em territorio estrangeiro quando nao julgados no exterior.',
+    atencao:'Na extraterritorialidade condicionada (art. 7, paragrafo 2), exige-se: que o agente tenha entrado no territorio nacional; que o fato seja punivel no pais em que foi praticado; que o crime esteja incluido entre os que autorizam extradicao; que o agente nao tenha sido absolvido ou cumprido pena no exterior. Lugar do crime (art. 6 CP): teoria da ubiquidade -- considera-se praticado o crime no lugar em que ocorreu a acao ou omissao, no todo ou em parte, bem como onde se produziu ou deveria produzir-se o resultado. Diferente do CPP (art. 70), que adota a teoria do resultado para fixar a competencia.',
+    oral:'O Codigo Penal adota o principio da territorialidade temperada: aplica-se a lei brasileira ao crime cometido no territorio nacional, ressalvadas as excecoes previstas em convencoes internacionais, como a imunidade diplomatica. O territorio nacional e estendido por ficcao as embarcacoes e aeronaves publicas brasileiras onde quer que estejam e as privadas em alto-mar. A extraterritorialidade incondicionada aplica a lei brasileira a crimes praticados no exterior independentemente de qualquer condicao, como nos crimes contra a vida do Presidente da Republica e o genocidio. A extraterritorialidade condicionada sujeita a aplicacao da lei brasileira ao preenchimento de requisitos como a entrada do agente no territorio nacional e a dupla tipicidade. O lugar do crime e definido pela teoria da ubiquidade -- tanto o local da conduta quanto o do resultado.',
+    dica:'Territorialidade temperada: regra + excecoes por tratados. Extensao do territorio: embarcacoes/aeronaves publicas (qualquer lugar) + privadas (alto-mar). Extraterritorialidade incondicionada (art. 7, I): sem requisitos adicionais. Condicionada (art. 7, II): entrada no BR + dupla tipicidade + extradicao admitida + nao julgado/preso no exterior. Lugar do crime (art. 6): ubiquidade (acao OU resultado). CPP (art. 70): resultado (competencia).'
+  },
+
+  // CONCURSO DE PESSOAS
+  {
+    grupo:'concurso', cat:'Concurso de Pessoas', catClass:'cat-purple',
+    title:'Concurso de pessoas -- autoria e participacao',
+    question:'O que e concurso de pessoas? Quais os requisitos? Qual a diferenca entre autor, coautor e participe?',
+    pills:['Arts. 29-31 CP','Teoria do dominio do fato','Comunicabilidade'],
+    fundamento:'Arts. 29 a 31 do Codigo Penal.',
+    conceito:'CONCEITO: duas ou mais pessoas concorrendo para a pratica de uma infração penal. REQUISITOS: pluralidade de agentes e de condutas; relevancia causal de cada conduta; vinculo subjetivo (acordo de vontades -- nao exige ajuste previo); identidade infracional. TEORIAS DA AUTORIA: (a) objetivo-formal: autor e quem pratica o nucleo do tipo; participe, quem contribui sem pratica-lo; (b) dominio do fato (Roxin -- adotada pelo STF no mensalao): autor e quem tem o dominio final do fato -- pode ser dominio da acao (executa), dominio da vontade (coage ou induz em erro) ou dominio funcional (divisao de tarefas). AUTORIA MEDIATA: o agente se vale de pessoa sem culpabilidade ou que age sem dolo para praticar o crime -- o executor nao responde; so o autor mediato. PARTICIPACAO: instigacao (reforco da resolucao criminosa) ou cumplicidade (auxilio material). COMUNICABILIDADE (art. 30): circunstancias de carater pessoal nao se comunicam, salvo quando elementares do tipo.',
+    atencao:'Art. 29, paragrafo 1 CP: se a participacao for de menor importancia, a pena pode ser diminuida de 1/6 a 1/3. Art. 29, paragrafo 2 CP: se um dos concorrentes quis participar de crime menos grave, sera-lhe aplicada a pena deste -- so responde pelo excesso quem o praticou. Desvio subjetivo do executor: o coautor responde apenas pelo crime que concordou em praticar -- o excesso e pessoal. Concurso de pessoas em crimes proprios: o extraneus (nao detentor da qualidade especial) pode ser coautor ou participe desde que tenha ciencia da qualidade do intraneus.',
+    oral:'O concurso de pessoas exige pluralidade de agentes com condutas relevantes, vinculo subjetivo entre eles e identidade da infracao praticada. A teoria do dominio do fato, adotada pelo STF no julgamento do Mensalao, define como autor quem detem o controle final do fato -- seja pela execucao direta, pelo dominio da vontade sobre quem executa ou pelo dominio funcional da divisao de tarefas em organizacoes. O participe contribui para o crime sem ter o dominio do fato, por meio de instigacao ou cumplicidade. Na autoria mediata, o agente se vale de pessoa sem culpabilidade como instrumento, sendo o unico responsavel pelo resultado. Quanto a comunicabilidade, as circunstancias de carater pessoal nao se comunicam entre os concorrentes, salvo quando forem elementares do tipo penal.',
+    dica:'Requisitos: pluralidade de agentes + relevancia causal + vinculo subjetivo + identidade infracional. Teoria do dominio do fato (STF -- Mensalao): dominio da acao + da vontade + funcional. Autoria mediata: executor sem culpabilidade, so autor mediato responde. Comunicabilidade (art. 30): pessoais = nao comunicam. Elementares do tipo = comunicam. Participacao de menor importancia: reducao 1/6 a 1/3 (art. 29 paragrafo 1). Desvio subjetivo: excesso e pessoal.'
+  },
+
+  // CRIMES CONTRA A DIGNIDADE SEXUAL
+  {
+    grupo:'sexual', cat:'Crimes contra a Dignidade Sexual', catClass:'cat-coral',
+    title:'Estupro e estupro de vulneravel -- tipo penal e distincoes',
+    question:'Como o CP define o estupro apos a Lei 12.015/2009? O que e estupro de vulneravel? A presuncao de violencia e absoluta?',
+    pills:['Arts. 213-217-A CP','Lei 12.015/2009','Sumula 593 STJ'],
+    fundamento:'Arts. 213 a 217-A do CP, com redacao da Lei no 12.015/2009.',
+    conceito:'ESTUPRO (art. 213 CP): constranger alguem, mediante violencia ou grave ameaca, a ter conjuncao carnal ou a praticar ou permitir que com ele se pratique outro ato libidinoso. Pena: reclusao de 6 a 10 anos. A Lei 12.015/09 unificou o estupro (art. 213 antigo -- so mulher) e o atentado violento ao pudor (art. 214 antigo -- qualquer pessoa) num unico tipo -- hoje qualquer pessoa pode ser sujeito ativo ou passivo. QUALIFICADORAS: lesao corporal grave (8 a 12 anos); morte (12 a 30 anos). ESTUPRO DE VULNERAVEL (art. 217-A): praticar conjuncao carnal ou outro ato libidinoso com menor de 14 anos, ou com pessoa que, por enfermidade ou deficiencia mental, nao tenha o necessario discernimento para a pratica do ato, ou que nao possa oferecer resistencia. Pena: reclusao de 8 a 15 anos. PRESUNCAO DE VIOLENCIA: ABSOLUTA (Sumula 593 STJ) -- nao admite prova em contrario; o consentimento do menor de 14 anos e irrelevante.',
+    atencao:'Ambos os crimes sao hediondos (Lei 8.072/90). Estupro coletivo (art. 226, IV, a CP): quando o crime e praticado por 2 ou mais pessoas -- majorante. Estupro corretivo (art. 226, IV, b CP): quando motivado pela orientacao sexual ou identidade de genero da vitima -- majorante. Vitima maior de 14 e menor de 18 anos: o consentimento pode ser relevante (nao e caso do art. 217-A) -- mas se houver vulnerabilidade real (enfermidade, deficiencia), pode configurar o art. 217-A. A conjuncao carnal e apenas a relacao sexual vaginal -- os demais atos libidinosos sao abrangidos pela segunda parte do tipo.',
+    oral:'O estupro, definido no art. 213 do Codigo Penal com a redacao dada pela Lei 12.015 de 2009, consiste em constranger alguem mediante violencia ou grave ameaca a ter conjuncao carnal ou a praticar ou permitir outro ato libidinoso. A reforma unificou os antigos tipos de estupro e atentado violento ao pudor, passando a admitir qualquer pessoa como sujeito ativo ou passivo. O estupro de vulneravel do art. 217-A tutela especificamente o menor de quatorze anos e a pessoa sem discernimento ou resistencia. A Sumula 593 do STJ consolidou que a presuncao de violencia no estupro de vulneravel e absoluta -- o consentimento do menor de quatorze anos e juridicamente irrelevante. Ambos os crimes sao hediondos e admitem as qualificadoras de lesao corporal grave e morte.',
+    dica:'Estupro (art. 213): violencia/ameaca + conjuncao carnal OU ato libidinoso. Qualquer pessoa pode ser sujeito ativo ou passivo (Lei 12.015/09). Estupro de vulneravel (art. 217-A): menor de 14 anos + presuncao absoluta (S. 593 STJ). Consentimento do menor de 14: irrelevante. Hediondos. Majorantes: lesao grave (8-12) + morte (12-30). Estupro coletivo: 2+ pessoas. Estupro corretivo: motivado por orientacao sexual/identidade de genero.'
+  },
+  {
+    grupo:'sexual', cat:'Crimes contra a Dignidade Sexual', catClass:'cat-coral',
+    title:'Importunacao sexual, assedio sexual e crimes virtuais',
+    question:'O que e importunacao sexual? Quando se aplica? O que e assedio sexual? Como o CP trata os crimes sexuais virtuais?',
+    pills:['Art. 215-A CP','Art. 216-A CP','Lei 13.718/2018'],
+    fundamento:'Arts. 215-A, 216-A e 218-C do CP, com redacao da Lei no 13.718/2018.',
+    conceito:'IMPORTUNACAO SEXUAL (art. 215-A -- Lei 13.718/2018): praticar contra alguem e sem a sua anuencia ato libidinoso com o objetivo de satisfazer a propria lascívia ou a de terceiro. Pena: reclusao de 1 a 5 anos. ASSEDIO SEXUAL (art. 216-A): constranger alguem com o intuito de obter vantagem ou favorecimento sexual, prevalecendo-se o agente da sua condicao de superior hierarquico ou ascendencia inerentes ao exercicio de emprego, cargo ou funcao. Pena: detenção de 2 a 2 anos. DIVULGACAO DE CENA DE ESTUPRO OU SEXO SEM CONSENTIMENTO (art. 218-C): oferecer, trocar, disponibilizar, transmitir, vender ou expor cenas de estupro ou de sexo sem consentimento -- reclusao de 1 a 5 anos. Qualificado se o agente mantem relacionamento com a vitima: 2 a 6 anos (crime de "pornografia de vinganca").',
+    atencao:'A importunacao sexual foi criada para preencher lacuna de tipicidade -- antes da Lei 13.718/2018, a ejaculacao em mulher no transporte coletivo, por exemplo, era enquadrada como contravencao ou mera perturbacao. O assedio sexual exige a relacao de hierarquia -- sem ela, pode configurar outro crime. A vitima do assedio sexual pode ser qualquer genero. Divulgacao sem consentimento ("revenge porn"): a qualificadora se aplica quando ha relacionamento intimo (afetivo ou sexual) entre o agente e a vitima -- nao precisa ser conjugal.',
+    oral:'A Lei 13.718 de 2018 criou e aprimorou importantes tipos penais na area da dignidade sexual. A importunacao sexual do art. 215-A pune a pratica de ato libidinoso contra alguem sem sua anuencia, com o objetivo de satisfazer lascívia, com pena de um a cinco anos. O assedio sexual do art. 216-A exige a relacao de hierarquia ou ascendencia funcional e visa proteger a liberdade sexual no ambiente de trabalho. A divulgacao de cenas de estupro ou de sexo sem consentimento, tipificada no art. 218-C, alcanca a chamada pornografia de vinganca, com pena qualificada de dois a seis anos quando o agente mantem relacionamento com a vitima.',
+    dica:'Importunacao sexual (art. 215-A): ato libidinoso sem anuencia + lascívia = 1-5 anos. Assedio sexual (art. 216-A): hierarquia/ascendencia + vantagem sexual = detenção 2-2 anos. Divulgacao sem consentimento (art. 218-C): cenas de estupro ou sexo sem consentimento = 1-5 anos; qualificado com relacionamento intimo = 2-6 anos ("revenge porn"). Lei 13.718/2018 criou todos esses tipos.'
+  },
+
+  // CRIMES CONTRA A LIBERDADE INDIVIDUAL
+  {
+    grupo:'liberdade', cat:'Crimes contra a Liberdade Individual', catClass:'cat-amber',
+    title:'Crimes contra a liberdade pessoal -- constrangimento, ameaca e sequestro',
+    question:'Quais os principais crimes contra a liberdade individual? O que e constrangimento ilegal? Como diferenciar sequestro de extorsao mediante sequestro?',
+    pills:['Arts. 146-149-A CP','Constrangimento ilegal','Sequestro x extorsao'],
+    fundamento:'Arts. 146 a 154-B do CP.',
+    conceito:'CONSTRANGIMENTO ILEGAL (art. 146): constranger alguem, mediante violencia ou grave ameaca, ou depois de lhe ter reduzido a capacidade de resistencia, a nao fazer o que a lei permite ou a fazer o que ela nao manda. Pena: detenção de 3 meses a 1 ano ou multa. AMEACA (art. 147): ameacar alguem, por palavra, escrito ou gesto, ou qualquer outro meio simbolico, de causa-lhe mal injusto e grave. Pena: detenção de 1 a 6 meses ou multa. SEQUESTRO E CARCERE PRIVADO (art. 148): privar alguem de sua liberdade, mediante sequestro ou carcere privado. Pena: reclusao de 1 a 3 anos. REDUCAO A CONDICAO ANALOGAS A DE ESCRAVO (art. 149): sujeitar alguem a trabalhos forcados, jornada exaustiva, condicoes degradantes ou restringir sua locomocao em razao de divida (trabalho escravo). TRAFICO DE PESSOAS (art. 149-A): agenciar, aliciar, recrutar, transportar, transferir, comprar, alojar ou acolher pessoa, mediante grave ameaca, violencia, coacao, fraude ou abuso, com a finalidade de remover orgaos, submeter a trabalho em condicao analogas a de escravo, submeter a qualquer tipo de servidao, adocao ilegal ou exploracao sexual.',
+    atencao:'Distincao sequestro x extorsao mediante sequestro: no sequestro (art. 148), a privacao de liberdade e um fim em si mesmo, ou tem outra finalidade que nao a obtencao de resgate. Na extorsao mediante sequestro (art. 159), a privacao de liberdade e o MEIO para obter vantagem como condicao ou preco do resgate -- elemento subjetivo especifico. Trafico de pessoas (art. 149-A): crime hediondo (incluido pela Lei 15.397/2026). A condicao de vulnerabilidade da vitima (crianca, adolescente, idoso, deficiente) qualifica os crimes desta secao.',
+    oral:'Os crimes contra a liberdade individual abrangem condutas que restringem a autodeterminacao e a locomocao da pessoa. O constrangimento ilegal pune o uso de violencia ou grave ameaca para coagir alguem a fazer ou deixar de fazer algo. A ameaca protege a paz e a tranquilidade individual. O sequestro e o carcere privado punem a privacao arbitraria da liberdade de locomocao, distinguindo-se da extorsao mediante sequestro pela finalidade: no sequestro simples, a privacao e o fim ou tem outra finalidade; na extorsao mediante sequestro, o objetivo e obter vantagem como preco do resgate. O trafico de pessoas, tipificado no art. 149-A, e crime hediondo que abrange o recrutamento e transporte de pessoas para fins de exploracao.',
+    dica:'Constrangimento ilegal (art. 146): violencia/ameaca + obrigar/impedir conduta = detenção 3m-1a. Ameaca (art. 147): mal injusto e grave = detenção 1-6m. Sequestro (art. 148): privacao de liberdade = reclusao 1-3 anos. Diferenca: sequestro = fim em si. Extorsao med. sequestro = meio para obter resgate (art. 159). Trafico de pessoas (art. 149-A): hediondo (Lei 15.397/2026). Reducao a escravo (art. 149): trabalho forcado, jornada exaustiva, condicoes degradantes.'
+  },
+
+  // CRIMES CONTRA A INCOLUMIDADE PUBLICA
+  {
+    grupo:'incolumidade', cat:'Crimes contra a Incolumidade Publica', catClass:'cat-teal',
+    title:'Crimes de perigo comum -- incendio, explosao e substancias toxicas',
+    question:'O que sao crimes de perigo comum? Quais os principais tipos? Quando o perigo e concreto e quando e abstrato?',
+    pills:['Arts. 250-259 CP','Perigo concreto x abstrato','Incendio doloso'],
+    fundamento:'Arts. 250 a 285 do Codigo Penal.',
+    conceito:'CRIMES CONTRA A INCOLUMIDADE PUBLICA: crimes que colocam em risco um numero indeterminado de pessoas -- tutelam a segurança coletiva. INCENDIO (art. 250): causar incendio, expondo a perigo a vida, a integridade fisica ou o patrimonio de outrem. Pena: reclusao de 3 a 6 anos. Qualificado se resultar lesao grave (4-12 anos) ou morte (8-20 anos). EXPLOSAO (art. 251): expor a perigo a vida, integridade fisica ou patrimonio de outrem, mediante explosao, arremesso ou simples colocacao de engenho de dinamite ou substancia de efeitos analogos. Pena: reclusao de 3 a 6 anos. PERIGO PARA A VIDA OU SAUDE DE OUTREM (art. 132): expor a vida ou saude de outrem a perigo direto e iminente. Pena: detenção de 3 meses a 1 ano. SUBSTANCIAS TOXICAS (art. 256): misturar substancias nocivas a agua potavel ou alimento destinado a consumo publico. Pena: reclusao de 2 a 5 anos. EPIDEMIA (art. 267): causar epidemia mediante a propagacao de germes patogenicos. Pena: reclusao de 10 a 15 anos; se doloso com resultado morte: reclusao de 12 a 20 anos -- HEDIONDO.',
+    atencao:'Perigo concreto: exige-se a prova de que o perigo realmente ocorreu para uma pessoa ou grupo determinado (ex: art. 132 -- perigo para vida ou saude). Perigo abstrato: a lei presume o perigo pela simples pratica da conduta -- prescinde de prova (ex: incendio, explosao -- a mera pratica ja e suficiente para a consumacao). Incendio culposo (art. 250, paragrafo 2): pena de detenção de 6 meses a 2 anos. A epidemia com resultado morte e crime hediondo (art. 1, I, d da Lei 8.072/90). Crimes ambientais (Lei 9.605/98): a poluicao que coloca em risco a saude humana (art. 54) pode concorrer com os crimes de incolumidade publica.',
+    oral:'Os crimes contra a incolumidade publica protegem a seguranca coletiva, tutelando a vida e a integridade fisica de um numero indeterminado de pessoas. O incendio doloso do art. 250 pune a conduta de causar incendio que exponha a perigo a vida, integridade fisica ou patrimonio alheio, com pena de tres a seis anos e qualificadoras em caso de lesao grave ou morte. A explosao do art. 251 tem estrutura semelhante. Esses crimes sao em regra de perigo abstrato -- a prova do perigo efetivo e desnecessaria. A epidemia dolosa do art. 267, por sua gravidade, e classificada como crime hediondo, especialmente quando resulta em morte.',
+    dica:'Incolumidade publica: perigo para numero indeterminado de pessoas. Incendio (art. 250): 3-6 anos; lesao grave 4-12; morte 8-20. Explosao (art. 251): 3-6 anos. Perigo abstrato: incendio e explosao -- nao precisa provar o perigo. Perigo concreto: art. 132 -- precisa provar perigo direto e iminente. Epidemia (art. 267): 10-15 anos; com morte dolosa = HEDIONDO. Substancias toxicas (art. 256): misturar nocivo a agua/alimento = 2-5 anos.'
+  }
+];
+
+var filtered = allCards.slice();
+var cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido -- ideal para simular a banca'
+    : 'Resposta em blocos estruturados -- ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? allCards.slice() : allCards.filter(function(c){ return c.grupo === f; });
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  var c = filtered[cur];
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(function(p){ return '<span class="pill">' + p + '</span>'; }).join('');
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+  document.getElementById('b-blocks').innerHTML = mode === 'oral'
+    ? '<div class="oral-answer">' + c.oral + '</div><div class="oral-tip"><div class="blbl">Dica para a banca</div><p>' + c.dica + '</p></div>'
+    : '<div class="b-block"><div class="blbl">Fundamento legal</div><p>' + c.fundamento + '</p></div>' +
+      '<div class="b-block"><div class="blbl">Conceito e distincoes</div><p>' + c.conceito + '</p></div>' +
+      '<div class="b-alert"><div class="blbl">Atencao -- ponto de prova</div><p>' + c.atencao + '</p></div>' +
+      '<div class="b-tip"><div class="blbl">Dica de memorizacao</div><p>' + c.dica + '</p></div>';
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = (cur + 1) + ' / ' + filtered.length + ' fichas';
+  var sh = function(t){ return t.length > 28 ? t.substring(0,28) + '...' : t; };
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map(function(x,i){ return '<button class="topic-btn ' + (i===cur?'active':'') + '" onclick="go(' + i + ')">' + (i+1) + '. ' + sh(x.title) + '</button>'; }).join('') +
+    '<span class="counter-pill">' + (cur+1) + ' / ' + filtered.length + '</span>';
+}
+
+function flip(){ document.getElementById('card').classList.toggle('flipped'); }
+function go(i){ cur = i; render(); }
+function prev(){ cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next(){ cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>

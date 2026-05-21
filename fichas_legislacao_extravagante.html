@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fichas -- Legislacao Extravagante | CFO PMMG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1F3864;--navy-mid:#2E5FA3;--navy-light:#dce8f8;
+    --teal:#0F6E56;--teal-light:#E1F5EE;
+    --coral:#993C1D;--coral-light:#FAECE7;
+    --amber:#854F0B;--amber-light:#FAEEDA;
+    --purple:#534AB7;--purple-light:#EEEDFE;
+    --bg:#f4f6fb;--surface:#fff;
+    --border:rgba(31,56,100,0.12);
+    --text:#1a1f2e;--muted:#5a6580;--faint:#9ba4bc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  header{background:var(--navy);padding:1.5rem 2rem 1.25rem;}
+  .hbadge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:4px 10px;border-radius:4px;text-transform:uppercase;display:inline-block;margin-bottom:6px;}
+  header h1{font-size:20px;font-weight:600;color:#fff;}
+  header p{font-size:13px;color:rgba(255,255,255,.55);margin-top:3px;}
+  .hrow{display:flex;align-items:flex-end;gap:1rem;flex-wrap:wrap;}
+  .hcount{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);margin-left:auto;}
+  .mode-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mode-label{font-size:12px;color:var(--muted);font-weight:500;}
+  .toggle-wrap{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:2px;gap:2px;}
+  .toggle-opt{font-size:11.5px;padding:4px 14px;border-radius:999px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;font-weight:500;transition:all .15s;}
+  .toggle-opt.active{background:var(--navy);color:#fff;}
+  .mode-hint{font-size:11px;color:var(--faint);}
+  .filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:.65rem 2rem;display:flex;gap:6px;flex-wrap:wrap;}
+  .filter-btn{font-family:'Sora',sans-serif;font-size:11.5px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .filter-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .filter-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+  .progress-wrap{height:3px;background:var(--border);border-radius:999px;margin-bottom:1.5rem;overflow:hidden;}
+  .progress-bar{height:100%;background:var(--navy-mid);border-radius:999px;transition:width .3s ease;}
+  .topic-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.75rem;align-items:center;}
+  .topic-btn{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;font-weight:500;font-family:'Sora',sans-serif;}
+  .topic-btn:hover{border-color:var(--navy-mid);color:var(--navy);}
+  .topic-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .counter-pill{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--faint);white-space:nowrap;}
+  .card-scene{perspective:1200px;margin-bottom:1.5rem;}
+  .card-inner{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1);min-height:290px;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .face{backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.75rem 2rem;display:flex;flex-direction:column;}
+  .face.back{transform:rotateY(180deg);position:absolute;top:0;left:0;right:0;}
+  .f-cat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:1.1rem;width:fit-content;}
+  .cat-navy{background:var(--navy-light);color:var(--navy);}
+  .cat-teal{background:var(--teal-light);color:var(--teal);}
+  .cat-coral{background:var(--coral-light);color:var(--coral);}
+  .cat-amber{background:var(--amber-light);color:var(--amber);}
+  .cat-purple{background:var(--purple-light);color:var(--purple);}
+  .f-title{font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:.6rem;}
+  .f-question{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;flex:1;}
+  .f-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.4rem;}
+  .pill{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+  .hint-line{font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;}
+  .oral-answer{font-size:14px;color:var(--text);line-height:1.8;border-left:3px solid var(--navy-mid);background:var(--navy-light);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:9px;}
+  .blbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+  .oral-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;}
+  .oral-tip .blbl{color:var(--teal);}
+  .oral-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .b-block{background:var(--bg);border-radius:10px;padding:11px 15px;margin-bottom:9px;}
+  .b-block .blbl{color:var(--faint);}
+  .b-block p{font-size:13px;color:var(--text);line-height:1.65;}
+  .b-alert{border-left:3px solid var(--coral);background:var(--coral-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-alert .blbl{color:var(--coral);}
+  .b-alert p{font-size:13px;color:#5a2010;line-height:1.65;}
+  .b-tip{border-left:3px solid var(--teal);background:var(--teal-light);border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:9px;}
+  .b-tip .blbl{color:var(--teal);}
+  .b-tip p{font-size:13px;color:#0a3d2e;line-height:1.65;}
+  .btn-row{display:flex;gap:8px;margin-top:1.4rem;}
+  .btn{flex:1;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+  .btn:hover{background:var(--bg);color:var(--text);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:#17316b;}
+  footer{text-align:center;padding:2rem 1rem;font-size:11.5px;color:var(--faint);border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;}
+  @media(max-width:540px){
+    main{padding:1.25rem 1rem 3rem;}
+    header,.filter-bar,.mode-bar{padding:.75rem 1rem;}
+    .f-title{font-size:18px;}
+    .face{padding:1.25rem;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div>
+      <div class="hbadge">CFO PMMG -- Legislacao Extravagante e Direitos Humanos</div>
+      <h1>Legislacao Extravagante e Direitos Humanos</h1>
+      <p>ECA, Hediondos, Improbidade, Juizados, Tortura, Meio Ambiente, Idoso, Desarmamento, LMP, Drogas, Abuso de Autoridade, DH</p>
+    </div>
+    <div class="hcount" id="hdr-count"></div>
+  </div>
+</header>
+<div class="mode-bar">
+  <span class="mode-label">Modo:</span>
+  <div class="toggle-wrap">
+    <button class="toggle-opt active" onclick="setMode('oral',this)">Oral</button>
+    <button class="toggle-opt" onclick="setMode('estudo',this)">Estudo</button>
+  </div>
+  <span class="mode-hint" id="mode-hint">Resposta em texto corrido -- ideal para simular a banca</span>
+</div>
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('eca',this)">ECA</button>
+  <button class="filter-btn" onclick="setFilter('hediondos',this)">Hediondos</button>
+  <button class="filter-btn" onclick="setFilter('improbidade',this)">Improbidade</button>
+  <button class="filter-btn" onclick="setFilter('juizados',this)">Juizados</button>
+  <button class="filter-btn" onclick="setFilter('especial',this)">Tortura/Idoso/Desarmamento</button>
+  <button class="filter-btn" onclick="setFilter('lmp',this)">Lei Maria da Penha</button>
+  <button class="filter-btn" onclick="setFilter('drogas',this)">Lei de Drogas</button>
+  <button class="filter-btn" onclick="setFilter('abuso',this)">Abuso de Autoridade</button>
+  <button class="filter-btn" onclick="setFilter('dh',this)">Direitos Humanos</button>
+</div>
+<main>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="card-scene">
+    <div class="card-inner" id="card">
+      <div class="face front">
+        <div id="f-cat" class="f-cat"></div>
+        <div id="f-title" class="f-title"></div>
+        <div id="f-question" class="f-question"></div>
+        <div id="f-pills" class="f-pills"></div>
+        <div class="hint-line">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Responda em voz alta antes de revelar
+        </div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ver resposta</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+      <div class="face back">
+        <div id="b-cat" class="f-cat"></div>
+        <div id="b-title" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:1.1rem;"></div>
+        <div id="b-blocks"></div>
+        <div class="btn-row">
+          <button class="btn" onclick="prev()">anterior</button>
+          <button class="btn btn-primary" onclick="flip()">ocultar</button>
+          <button class="btn" onclick="next()">proxima</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Mentoria Lider -- CFO PMMG -- Material de uso exclusivo dos alunos</footer>
+
+<script>
+var mode = 'oral';
+var allCards = [
+
+  // ECA
+  {
+    grupo:'eca', cat:'ECA -- Lei 8.069/1990', catClass:'cat-navy',
+    title:'ECA -- principios, sujeitos e doutrina da protecao integral',
+    question:'Quais os principios fundamentais do ECA? O que e doutrina da protecao integral? Quem sao crianca e adolescente?',
+    pills:['Lei 8.069/1990','Art. 227 CF/88','Prioridade absoluta'],
+    fundamento:'Lei no 8.069, de 13 de julho de 1990. Art. 227 da CF/88.',
+    conceito:'CRIANCA: pessoa ate 12 anos de idade incompletos. ADOLESCENTE: pessoa de 12 a 18 anos de idade. DOUTRINA DA PROTECAO INTEGRAL: criancas e adolescentes sao sujeitos de direitos -- nao objetos de intervencao do Estado. Tem todos os direitos fundamentais da pessoa humana, mais os direitos especificos em razao de sua condicao de pessoa em desenvolvimento. PRINCIPIO DA PRIORIDADE ABSOLUTA (art. 4 ECA + art. 227 CF): primazia de receber protecao e socorro; precedencia no atendimento; preferencia na formulacao e execucao de politicas publicas; destinacao privilegiada de recursos. PRINCIPIO DO MELHOR INTERESSE DA CRIANCA: em todas as decisoes relativas a criancas e adolescentes, deve-se considerar prioritariamente o seu melhor interesse. PRINCIPIO DA MUNICIPALIZACAO: o atendimento deve ser prestado preferencialmente no municipio de origem.',
+    atencao:'O ECA adotou a Doutrina da Protecao Integral, superando a antiga Doutrina da Situacao Irregular (Codigo de Menores de 1979), que tratava o menor apenas como objeto de intervencao estatal em situacoes de risco. O Conselho Tutelar e orgao permanente e autonomo, nao jurisdicional, encarregado de zelar pelo cumprimento dos direitos da crianca e do adolescente -- nao e orgao do Poder Judiciario. SINASE (Sistema Nacional de Atendimento Socioeducativo -- Lei 12.594/2012): regula a execucao das medidas socioeducativas.',
+    oral:'O Estatuto da Crianca e do Adolescente consagra a Doutrina da Protecao Integral, reconhecendo criancas e adolescentes como sujeitos de direitos em condicao peculiar de desenvolvimento. Crianca e a pessoa com ate doze anos incompletos; adolescente, a de doze a dezoito anos. O principio da prioridade absoluta, previsto no art. 4 do ECA e no art. 227 da Constituicao, determina preferencia no atendimento, na formulacao de politicas publicas e na destinacao de recursos. O principio do melhor interesse da crianca orienta todas as decisoes que a envolvam. O Conselho Tutelar e o orgao autonomo e nao jurisdicional responsavel por zelar pelo cumprimento dos direitos da crianca e do adolescente no ambito municipal.',
+    dica:'Crianca: ate 12 anos incompletos. Adolescente: 12 a 18 anos. Protecao integral: sujeito de direitos (nao objeto). Prioridade absoluta: primazia + precedencia + preferencia + destinacao privilegiada de recursos. Conselho Tutelar: autonomo, nao jurisdicional, nao e Poder Judiciario. Doutrina anterior: Situacao Irregular (Codigo de Menores 1979) -- superada.'
+  },
+  {
+    grupo:'eca', cat:'ECA -- Lei 8.069/1990', catClass:'cat-navy',
+    title:'ECA -- ato infracional e medidas socioeducativas',
+    question:'O que e ato infracional? Quais as medidas socioeducativas? Como funciona a internacao?',
+    pills:['Arts. 103-125 ECA','SINASE','Internacao: 3 anos max'],
+    fundamento:'Arts. 103 a 125 da Lei no 8.069/1990. Lei no 12.594/2012 (SINASE).',
+    conceito:'ATO INFRACIONAL: conduta descrita como crime ou contravencao penal praticada por crianca ou adolescente (art. 103 ECA). Crianca: sujeita a medidas de protecao (nao socioeducativas). Adolescente: sujeito a medidas socioeducativas. MEDIDAS SOCIOEDUCATIVAS (art. 112 ECA): advertencia; obrigacao de reparar o dano; prestacao de servicos a comunidade; liberdade assistida; semi-liberdade; internacao. INTERNACAO (art. 121): privacao de liberdade -- aplicavel apenas quando: (a) ato infracional cometido com grave ameaca ou violencia a pessoa; (b) reiteracao em outras infrações graves; (c) descumprimento reiterado e injustificavel de medida anteriormente imposta. Prazo maximo: 3 anos. Liberacao compulsoria aos 21 anos. Reavaliacao a cada 6 meses.',
+    atencao:'O adolescente NAO pode ser processado criminalmente -- responde por ato infracional perante a Vara da Infancia e Juventude. A imputabilidade penal e aos 18 anos (art. 27 CP + art. 228 CF -- clausula petrea, nao pode ser reduzida por EC). Internacao nao admite prazo determinado -- o juiz fixa o prazo maximo de 3 anos e reavalia a cada 6 meses. Internacao provisoria: prazo maximo de 45 dias. Remissao (art. 126 ECA): exclusao, suspensao ou extincao do processo -- pode ser concedida pelo MP (antes da acao) ou pelo juiz (durante o processo).',
+    oral:'O ato infracional e a conduta descrita como crime ou contravencao penal praticada por crianca ou adolescente. A crianca que pratica ato infracional e submetida a medidas de protecao; o adolescente, a medidas socioeducativas. As medidas socioeducativas vao da advertencia a internacao, passando pela liberdade assistida e pela semiliberdade. A internacao e medida de privacao de liberdade aplicavel apenas nas hipoteses taxativas do art. 121: ato infracional com grave ameaca ou violencia, reiteracao em infrações graves ou descumprimento de medida anterior. O prazo maximo e de tres anos, com liberacao compulsoria aos vinte e um anos e reavaliacao obrigatoria a cada seis meses.',
+    dica:'Medidas socioeducativas: advertencia + reparacao do dano + PSC + liberdade assistida + semiliberdade + internacao. Internacao: violencia/grave ameaca OU reiteracao em infrações graves OU descumprimento de medida. Prazo max: 3 anos. Reavaliacao: 6 meses. Liberacao compulsoria: 21 anos. Internacao provisoria: 45 dias. Imputabilidade: 18 anos -- clausula petrea (nao pode ser reduzida por EC).'
+  },
+
+  // HEDIONDOS
+  {
+    grupo:'hediondos', cat:'Crimes Hediondos -- Lei 8.072/1990', catClass:'cat-coral',
+    title:'Crimes hediondos -- rol, regime e vedacoes',
+    question:'Quais os crimes hediondos? Quais as vedacoes constitucionais? Qual o regime de cumprimento de pena?',
+    pills:['Lei 8.072/1990','Art. 5 XLIII CF','Progressao: 40-60%'],
+    fundamento:'Lei no 8.072, de 25 de julho de 1990. Art. 5o, XLIII, da CF/88.',
+    conceito:'ROL (art. 1 Lei 8.072/90 -- principais): homicidio qualificado e doloso em atividade tipica de grupo de exterminio; lesao corporal dolosa gravissima ou seguida de morte praticada por grupo de exterminio; latrocinio; extorsao qualificada pela morte; extorsao mediante sequestro; estupro e estupro de vulneravel; epidemia com resultado morte; falsificacao de remedio; genocidio; posse/porte de arma de uso proibido; comercio ilegal de armas de fogo; trafico de drogas; terrorismo; tortura; feminicidio (art. 121-A CP -- inserido pela Lei 14.994/2024). EQUIPARADOS A HEDIONDOS: tortura (Lei 9.455/97), trafico de drogas (Lei 11.343/06), terrorismo (Lei 13.260/16). VEDACOES (art. 5, XLIII CF): fianca; graca; anistia; para equiparados: tambem indulto (STF). REGIME: cumprimento inicial em regime fechado (para primarios: progressao apos 40% da pena; reincidentes em crime hediondo: 60%; reincidentes em crime comum: 50%).',
+    atencao:'A Lei Antifaccao (Lei 15.397/2026) inseriu novas hipoteses no rol dos hediondos e ampliou restricoes. O STF (HC 111.840) declarou inconstitucional o regime inicialmente fechado obrigatorio para hediondos -- o juiz deve fixar o regime com base nos criterios do art. 33 CP (pena, reincidencia, circunstancias). O livramento condicional exige cumprimento de mais de 2/3 da pena para hediondos (art. 83, V CP) -- vedado para reincidentes especificos. Delacao premiada em hediondos: admitida -- reducao de 1/3 a 2/3 da pena (art. 8, PU Lei 8.072/90 -- quadrilha ou bando).',
+    oral:'A Lei 8.072 de 1990 define os crimes hediondos e lhes impoe tratamento penal mais rigoroso. O rol inclui, entre outros, homicidio qualificado, latrocinio, extorsao mediante sequestro, estupro e estupro de vulneravel, trafico de drogas, terrorismo e feminicidio. A Constituicao Federal, no art. 5o, XLIII, veda para os crimes hediondos e equiparados a concessao de fianca, graca e anistia. O regime de cumprimento de pena exige progressao apos o cumprimento de quarenta por cento para os primarios e sessenta por cento para os reincidentes em crime hediondo. O STF declarou inconstitucional o regime inicialmente fechado obrigatorio, determinando que o juiz fixe o regime com base nos criterios gerais do Codigo Penal.',
+    dica:'Hediondos: homicidio qualif. + latrocinio + extorsao qualif. + extorsao med. sequestro + estupro + estupro de vulneravel + epidemia + falsificacao de remedio + genocidio + trafico + terrorismo + tortura + feminicidio. Equiparados: tortura + trafico + terrorismo. Vedacoes CF: fianca + graca + anistia. Progressao: 40% (primario) / 50% (reincidente comum) / 60% (reincidente hediondo). STF: regime fechado obrigatorio = inconstitucional.'
+  },
+
+  // IMPROBIDADE
+  {
+    grupo:'improbidade', cat:'Improbidade -- Lei 8.429/1992', catClass:'cat-purple',
+    title:'Improbidade administrativa -- espécies e sancoes',
+    question:'Quais as espécies de atos de improbidade? Quais as sancoes? O que mudou com a Lei 14.230/2021?',
+    pills:['Lei 8.429/1992','Lei 14.230/2021','Dolo especifico'],
+    fundamento:'Lei no 8.429/1992, com a redacao da Lei no 14.230/2021.',
+    conceito:'ESPECIES (apos Lei 14.230/2021): (1) Atos que importam enriquecimento ilicito (art. 9): obter vantagem patrimonial indevida -- DOLO. (2) Atos que causam prejuizo ao erario (art. 10): acoes ou omissoes que causem perda patrimonial dolosa -- apenas DOLO (antes era dolo ou culpa). (3) Atos que atentam contra os principios da Administracao (art. 11): violacao dos deveres de honestidade, imparcialidade, legalidade e lealdade -- apenas DOLO. SANCOES (art. 12 -- nao cumulativas obrigatoriamente): perda dos bens ou valores acrescidos ilicitamente; ressarcimento integral do dano; perda da funcao publica; suspensao dos direitos politicos; multa civil; proibicao de contratar com o Poder Publico. PRESCRICAO: 8 anos da data do fato (regra) ou ate 14 anos (com medidas cautelares). LEGITIMIDADE para acao: apenas o MP (lei 14.230/21 retirou a legitimidade do ente lesado).',
+    atencao:'A Lei 14.230/2021 operou mudancas estruturais: (1) CULPA foi eliminada -- so responde por improbidade quem age com DOLO especifico (vontade livre e consciente de praticar o ato ilicito); (2) apenas o MP tem legitimidade ativa; (3) a pessoa juridica de direito privado foi excluida do polo passivo (so agente publico e terceiro que com ele concorra); (4) prazo prescricional alterado; (5) acordo de nao persecucao civel (ANPC) foi expressamente previsto. O STF (ADI 7.236) confirmou a constitucionalidade das principais mudancas.',
+    oral:'A Lei de Improbidade Administrativa foi profundamente reformada pela Lei 14.230 de 2021. As tres especies de atos de improbidade -- enriquecimento ilicito, prejuizo ao erario e violacao aos principios -- passaram a exigir exclusivamente o dolo especifico do agente, sendo eliminada a modalidade culposa. A legitimidade para a acao de improbidade foi concentrada no Ministerio Publico, afastando-se o ente lesado. As sancoes previstas no art. 12 incluem perda dos bens ilicitamente obtidos, ressarcimento do dano, perda da funcao publica, suspensao dos direitos politicos, multa civil e proibicao de contratar com o poder publico. O prazo prescricional geral e de oito anos contados do fato.',
+    dica:'Pos Lei 14.230/2021: so DOLO especifico (culpa eliminada). So MP tem legitimidade ativa. Tres especies: enriquecimento ilicito + prejuizo ao erario + violacao de principios -- todas exigem dolo. Sancoes: perda dos bens + ressarcimento + perda da funcao + suspensao de direitos politicos + multa + proibicao de contratar. Prescricao: 8 anos (regra). ANPC: acordo de nao persecucao civel -- admitido expressamente.'
+  },
+
+  // JUIZADOS
+  {
+    grupo:'juizados', cat:'Juizados Especiais -- Lei 9.099/1995', catClass:'cat-amber',
+    title:'Juizados Especiais -- infrações de menor potencial ofensivo',
+    question:'O que sao infrações de menor potencial ofensivo? Quais os institutos despenalizadores? O que e transacao penal?',
+    pills:['Lei 9.099/1995','Pena max: 2 anos','Art. 89 -- sursis processual'],
+    fundamento:'Lei no 9.099, de 26 de setembro de 1995. Art. 98, I, da CF/88.',
+    conceito:'INFRAÇÕES DE MENOR POTENCIAL OFENSIVO: crimes com pena maxima nao superior a 2 anos e contravencoes penais -- competencia dos Juizados Especiais Criminais (JECrim). PRINCIPIOS: oralidade, simplicidade, informalidade, economia processual, celeridade. INSTITUTOS DESPENALIZADORES: (1) COMPOSICAO CIVIL DOS DANOS (art. 74): acordo entre vitima e autor do fato -- homologado pelo juiz, extingue a punibilidade nos crimes de acao privada e publica condicionada. (2) TRANSACAO PENAL (art. 76): proposta do MP ao autor do fato (que nao tenha sido condenado anteriormente, nao tenha se beneficiado da transacao nos 5 anos anteriores) -- aplicacao imediata de pena restritiva de direitos ou multa, sem processo. Nao gera reincidencia nem maus antecedentes. (3) SUSPENSAO CONDICIONAL DO PROCESSO (art. 89): nos crimes com pena minima ate 1 ano -- o MP propoe suspensao por 2 a 4 anos, com condicoes. Se cumprir: extingue a punibilidade.',
+    atencao:'A Lei 9.099/95 NAO se aplica aos crimes praticados com violencia domestica (Lei Maria da Penha -- art. 41 Lei 11.340/06 -- Sumula 536 STJ). Transacao penal: nao e condenacao -- nao gera reincidencia, maus antecedentes, nem obriga ressarcimento do dano. A recusa da proposta pelo autor do fato e possivel -- nao e obrigado a aceitar. Competencia: infrações cometidas no territorio de competencia do Juizado -- mas a competencia e relativa (pode ser derrogada por conexao com crime de maior potencial). Sursis processual (art. 89): pena minima ate 1 ano -- inclui crimes como lesao corporal leve.',
+    oral:'A Lei 9.099 de 1995 criou os Juizados Especiais Criminais e disciplinou o tratamento das infrações de menor potencial ofensivo -- crimes com pena maxima de ate dois anos e contravencoes penais. Os institutos despenalizadores introduzidos pela lei sao tres. A composicao civil dos danos, que quando homologada pelo juiz extingue a punibilidade nos crimes de acao privada e publica condicionada. A transacao penal, pela qual o Ministerio Publico propoe ao autor do fato a aplicacao imediata de pena restritiva de direitos ou multa, sem instauracao de processo e sem geracao de reincidencia. E a suspensao condicional do processo, aplicavel nos crimes com pena minima de ate um ano, pelo periodo de dois a quatro anos, extinguindo-se a punibilidade com o cumprimento das condicoes.',
+    dica:'IMPO: pena max ate 2 anos + contravencoes. Institutos: composicao civil (extingue punibilidade nas condicionadas e privadas) + transacao penal (proposta do MP, sem processo, sem reincidencia) + sursis processual (pena min ate 1 ano, 2-4 anos de suspensao). Lei 9.099 NAO se aplica a violencia domestica (art. 41 LMP -- S. 536 STJ). Transacao: autor pode recusar.'
+  },
+
+  // TORTURA / IDOSO / DESARMAMENTO
+  {
+    grupo:'especial', cat:'Tortura -- Lei 9.455/1997', catClass:'cat-coral',
+    title:'Lei de Tortura -- tipos penais e regime',
+    question:'Como a Lei 9.455/97 define a tortura? Quais as formas? E equiparada a crime hediondo?',
+    pills:['Lei 9.455/1997','Art. 5 III CF','Inafiancavel'],
+    fundamento:'Lei no 9.455, de 7 de abril de 1997. Art. 5o, III e XLIII, da CF/88.',
+    conceito:'MODALIDADES (art. 1 Lei 9.455/97): (I,a) constranger alguem com emprego de violencia ou grave ameaca, causando sofrimento fisico ou mental, com o fim de obter informacao, declaracao ou confissao, para provocar acao ou omissao de natureza criminosa, ou em razao de discriminacao racial ou religiosa; (I,b) submeter alguem, sob sua guarda, poder ou autoridade, com emprego de violencia ou grave ameaca, a intenso sofrimento fisico ou mental, como forma de aplicar castigo pessoal ou medida de carater preventivo; (II) submeter pessoa presa ou sujeita a medida de seguranca a sofrimento fisico ou mental, por ato nao previsto em lei ou nao resultante de medida legal. PENA: reclusao de 2 a 8 anos (basica). QUALIFICADORA: resultado lesao grave (4 a 10 anos) ou morte (8 a 16 anos). EQUIPARADA A HEDIONDO: sim -- sujeita as mesmas restricoes (sem fianca, graca, anistia, regime diferenciado).',
+    atencao:'A tortura por OMISSAO (art. 1, paragrafo 2): quem se omite em face dessas condutas quando tinha o dever de evita-las ou apura-las, incorre na pena de detenção de 1 a 4 anos. Sujeito ativo: pode ser qualquer pessoa (inclusive particular) -- diferente do crime de abuso de autoridade, que exige agente publico. Tortura nao admite anistia, graca nem extradição (art. 5, XLIII e LII CF). Pena da tortura segue o regime de progressao dos hediondos (40-50-60%). Concurso com o crime de maus-tratos: a tortura e mais grave -- absorve os maus-tratos (principio da especialidade).',
+    oral:'A Lei 9.455 de 1997 define e tipifica o crime de tortura em suas modalidades. A forma mais comum e o constrangimento de alguem mediante violencia ou grave ameaca, causando sofrimento fisico ou mental, com finalidade especifica de obter informacao, confissao ou como forma de discriminacao. Outra modalidade e submeter pessoa sob guarda ou autoridade do agente a intenso sofrimento como castigo ou medida preventiva. A omissao do responsavel por evitar ou apurar a tortura tambem e tipificada, com pena de detencao. A tortura e equiparada a crime hediondo, sendo inafiancavel e insuscetivel de graca e anistia. Ao contrario do abuso de autoridade, pode ser praticada por qualquer pessoa, nao apenas por agente publico.',
+    dica:'Tortura ativa: violencia/ameaca + sofrimento fisico/mental + finalidade especifica. Tortura por submissao: guarda/autoridade + intenso sofrimento como castigo. Tortura por omissao: detenção 1-4 anos. Sujeito ativo: qualquer pessoa (nao exige agente publico). Equiparada a hediondo. Qualificadoras: lesao grave (4-10 anos) ou morte (8-16 anos).'
+  },
+  {
+    grupo:'especial', cat:'Estatuto do Idoso -- Lei 10.741/2003', catClass:'cat-teal',
+    title:'Estatuto do Idoso -- definicao, direitos e crimes',
+    question:'Quem e idoso conforme o Estatuto? Quais os direitos prioritarios? Quais os crimes especificos?',
+    pills:['Lei 10.741/2003','60 anos','Prioridade de atendimento'],
+    fundamento:'Lei no 10.741, de 1 de outubro de 2003.',
+    conceito:'IDOSO: pessoa com 60 anos ou mais. PRIORIDADE DE ATENDIMENTO: em orgaos publicos e privados prestadores de servicos, filas e atendimento preferencial, acesso a transporte publico. DIREITOS: saude (atendimento preferencial no SUS; proibicao de discriminacao por idade nos planos de saude); transporte gratuito para maiores de 65 anos (art. 39); alimentos (obrigacao prioritaria dos filhos -- art. 12). CRIMES DO ESTATUTO (arts. 96-108): discriminar idoso, impedindo ou dificultando acesso a operacoes bancarias (art. 96); deixar de prestar assistencia (art. 97); abandono de idoso em hospitais ou casas de saude (art. 98); expor o idoso a perigo (art. 99); apropriar-se de alimentos ou valores do idoso (art. 102); coagir o idoso a se retirar do lar (art. 103). AGRAVANTE GENERICA: crimes contra idoso sao punidos com pena em dobro se praticados por descendentes (art. 95).',
+    atencao:'Os crimes do Estatuto do Idoso sao de acao penal publica incondicionada -- independem de representacao do idoso. O idoso com 65 anos tem direito a transporte interestadual gratuito em 2 vagas por veiculo (Lei 10.741/03, art. 39, paragrafo 1). Nos crimes previstos no CP, quando a vitima for idoso, aplica-se a agravante generica do art. 61, II, h do CP (crime contra pessoa maior de 60 anos). Prescricao dos crimes do Estatuto: prazo reduzido pela metade quando a vitima for idoso (art. 110, paragrafo 1 CP -- aplicavel por analogia).',
+    oral:'O Estatuto do Idoso define como idoso a pessoa com sessenta anos ou mais e assegura-lhe prioridade de atendimento em servicos publicos e privados. Entre os direitos garantidos estao o acesso preferencial a saude, a gratuidade no transporte publico para maiores de sessenta e cinco anos e a obrigacao prioritaria de alimentos pelos filhos. O estatuto tambem tipifica crimes especificos, como a discriminacao em operacoes bancarias, o abandono em hospitais, a coacao para se retirar do lar e a apropriacao de alimentos ou valores. Os crimes praticados por descendentes contra o idoso sao punidos com pena em dobro. A acao penal e sempre publica incondicionada.',
+    dica:'Idoso: 60 anos ou mais. Transporte gratuito: 65 anos (2 vagas por veiculo). Acao penal: publica incondicionada (todos os crimes do Estatuto). Agravante: pena em dobro para descendentes. Crimes: discriminacao bancaria + abandono + coacao para retirar do lar + apropriacao de alimentos. Agravante generica CP: art. 61, II, h -- vitima maior de 60 anos.'
+  },
+  {
+    grupo:'especial', cat:'Estatuto do Desarmamento -- Lei 10.826/2003', catClass:'cat-amber',
+    title:'Estatuto do Desarmamento -- crimes e regime',
+    question:'Quais os principais crimes do Estatuto do Desarmamento? O que e porte ilegal e posse irregular? Sao hediondos?',
+    pills:['Lei 10.826/2003','Lei 15.397/2026','Posse x porte'],
+    fundamento:'Lei no 10.826, de 22 de dezembro de 2003. Alteracoes da Lei no 15.397/2026.',
+    conceito:'POSSE IRREGULAR (art. 12): possuir ou manter em deposito arma de fogo de uso permitido em desacordo com as exigencias legais -- reclusao de 1 a 3 anos + multa. PORTE ILEGAL (art. 14): portar, deter, adquirir, fornecer, receber, ter em deposito, transportar, ceder arma de fogo de uso permitido sem autorizacao -- reclusao de 2 a 4 anos + multa. POSSE/PORTE DE ARMA DE USO RESTRITO (art. 16): reclusao de 3 a 6 anos + multa. POSSE/PORTE DE ARMA DE USO PROIBIDO (art. 16, PU, IV -- inserido pela NLLC 14.133 e confirmado pela Lei 15.397/2026): CRIME HEDIONDO -- reclusao de 4 a 12 anos. CRIME DE COMISSIO ARMADA (art. 16, PU, IV): transformar arma de uso permitido em arma de uso proibido. OMISSAO DE CAUTELA (art. 13): deixar arma de fogo ser manuseada por crianca ou adolescente -- detenção de 1 a 2 anos.',
+    atencao:'Posse x porte: POSSE = no domicilio ou local de trabalho; PORTE = em via publica ou local acessivel ao publico. Porte ilegal de arma de fogo e crime de perigo abstrato -- prescinde de apreensao da arma ou de que ela esteja em condicoes de disparo (STF, HC 131.744). Arma desmontada ou sem municao: o STJ entende que ainda configura o crime (Sumula 513 STJ). Lei 15.397/2026: elevou penas de varios crimes do Estatuto e incluiu novas qualificadoras para crimes praticados por organizacoes criminosas.',
+    oral:'O Estatuto do Desarmamento distingue posse irregular e porte ilegal. A posse e a manutencao da arma no domicilio ou local de trabalho sem autorizacao, tipificada no art. 12 com pena de um a tres anos. O porte e o transporte da arma em via publica ou local acessivel ao publico, punido com dois a quatro anos. As armas de uso restrito sujeitam o agente a tres a seis anos. O porte ou posse de arma de uso proibido e crime hediondo, com pena de quatro a doze anos. O porte ilegal e crime de perigo abstrato, dispensando a prova de que a arma estava apta ao disparo. A arma desmontada ou sem municao tambem configura o crime, conforme a Sumula 513 do STJ.',
+    dica:'Posse (art. 12): domicilio/trabalho + uso permitido = 1-3 anos. Porte (art. 14): via publica + uso permitido = 2-4 anos. Uso restrito (art. 16): 3-6 anos. Uso proibido: HEDIONDO -- 4-12 anos (Lei 15.397/2026). Perigo abstrato: prescinde de apreensao ou condicoes de disparo. Arma desmontada/sem municao: configura o crime (S. 513 STJ). Omissao de cautela: detenção 1-2 anos.'
+  },
+
+  // LEI MARIA DA PENHA
+  {
+    grupo:'lmp', cat:'Lei Maria da Penha -- Lei 11.340/2006', catClass:'cat-coral',
+    title:'Lei Maria da Penha -- ambito de aplicacao e medidas protetivas',
+    question:'Qual o ambito de aplicacao da LMP? Quais as medidas protetivas de urgencia? A lei se aplica a casais homoafetivos?',
+    pills:['Lei 11.340/2006','Art. 7 -- formas de violencia','Medidas protetivas'],
+    fundamento:'Lei no 11.340, de 7 de agosto de 2006. Arts. 226, paragrafo 8, da CF/88.',
+    conceito:'AMBITO DE APLICACAO: violencia domestica e familiar contra a MULHER (qualquer relacao intima de afeto, independentemente de coabitacao ou orientacao sexual). FORMAS DE VIOLENCIA (art. 7): fisica; psicologica; sexual; patrimonial; moral. SUJEITO PASSIVO: mulher -- qualquer que seja sua orientacao sexual. A LMP se aplica a casais homoafetivos femininos. MEDIDAS PROTETIVAS DE URGENCIA (arts. 22-24): em relacao ao agressor: suspensao de porte de armas; afastamento do lar; proibicao de aproximacao e contato; restricao de visitas aos dependentes; prestacao de alimentos provisionais. Em relacao a vitima: encaminhamento a programa de protecao; recondução ao domicilio; afastamento do lar (pela propria vitima). ACAO PENAL: crimes praticados com violencia domestica = acao penal publica INCONDICIONADA (Sumula 542 STJ) -- a vitima nao precisa representar.',
+    atencao:'A Lei 13.827/2019 autorizou o Delegado de Policia (e ate o policial, se nao houver Delegado) a aplicar IMEDIATAMENTE a medida protetiva de afastamento do lar, independentemente de autorizacao judicial, em caso de risco atual ou iminente a vida ou integridade fisica da mulher ou de seus dependentes -- o juiz deve ratificar em 24 horas. A retratacao da vitima NAO extingue a acao penal (acao publica incondicionada). O descumprimento de medida protetiva configura crime autonomo (art. 24-A LMP -- detenção de 3 meses a 2 anos) alem de admitir prisao preventiva.',
+    oral:'A Lei Maria da Penha tutela a mulher em situacao de violencia domestica e familiar, nas relacoes de afeto presentes ou passadas, independentemente de coabitacao ou orientacao sexual. As formas de violencia reconhecidas sao a fisica, a psicologica, a sexual, a patrimonial e a moral. As medidas protetivas de urgencia podem ser impostas ao agressor -- como afastamento do lar, proibicao de aproximacao e suspensao de porte de armas -- ou direcionadas a vitima. A acao penal nos crimes de violencia domestica e publica incondicionada, conforme a Sumula 542 do STJ. Desde 2019, o Delegado pode aplicar imediatamente o afastamento do lar em caso de risco atual a vida da mulher, sem necessidade de autorizacao judicial previa.',
+    dica:'Sujeito passivo: mulher, qualquer orientacao sexual -- aplica-se a casais homoafetivos femininos. Formas: fisica + psicologica + sexual + patrimonial + moral. Acao penal: publica incondicionada (S. 542 STJ) -- retratacao nao extingue. Medidas protetivas: Delegado pode aplicar imediatamente (Lei 13.827/2019), juiz ratifica em 24h. Descumprimento da medida protetiva: crime autonomo (art. 24-A LMP) + admite preventiva.'
+  },
+
+  // LEI DE DROGAS
+  {
+    grupo:'drogas', cat:'Lei de Drogas -- Lei 11.343/2006', catClass:'cat-purple',
+    title:'Lei de Drogas -- trafico, usuario e distincao',
+    question:'Como distinguir trafico de drogas (art. 33) do porte para uso pessoal (art. 28)? Quais as penas? O usuario e preso?',
+    pills:['Lei 11.343/2006','Art. 28 x art. 33','STF RE 635.659'],
+    fundamento:'Lei no 11.343, de 23 de agosto de 2006.',
+    conceito:'TRAFICO DE DROGAS (art. 33): importar, exportar, remeter, preparar, produzir, fabricar, adquirir, vender, expor a venda, oferecer, ter em deposito, transportar, trazer consigo, guardar, prescrever, ministrar, entregar a consumo ou fornecer droga sem autorizacao -- reclusao de 5 a 15 anos + multa. CRIME EQUIPARADO A HEDIONDO. CAUSA DE DIMINUICAO (art. 33, paragrafo 4): agente primario, bons antecedentes, nao integra organizacao criminosa e nao se dedica a atividades criminosas -- reducao de 1/6 a 2/3 (trafico privilegiado). USUARIO (art. 28): adquirir, guardar, ter em deposito, transportar ou trazer consigo droga para consumo pessoal -- NAO ha pena privativa de liberdade. Penas: advertencia, prestacao de servicos a comunidade ou medida educativa. CRITERIOS DE DISTINCAO (art. 28, paragrafo 2): quantidade e natureza da substancia; local e condicoes da apreensao; circunstancias sociais e pessoais; conduta e antecedentes do agente.',
+    atencao:'STF (RE 635.659 -- Tema 506, 2024): descriminalizou a posse de drogas para uso pessoal -- o porte de cannabis para uso proprio nao e mais crime. A decisao nao descriminalizou o trafico. O STF fixou a quantidade de 40 gramas de maconha ou 6 plantas femeas como parametro para presumir uso pessoal -- presuncao relativa. Trafico privilegiado (art. 33, paragrafo 4): o STJ (Sumula 512) firmou que o trafico privilegiado NAO e equiparado a hediondo (apos declaracao de inconstitucionalidade do art. 2, paragrafo 1 da Lei 8.072/90 nessa parte pelo STF -- HC 118.533).',
+    oral:'A Lei 11.343 de 2006 distingue o trafico de drogas, tipificado no art. 33, do porte para uso pessoal do art. 28. O trafico e crime equiparado a hediondo, com pena de cinco a quinze anos, insuscetivel de fianca, graca e anistia. O usuario que porta droga para consumo pessoal nao esta sujeito a pena privativa de liberdade, mas a advertencia, prestacao de servicos ou medida educativa. Em 2024, o STF no RE 635.659 descriminalizou a posse de cannabis para uso pessoal, fixando como parametro a quantidade de quarenta gramas ou seis plantas femeas para presumir o uso proprio. O trafico privilegiado do art. 33 paragrafo 4, aplicavel ao agente primario sem vinculacao com organizacoes criminosas, nao e equiparado a hediondo conforme o STF.',
+    dica:'Trafico (art. 33): 5-15 anos + hediondo + inafiancavel. Usuario (art. 28): sem pena privativa de liberdade. Criterios de distincao: quantidade + natureza + local + circunstancias pessoais. STF RE 635.659 (2024): posse de cannabis para uso pessoal descriminalizada -- parametro 40g ou 6 plantas. Trafico privilegiado (art. 33 paragrafo 4): primario + bons antecedentes + sem organizacao -- reducao 1/6 a 2/3 -- NAO e hediondo (STF HC 118.533).'
+  },
+
+  // ABUSO DE AUTORIDADE
+  {
+    grupo:'abuso', cat:'Abuso de Autoridade -- Lei 13.869/2019', catClass:'cat-coral',
+    title:'Abuso de autoridade -- conceito, elementos e crimes',
+    question:'O que e abuso de autoridade pela Lei 13.869/2019? Qual o elemento subjetivo exigido? Quais os principais tipos?',
+    pills:['Lei 13.869/2019','Finalidade especifica','Dolo especifico'],
+    fundamento:'Lei no 13.869, de 5 de setembro de 2019.',
+    conceito:'CONCEITO: pratica, por agente publico, de conduta funcional que desvie do fim legal, causando dano a direito ou interesse da pessoa. SUJEITO ATIVO: agente publico -- qualquer pessoa que exerça cargo, emprego ou funcao publica, independentemente de vinculo permanente. ELEMENTO SUBJETIVO (art. 1, paragrafo 1): exige DOLO ESPECIFICO -- finalidade especifica de prejudicar outrem ou beneficiar a si mesmo ou a terceiro, ou ainda por mero capricho ou satisfacao pessoal. Mera irregularidade ou erro nao e abuso. PRINCIPAIS TIPOS: decretar medida privativa de liberdade em manifesta desconformidade com a lei (art. 9); ilegalmente prender em flagrante (art. 10); submeter preso a tratamento desumano (art. 13); nao dar ciencia ao preso de seus direitos (art. 12); instaurar investigacao sem indicio (art. 27); violar domicilio sem justa causa (art. 22). PENAS: detenção de 1 a 4 anos (regra), alem de multa e perda do cargo.',
+    atencao:'A Lei 13.869/2019 revogou a Lei 4.898/1965. O elemento subjetivo especifico e o ponto mais cobrado: sem a finalidade especifica (prejudicar, beneficiar ou por capricho), nao ha abuso de autoridade -- pode haver outro crime ou mera irregularidade administrativa. A lei e aplicavel a membros do MP e magistrados no exercicio de funcoes jurisdicionais e administrativas. Impedimento de comunicacao com o advogado: crime do art. 20 (detenção de 1-4 anos). Os crimes da Lei 13.869/19 sao de ACAO PENAL PUBLICA INCONDICIONADA.',
+    oral:'A Lei 13.869 de 2019 define abuso de autoridade como a conduta funcional do agente publico que se desvia do fim legal, causando dano a direito ou interesse de pessoa natural ou juridica. O elemento subjetivo e o ponto central da lei: exige-se dolo especifico, consubstanciado na finalidade de prejudicar outrem, beneficiar a si mesmo ou a terceiro, ou de agir por mero capricho ou satisfacao pessoal. A simples irregularidade ou o erro de procedimento, sem essa finalidade especifica, nao configura o crime. Os tipos mais relevantes incluem a prisao ilegal em flagrante, a submissao do preso a tratamento desumano, a violacao de domicilio sem justa causa e a instauracao de investigacao sem indicio minimo. A acao penal e publica incondicionada.',
+    dica:'Sujeito ativo: agente publico (qualquer vinculo). Dolo especifico: finalidade de prejudicar + beneficiar + capricho/satisfacao pessoal -- sem isso, nao e abuso. Mera irregularidade: nao e crime. Aplica-se a magistrados e membros do MP. Acao penal: publica incondicionada. Principais tipos: prisao ilegal (art. 9-10) + tratamento desumano (art. 13) + violacao de domicilio (art. 22) + investigacao sem indicio (art. 27).'
+  },
+
+  // DIREITOS HUMANOS
+  {
+    grupo:'dh', cat:'Direitos Humanos', catClass:'cat-teal',
+    title:'Declaracao Universal dos Direitos Humanos (1948)',
+    question:'Qual a natureza juridica da DUDH? Quais seus principios fundamentais? Qual a sua importancia historica?',
+    pills:['DUDH -- 1948','ONU','Soft law'],
+    fundamento:'Declaracao Universal dos Direitos Humanos, adotada pela Assembleia Geral da ONU em 10 de dezembro de 1948.',
+    conceito:'HISTORICO: adotada apos as atrocidades da Segunda Guerra Mundial, com o objetivo de estabelecer um padrao minimo de direitos para todos os seres humanos. NATUREZA JURIDICA: resolucao da Assembleia Geral da ONU -- nao e tratado, nao tem forca juridica vinculante direta (soft law). Porem, parte de seu conteudo e reconhecido como costume internacional vinculante. PRINCIPIOS FUNDAMENTAIS: dignidade da pessoa humana; universalidade (todos os seres humanos, sem distincao); indivisibilidade; interdependencia; igualdade. ESTRUTURA: 30 artigos -- direitos civis e politicos (arts. 1-21) e direitos economicos, sociais e culturais (arts. 22-27). DIREITOS PROCLAMADOS: vida, liberdade, seguranca; vedacao da escravidao e tortura; igualdade perante a lei; presuncao de inocencia; direito de asilo; liberdade de pensamento, consciencia e religiao; liberdade de reuniao; trabalho; educacao; participacao politica.',
+    atencao:'A DUDH nao e tratado e nao e diretamente incorporada ao direito brasileiro como norma juridica vinculante -- mas influenciou profundamente a CF/88 e os tratados subsequentes. O PIDCP (Pacto Internacional de Direitos Civis e Politicos, 1966) e o PIDESC (Pacto Internacional de Direitos Economicos, Sociais e Culturais, 1966) converteram os direitos da DUDH em tratados vinculantes. Dia 10 de dezembro: Dia Internacional dos Direitos Humanos -- data da adocao da DUDH.',
+    oral:'A Declaracao Universal dos Direitos Humanos foi adotada pela Assembleia Geral das Nacoes Unidas em 10 de dezembro de 1948, como resposta as atrocidades da Segunda Guerra Mundial. Nao e um tratado internacional -- e uma resolucao da Assembleia Geral, sem forca juridica vinculante direta, classificada como soft law. Seu conteudo, porem, e reconhecido como base do direito internacional dos direitos humanos e influenciou decisivamente constituicoes ao redor do mundo, incluindo a CF/88. Seus trinta artigos proclamam direitos civis e politicos, como o direito a vida, a liberdade e a vedacao da tortura, e direitos economicos, sociais e culturais, como o direito ao trabalho e a educacao. Os principios fundamentais sao a dignidade, a universalidade, a indivisibilidade e a interdependencia dos direitos.',
+    dica:'DUDH: resolucao ONU (1948), nao e tratado, nao vincula diretamente (soft law). 30 artigos: civis e politicos (1-21) + economicos, sociais e culturais (22-27). Principios: dignidade + universalidade + indivisibilidade + interdependencia. Convertida em tratados: PIDCP e PIDESC (1966). Dia 10/12: Dia Internacional dos DH. Influenciou diretamente a CF/88.'
+  },
+  {
+    grupo:'dh', cat:'Direitos Humanos', catClass:'cat-teal',
+    title:'Convencao Americana sobre Direitos Humanos (Pacto de San Jose)',
+    question:'O que e a Convencao Americana? Qual seu status no direito brasileiro? O que e a CIDH e a Corte IDH?',
+    pills:['CADH -- 1969','Status supralegal','Corte IDH'],
+    fundamento:'Convencao Americana sobre Direitos Humanos, assinada em San Jose da Costa Rica em 22 de novembro de 1969. Incorporada ao Brasil pelo Decreto no 678/1992.',
+    conceito:'CONVENCAO AMERICANA (CADH -- Pacto de San Jose da Costa Rica): principal tratado de direitos humanos do sistema interamericano. Adotada em 1969, em vigor em 1978. STATUS NO BRASIL: incorporada pelo Decreto 678/1992 -- o STF (RE 466.343) fixou status SUPRALEGAL (acima das leis, abaixo da CF) pois nao foi aprovada pelo quorum do art. 5, paragrafo 3 CF. VEDACAO: proibicao de prisao civil por divida, salvo devedor de alimentos (art. 7, paragrafo 7) -- o STF aplicou a CADH para suprimir a prisao do depositario infiel (Sumula Vinculante 25). ORGAOS DO SISTEMA INTERAMERICANO: CIDH (Comissao Interamericana de Direitos Humanos): orgao quasi-judicial, recebe peticoes, faz recomendacoes, pode submeter casos a Corte IDH. Corte IDH (Corte Interamericana de Direitos Humanos): orgao judicial -- emite sentencas vinculantes para os Estados-partes que reconheceram sua jurisdicao. O Brasil reconheceu a jurisdicao da Corte IDH em 1998.',
+    atencao:'A CADH nao e hierarquicamente superior a CF/88 no Brasil -- tem status supralegal. Para ter status de emenda constitucional, deveria ter sido aprovada com quorum de 3/5, em dois turnos, em cada Casa (art. 5, paragrafo 3 CF -- EC 45/2004). O Brasil foi condenado pela Corte IDH em varios casos -- entre eles o caso Damiao Ximenes Lopes (morte em hospital psiquiatrico, 2006), o caso Gomes Lund (guerrilha do Araguaia, 2010) e o caso Vladimir Herzog (2018). As sentencas da Corte IDH sao de cumprimento obrigatorio pelo Brasil.',
+    oral:'A Convencao Americana sobre Direitos Humanos, assinada em San Jose da Costa Rica em 1969, e o principal instrumento juridico do sistema interamericano de protecao dos direitos humanos. No Brasil, foi incorporada pelo Decreto 678 de 1992 e tem status supralegal -- posicao fixada pelo STF no julgamento do RE 466.343 -- o que significa que esta acima das leis ordinarias, mas abaixo da Constituicao. A sua vedacao a prisao civil por divida, exceto para o devedor de alimentos, foi aplicada pelo STF para afastar a prisao do depositario infiel, cristalizada na Sumula Vinculante 25. O sistema interamericano e composto pela Comissao Interamericana, orgao quasi-judicial que recebe peticoes, e pela Corte Interamericana de Direitos Humanos, cujas sentencas sao vinculantes para os Estados que reconheceram sua jurisdicao, como o Brasil desde 1998.',
+    dica:'CADH: tratado interamericano (1969), vigor 1978, Brasil assinou 1969 e incorporou 1992. Status: SUPRALEGAL (RE 466.343 STF) -- nao foi aprovada com quorum de EC. SV 25: proibe prisao do depositario infiel (CADH art. 7 par. 7 -- so devedor de alimentos pode ser preso). CIDH: quasi-judicial, recomendacoes. Corte IDH: judicial, sentencas vinculantes -- Brasil reconheceu jurisdicao em 1998.'
+  }
+];
+
+var filtered = allCards.slice();
+var cur = 0;
+
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.toggle-opt').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('mode-hint').textContent = m === 'oral'
+    ? 'Resposta em texto corrido -- ideal para simular a banca'
+    : 'Resposta em blocos estruturados -- ideal para aprofundar o estudo';
+  document.getElementById('card').classList.remove('flipped');
+  render();
+}
+
+function setFilter(f, btn) {
+  cur = 0;
+  filtered = f === 'all' ? allCards.slice() : allCards.filter(function(c){ return c.grupo === f; });
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  if (!filtered.length) return;
+  var c = filtered[cur];
+  document.getElementById('f-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('f-cat').textContent = c.cat;
+  document.getElementById('f-title').textContent = c.title;
+  document.getElementById('f-question').textContent = c.question;
+  document.getElementById('f-pills').innerHTML = c.pills.map(function(p){ return '<span class="pill">' + p + '</span>'; }).join('');
+  document.getElementById('b-cat').className = 'f-cat ' + c.catClass;
+  document.getElementById('b-cat').textContent = c.cat;
+  document.getElementById('b-title').textContent = c.title;
+  document.getElementById('b-blocks').innerHTML = mode === 'oral'
+    ? '<div class="oral-answer">' + c.oral + '</div><div class="oral-tip"><div class="blbl">Dica para a banca</div><p>' + c.dica + '</p></div>'
+    : '<div class="b-block"><div class="blbl">Fundamento legal</div><p>' + c.fundamento + '</p></div>' +
+      '<div class="b-block"><div class="blbl">Conceito e distincoes</div><p>' + c.conceito + '</p></div>' +
+      '<div class="b-alert"><div class="blbl">Atencao -- ponto de prova</div><p>' + c.atencao + '</p></div>' +
+      '<div class="b-tip"><div class="blbl">Dica de memorizacao</div><p>' + c.dica + '</p></div>';
+  document.getElementById('card').classList.remove('flipped');
+  document.getElementById('pbar').style.width = ((cur + 1) / filtered.length * 100).toFixed(0) + '%';
+  document.getElementById('hdr-count').textContent = (cur + 1) + ' / ' + filtered.length + ' fichas';
+  var sh = function(t){ return t.length > 28 ? t.substring(0,28) + '...' : t; };
+  document.getElementById('topic-nav').innerHTML =
+    filtered.map(function(x,i){ return '<button class="topic-btn ' + (i===cur?'active':'') + '" onclick="go(' + i + ')">' + (i+1) + '. ' + sh(x.title) + '</button>'; }).join('') +
+    '<span class="counter-pill">' + (cur+1) + ' / ' + filtered.length + '</span>';
+}
+
+function flip(){ document.getElementById('card').classList.toggle('flipped'); }
+function go(i){ cur = i; render(); }
+function prev(){ cur = (cur - 1 + filtered.length) % filtered.length; render(); }
+function next(){ cur = (cur + 1) % filtered.length; render(); }
+
+render();
+</script>
+</body>
+</html>
